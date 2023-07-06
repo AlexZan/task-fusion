@@ -1,15 +1,16 @@
 // hooks/useTasks.js
 import { useState, useEffect } from 'react';
+import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorage';
 import tasksData from '../tasks.json';
 
 export default function useTasks() {
-  const [needToTasks, setNeedToTasks] = useState([]);
-  const [likeToTasks, setLikeToTasks] = useState([]);
+  const [needToTasks, setNeedToTasks] = useState(loadFromLocalStorage('needToTasks') || tasksData.needToTasks);
+  const [likeToTasks, setLikeToTasks] = useState(loadFromLocalStorage('likeToTasks') || tasksData.likeToTasks);
 
   useEffect(() => {
-    setNeedToTasks(tasksData.needToTasks);
-    setLikeToTasks(tasksData.likeToTasks);
-  }, []);
+    saveToLocalStorage('needToTasks', needToTasks);
+    saveToLocalStorage('likeToTasks', likeToTasks);
+  }, [needToTasks, likeToTasks]);
 
   const addTask = (task) => {
     if (task.listType === 'need-to') {
@@ -34,7 +35,6 @@ export default function useTasks() {
       );
     }
   };
-  
 
   const handleTaskDeletion = (id, listType) => {
     if (listType === 'need-to') {
@@ -61,12 +61,6 @@ export default function useTasks() {
       setLikeToTasks(newList);
     }
   };
-  
-  
-  
-  
-  
-  
 
   return {
     needToTasks,

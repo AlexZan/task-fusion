@@ -1,66 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import { playBeep } from '../utils/audioUtils';
-
-const NEED_TO_DURATION = 2; // 2 seconds for testing
-const LIKE_TO_DURATION = 5; // 5 seconds for testing
+import React, { useState } from 'react';
+import ConfigModal from './ConfigModal';
+import TaskTimerDisplayControl from './TaskTimerDisplayControl';
+import useTimer from '../hooks/useTimer';
+import { FaCog } from 'react-icons/fa';
 
 function TaskTimer() {
-  const [timeLeft, setTimeLeft] = useState(LIKE_TO_DURATION);
-  const [isNeedTo, setIsNeedTo] = useState(false);
-  const [isRunning, setIsRunning] = useState(false);
-  
+  const {
+    workTime,
+    breakTime,
+    timeLeft,
+    isWorkTime,
+    isRunning,
+    setWorkTime,
+    setBreakTime,
+    start,
+    stop,
+    reset
+  } = useTimer(40, 20);
 
-  useEffect(() => {
-    if (isRunning) {
-      playBeep();
-    }
-  }, [isNeedTo, isRunning]);
-  
-  
-  
-  
-  useEffect(() => {
-    let timerId;
+  const [isConfigOpen, setIsConfigOpen] = useState(false);
 
-    if (isRunning) {
-      timerId = setInterval(() => {
-        setTimeLeft((prevTimeLeft) => {
-          if (prevTimeLeft === 0) {
-            setIsNeedTo(!isNeedTo);
-            return isNeedTo ? LIKE_TO_DURATION : NEED_TO_DURATION;
-          } else {
-            return prevTimeLeft - 1;
-          }
-        });
-      }, 1000);
-    }
+  const handleConfigOpen = () => {
+    setIsConfigOpen(true);
+  };
 
-    return () => clearInterval(timerId);
-  }, [isNeedTo, isRunning]);
+  const handleConfigClose = () => {
+    setIsConfigOpen(false);
+  };
 
-  const start = () => setIsRunning(true);
-  const stop = () => setIsRunning(false);
-  const reset = () => {
-    setIsRunning(false);
-    setTimeLeft(isNeedTo ? NEED_TO_DURATION : LIKE_TO_DURATION);
+  const handleConfigConfirm = (e) => {
+    e.preventDefault();
+    setIsConfigOpen(false);
+    reset(); // Reset the timer when the times are updated
   };
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
   return (
-    <div className="text-center p-4 dark:bg-gray-800 rounded-lg mb-4">
-      <h2 className="text-2xl">{isNeedTo ? 'Need To' : 'Like To'}</h2>
-      <div className="text-6xl font-bold my-4">
-        <div className="inline-block bg-gray-800 rounded-full p-4">
-          {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
-        </div>
-      </div>
-      <div className="flex justify-between">
-        <button onClick={start} className="bg-gray-500 text-white p-2 rounded-md w-1/3 mr-2">Start</button>
-        <button onClick={stop} className="bg-gray-500 text-white p-2 rounded-md w-1/3 mr-2">Stop</button>
-        <button onClick={reset} className="bg-gray-500 text-white p-2 rounded-md w-1/3">Reset</button>
-      </div>
+    <div className="text-center p-4 dark:bg-gray-800 rounded-lg mb-4 relative">
+      <button onClick={handleConfigOpen} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition-colors duration-200"><FaCog /></button>
+      <h2 className="text-2xl">{isWorkTime ? 'Work Time' : 'Break Time'}</h2>
+      <TaskTimerDisplayControl
+        minutes={minutes}
+        seconds={seconds}
+        start={start}
+        stop={stop}
+        reset={reset}
+      />
+      <ConfigModal
+        isOpen={isConfigOpen}
+        onRequestClose={handleConfigClose}
+        onConfirm={handleConfigConfirm}
+        workTime={workTime}
+        breakTime={breakTime}
+        setWorkTime={setWorkTime}
+        setBreakTime={setBreakTime}
+      />
     </div>
   );
 }
