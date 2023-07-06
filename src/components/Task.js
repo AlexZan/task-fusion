@@ -69,7 +69,7 @@ function Task({ task, handleTaskCompletion, handleTaskDeletion, listType, moveTa
     <div
       ref={ref}
       style={{ opacity: isDragging ? 0.5 : 1 }}
-      className="flex items-center mb-2"
+      className="flex items-center mb-2 task-container" // Add class here
     >
       <input 
         type="checkbox" 
@@ -78,7 +78,7 @@ function Task({ task, handleTaskCompletion, handleTaskDeletion, listType, moveTa
       />
       <p className="dark:text-white">{task.task}</p>
       <button 
-        className="ml-2 text-gray-500 hover:text-red-500 transition-colors duration-200"
+        className="ml-2 text-gray-500 hover:text-red-500 transition-colors duration-200 delete-button" // Add class here
         onClick={() => handleTaskDeletion(task.id, listType)}
       >
         <AiOutlineDelete />
