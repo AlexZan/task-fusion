@@ -34,6 +34,7 @@ export default function useTasks() {
       );
     }
   };
+  
 
   const handleTaskDeletion = (id, listType) => {
     if (listType === 'need-to') {
@@ -47,11 +48,32 @@ export default function useTasks() {
     }
   };
 
+  const moveTask = (dragIndex, hoverIndex, listType) => {
+    const list = listType === 'need-to' ? needToTasks : likeToTasks;
+  
+    const newList = [...list];
+    const [draggedTask] = newList.splice(dragIndex, 1);
+    newList.splice(hoverIndex, 0, draggedTask);
+  
+    if (listType === 'need-to') {
+      setNeedToTasks(newList);
+    } else {
+      setLikeToTasks(newList);
+    }
+  };
+  
+  
+  
+  
+  
+  
+
   return {
     needToTasks,
     likeToTasks,
     addTask,
     handleTaskCompletion,
     handleTaskDeletion,
+    moveTask,
   };
 }
