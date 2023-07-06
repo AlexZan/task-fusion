@@ -1,0 +1,39 @@
+{
+    "needToTasks": [
+      {
+        "id": 1,
+        "task": "Complete project report"
+      },
+      {
+        "id": 2,
+        "task": "Prepare for meeting"
+      },
+      {
+        "id": 3,
+        "task": "Send emails"
+      },
+      {
+        "id": 4,
+        "task": "Review code"
+      }
+    ],
+    "likeToTasks": [
+      {
+        "id": 5,
+        "task": "Read a book"
+      },
+      {
+        "id": 6,
+        "task": "Practice guitar"
+      },
+      {
+        "id": 7,
+        "task": "Workout"
+      },
+      {
+        "id": 8,
+        "task": "Meditate"
+      }
+    ]
+  }
+  
