@@ -20,7 +20,7 @@ function App() {
   return (
     <div className="App dark:bg-gray-900 min-h-screen text-white">
       <header className="text-center p-4">
-        <img src={process.env.PUBLIC_URL + '/logo-thin.png'} alt="Logo" className="mx-auto w-1/2 max-w-xs" />
+        <img src={process.env.PUBLIC_URL + '/logo-thin.PNG'} alt="Logo" className="mx-auto w-1/2 max-w-xs" />
       </header>
       <div className="container mx-auto max-w-2xl">
         <TaskTimer />

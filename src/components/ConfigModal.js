@@ -25,13 +25,13 @@ function ConfigModal({ isOpen, onRequestClose, onConfirm, needToDoTime, wantToDo
       <form onSubmit={handleConfirm} className="space-y-4">
         <label className="block text-gray-900 dark:text-white">
           <span>Need To Do Time (minutes):</span>
-          <input type="number" value={needToDoTime / 60} onChange={e => setNeedToDoTime(e.target.value * 60)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:text-white" />
+          <input type="number" value={needToDoTime / 60} onChange={e => setNeedToDoTime(e.target.value * 60)} className="mt-1 block w-full dark:bg-gray-700 dark:text-white p-2 rounded-md" />
         </label>
         <label className="block text-gray-900 dark:text-white">
           <span>Want To Do Time (minutes):</span>
-          <input type="number" value={wantToDoTime / 60} onChange={e => setWantToDoTime(e.target.value * 60)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:text-white" />
+          <input type="number" value={wantToDoTime / 60} onChange={e => setWantToDoTime(e.target.value * 60)} className="mt-1 block w-full dark:bg-gray-700 dark:text-white p-2 rounded-md" />
         </label>
-        <button type="submit" className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Confirm</button>
+        <button type="submit" className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Save</button>
       </form>
     </Modal>
   );
