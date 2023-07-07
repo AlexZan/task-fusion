@@ -1,23 +1,18 @@
 // hooks/useTimer.js
 import { useState, useEffect } from 'react';
 import { playBeep } from '../utils/audioUtils';
-import { loadFromLocalStorage } from '../utils/localStorage';
+import { loadFromLocalStorage, saveToLocalStorage } from '../utils/localStorage';
 
 export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes) {
   const [needToDoTime, setNeedToDoTime] = useState((loadFromLocalStorage('needToDoTime') || initialNeedToDoMinutes) * 60);
   const [wantToDoTime, setWantToDoTime] = useState((loadFromLocalStorage('wantToDoTime') || initialWantToDoMinutes) * 60);
-  const [timeLeft, setTimeLeft] = useState(needToDoTime);
+  const [timeLeft, setTimeLeft] = useState(loadFromLocalStorage('timeLeft') || needToDoTime);
   const [isNeedToDoTime, setIsNeedToDoTime] = useState(true);
-  const [isRunning, setIsRunning] = useState(false);
-  const [intervalId, setIntervalId] = useState(null);
+  const [isRunning, setIsRunning] = useState(loadFromLocalStorage('isRunning') || false);
 
   const start = () => {
     if (!isRunning) {
       setIsRunning(true);
-      const id = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
-      setIntervalId(id);
       playBeep();
     }
   };
@@ -25,7 +20,6 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
   const stop = () => {
     if (isRunning) {
       setIsRunning(false);
-      clearInterval(intervalId);
     }
   };
 
@@ -40,8 +34,29 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
       setTimeLeft(isNeedToDoTime ? wantToDoTime : needToDoTime);
       playBeep();
     }
-  }, [timeLeft, isNeedToDoTime, needToDoTime, wantToDoTime]);
+    saveToLocalStorage('timeLeft', timeLeft);
+    saveToLocalStorage('isRunning', isRunning);
+  }, [timeLeft, isNeedToDoTime, needToDoTime, wantToDoTime, isRunning]);
 
+  useEffect(() => {
+    let timerId;
+  
+    if (isRunning) {
+      timerId = setInterval(() => {
+        setTimeLeft((prevTimeLeft) => {
+          if (prevTimeLeft === 0) {
+            setIsNeedToDoTime(!isNeedToDoTime);
+            return isNeedToDoTime ? wantToDoTime : needToDoTime;
+          } else {
+            return prevTimeLeft - 1;
+          }
+        });
+      }, 1000);
+    }
+  
+    return () => clearInterval(timerId);
+  }, [isNeedToDoTime, isRunning, needToDoTime, wantToDoTime]);
+  
   return {
     needToDoTime,
     wantToDoTime,

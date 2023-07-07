@@ -25,7 +25,6 @@ export default function useTasks() {
       ...task,
       completed: false,  // Add this line
     };
-    console.log(newTask);
     if (newTask.listType === 'need-to-do') {
       setNeedToDoTasks((prevTasks) => [newTask, ...prevTasks]);
     } else {
