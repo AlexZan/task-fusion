@@ -13,6 +13,7 @@ function TaskForm({ addTask }) {
       listType,
       status: 'not-completed',
       completionTime: null,
+      completed: false,
     });
 
     setTask('');
@@ -20,7 +21,7 @@ function TaskForm({ addTask }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="dark:bg-gray-800 p-6 rounded-lg">
+    <form onSubmit={handleSubmit} className="dark:bg-gray-800 p-6 rounded-lg mt-4">
       <textarea
         value={task}
         onChange={(e) => setTask(e.target.value)}

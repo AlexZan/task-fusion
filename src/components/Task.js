@@ -7,10 +7,12 @@ function Task({ task, handleTaskCompletion, handleTaskDeletion, listType, moveTa
   const [{ isDragging }, drag] = useDrag({
     type: 'task',
     item: { id: task.id, index },
+    canDrag: !task.completed,  // Add this line
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   });
+
 
   const [, drop] = useDrop({
     accept: 'task',
@@ -20,6 +22,11 @@ function Task({ task, handleTaskCompletion, handleTaskDeletion, listType, moveTa
         const dragIndex = item.index;
 
         if (dragIndex === hoverIndex) {
+          return;
+        }
+
+        // Prevent moving tasks below a completed task
+        if (task.completed) {
           return;
         }
 
@@ -50,13 +57,18 @@ function Task({ task, handleTaskCompletion, handleTaskDeletion, listType, moveTa
       style={{ opacity: isDragging ? 0.5 : 1 }}
       className="flex items-center mb-2 task-container"
     >
-      <input 
-        type="checkbox" 
-        className="mr-2 form-checkbox text-blue-600" 
-        onClick={() => handleTaskCompletion(task.id, listType)}
+      <input
+        type="checkbox"
+        checked={task.completed}
+        className="mr-2 form-checkbox text-blue-600"
+        onChange={() => {
+          console.log(`Checkbox clicked for task with id: ${task.id} in list: ${listType}`);
+          handleTaskCompletion(task.id, listType);
+        }}
       />
+
       <p className="dark:text-white">{task.task}</p>
-      <button 
+      <button
         className="ml-2 text-gray-500 hover:text-red-500 transition-colors duration-200 delete-button"
         onClick={() => handleTaskDeletion(task.id, listType)}
       >

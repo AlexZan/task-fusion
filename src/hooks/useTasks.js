@@ -4,8 +4,15 @@ import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorage'
 import tasksData from '../tasks.json';
 
 export default function useTasks() {
-  const [needToDoTasks, setNeedToDoTasks] = useState(loadFromLocalStorage('needToDoTasks') || tasksData.needToDoTasks);
-  const [wantToDoTasks, setWantToDoTasks] = useState(loadFromLocalStorage('wantToDoTasks') || tasksData.wantToDoTasks);
+  const [needToDoTasks, setNeedToDoTasks] = useState(
+    loadFromLocalStorage('needToDoTasks') ||
+      tasksData.needToDoTasks.map((task) => ({ ...task, completed: false }))
+  );
+  const [wantToDoTasks, setWantToDoTasks] = useState(
+    loadFromLocalStorage('wantToDoTasks') ||
+      tasksData.wantToDoTasks.map((task) => ({ ...task, completed: false }))
+  );
+  
   const [isMoving, setIsMoving] = useState(false);
 
   useEffect(() => {
@@ -14,29 +21,44 @@ export default function useTasks() {
   }, [needToDoTasks, wantToDoTasks]);
 
   const addTask = (task) => {
-    if (task.listType === 'need-to-do') {
-      setNeedToDoTasks((prevTasks) => [task, ...prevTasks]);
+    const newTask = {
+      ...task,
+      completed: false,  // Add this line
+    };
+    console.log(newTask);
+    if (newTask.listType === 'need-to-do') {
+      setNeedToDoTasks((prevTasks) => [newTask, ...prevTasks]);
     } else {
-      setWantToDoTasks((prevTasks) => [task, ...prevTasks]);
+      setWantToDoTasks((prevTasks) => [newTask, ...prevTasks]);
     }
   };
+  
+  
 
   const handleTaskCompletion = (id, listType) => {
     if (listType === 'need-to-do') {
-      setNeedToDoTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === id ? { ...task, completed: true } : task
-        )
-      );
+      setNeedToDoTasks((prevTasks) => {
+        const updatedTasks = prevTasks.map((task) =>
+          task.id === id ? { ...task, completed: !task.completed } : task
+        );
+        const uncompletedTasks = updatedTasks.filter((task) => !task.completed);
+        const completedTasks = updatedTasks.filter((task) => task.completed);
+        return [...uncompletedTasks, ...completedTasks];
+      });
     } else {
-      setWantToDoTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === id ? { ...task, completed: true } : task
-        )
-      );
+      setWantToDoTasks((prevTasks) => {
+        const updatedTasks = prevTasks.map((task) =>
+          task.id === id ? { ...task, completed: !task.completed } : task
+        );
+        const uncompletedTasks = updatedTasks.filter((task) => !task.completed);
+        const completedTasks = updatedTasks.filter((task) => task.completed);
+        return [...uncompletedTasks, ...completedTasks];
+      });
     }
   };
-
+  
+  
+  
   const handleTaskDeletion = (id, listType) => {
     if (listType === 'need-to-do') {
       setNeedToDoTasks((prevTasks) =>
