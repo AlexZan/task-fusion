@@ -4,31 +4,32 @@ import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorage'
 import tasksData from '../tasks.json';
 
 export default function useTasks() {
-  const [needToTasks, setNeedToTasks] = useState(loadFromLocalStorage('needToTasks') || tasksData.needToTasks);
-  const [likeToTasks, setLikeToTasks] = useState(loadFromLocalStorage('likeToTasks') || tasksData.likeToTasks);
+  const [needToDoTasks, setNeedToDoTasks] = useState(loadFromLocalStorage('needToDoTasks') || tasksData.needToDoTasks);
+  const [wantToDoTasks, setWantToDoTasks] = useState(loadFromLocalStorage('wantToDoTasks') || tasksData.wantToDoTasks);
+  const [isMoving, setIsMoving] = useState(false);
 
   useEffect(() => {
-    saveToLocalStorage('needToTasks', needToTasks);
-    saveToLocalStorage('likeToTasks', likeToTasks);
-  }, [needToTasks, likeToTasks]);
+    saveToLocalStorage('needToDoTasks', needToDoTasks);
+    saveToLocalStorage('wantToDoTasks', wantToDoTasks);
+  }, [needToDoTasks, wantToDoTasks]);
 
   const addTask = (task) => {
-    if (task.listType === 'need-to') {
-      setNeedToTasks((prevTasks) => [task, ...prevTasks]);
+    if (task.listType === 'need-to-do') {
+      setNeedToDoTasks((prevTasks) => [task, ...prevTasks]);
     } else {
-      setLikeToTasks((prevTasks) => [task, ...prevTasks]);
+      setWantToDoTasks((prevTasks) => [task, ...prevTasks]);
     }
   };
 
   const handleTaskCompletion = (id, listType) => {
-    if (listType === 'need-to') {
-      setNeedToTasks((prevTasks) =>
+    if (listType === 'need-to-do') {
+      setNeedToDoTasks((prevTasks) =>
         prevTasks.map((task) =>
           task.id === id ? { ...task, completed: true } : task
         )
       );
     } else {
-      setLikeToTasks((prevTasks) =>
+      setWantToDoTasks((prevTasks) =>
         prevTasks.map((task) =>
           task.id === id ? { ...task, completed: true } : task
         )
@@ -37,37 +38,42 @@ export default function useTasks() {
   };
 
   const handleTaskDeletion = (id, listType) => {
-    if (listType === 'need-to') {
-      setNeedToTasks((prevTasks) =>
+    if (listType === 'need-to-do') {
+      setNeedToDoTasks((prevTasks) =>
         prevTasks.filter((task) => task.id !== id)
       );
     } else {
-      setLikeToTasks((prevTasks) =>
+      setWantToDoTasks((prevTasks) =>
         prevTasks.filter((task) => task.id !== id)
       );
     }
   };
 
-  const moveTask = (dragIndex, hoverIndex, listType) => {
-    const list = listType === 'need-to' ? needToTasks : likeToTasks;
-  
-    const newList = [...list];
-    const [draggedTask] = newList.splice(dragIndex, 1);
-    newList.splice(hoverIndex, 0, draggedTask);
-  
-    if (listType === 'need-to') {
-      setNeedToTasks(newList);
-    } else {
-      setLikeToTasks(newList);
-    }
-  };
+  const moveTask = async (dragIndex, hoverIndex, listType) => {
+  setIsMoving(true);
+
+  const list = listType === 'need-to-do' ? needToDoTasks : wantToDoTasks;
+
+  const newList = [...list];
+  const [draggedTask] = newList.splice(dragIndex, 1);
+  newList.splice(hoverIndex, 0, draggedTask);
+
+  if (listType === 'need-to-do') {
+    await setNeedToDoTasks(newList);
+  } else {
+    await setWantToDoTasks(newList);
+  }
+
+  setIsMoving(false);
+};
 
   return {
-    needToTasks,
-    likeToTasks,
+    needToDoTasks,
+    wantToDoTasks,
     addTask,
     handleTaskCompletion,
     handleTaskDeletion,
     moveTask,
+    isMoving,
   };
 }

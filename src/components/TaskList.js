@@ -3,20 +3,11 @@ import React from 'react';
 import { useDrop } from 'react-dnd';
 import Task from './Task';
 
-function TaskList({ tasks, handleTaskCompletion, handleTaskDeletion, listType, moveTask }) {
-  const [, drop] = useDrop({
-    accept: 'task',
-    drop: (item, monitor) => {
-      const didDrop = monitor.didDrop();
-      if (didDrop) {
-        return;
-      }
-      moveTask(item.id, tasks[0].id, listType);
-    },
-  });
+function TaskList({ tasks, handleTaskCompletion, handleTaskDeletion, listType, moveTask, isMoving  }) {
+
 
   return (
-    <div ref={drop}>
+    <div >
       {tasks.filter(task => !task.completed).map((task, index) => (
         <Task
           key={task.id}

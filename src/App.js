@@ -10,8 +10,8 @@ import useTasks from './hooks/useTasks';
 
 function App() {
   const {
-    needToTasks,
-    likeToTasks,
+    needToDoTasks,
+    wantToDoTasks,
     addTask,
     handleTaskCompletion,
     handleTaskDeletion,
@@ -29,16 +29,16 @@ function App() {
         <DndProvider backend={HTML5Backend}>
           <div className="flex  dark:bg-gray-800 p-6 rounded-lg mt-4">
             <div className="w-1/2 p-4">
-              <h2 className="text-2xl mb-4">Need To</h2>
-              <TaskList tasks={needToTasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="need-to" moveTask={moveTask} />
+              <h2 className="text-2xl mb-4">Want To Do</h2>
+              <TaskList tasks={needToDoTasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="need-to-do" moveTask={moveTask} />
             </div>
             <div className="w-1/2 p-4">
-              <h2 className="text-2xl mb-4">Like To</h2>
-              <TaskList tasks={likeToTasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="like-to" moveTask={moveTask}/>
+              <h2 className="text-2xl mb-4">Need To Do</h2>
+              <TaskList tasks={wantToDoTasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="want-to-do" moveTask={moveTask} />
             </div>
           </div>
         </DndProvider>
-        <CompletedTasks tasks={[...needToTasks, ...likeToTasks].filter(task => task.completed)} />
+        <CompletedTasks tasks={[...needToDoTasks, ...wantToDoTasks].filter(task => task && task.completed)} />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 {
-    "needToTasks": [
+    "needToDoTasks": [
       {
         "id": 1,
         "task": "Complete project report"
@@ -17,7 +17,7 @@
         "task": "Review code"
       }
     ],
-    "likeToTasks": [
+    "wantToDoTasks": [
       {
         "id": 5,
         "task": "Read a book"

@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
 import { playBeep } from '../utils/audioUtils';
-import { loadFromLocalStorage, saveToLocalStorage } from '../utils/localStorage';
+import { loadFromLocalStorage } from '../utils/localStorage';
 
-export default function useTimer(initialWorkTime, initialBreakTime) {
-  const [workTime, setWorkTime] = useState((loadFromLocalStorage('workTime') || initialWorkTime) * 60);
-  const [breakTime, setBreakTime] = useState((loadFromLocalStorage('breakTime') || initialBreakTime) * 60);
-  const [timeLeft, setTimeLeft] = useState(workTime);
-  const [isWorkTime, setIsWorkTime] = useState(true);
+export default function useTimer(initialWantToDoTime, initialNeedToDoTime) {
+  const [needToDoTime, setNeedToDoTime] = useState((loadFromLocalStorage('needToDoTime') || initialNeedToDoTime) * 60);
+  const [wantToDoTime, setWantToDoTime] = useState((loadFromLocalStorage('wantToDoTime') || initialWantToDoTime) * 60);
+  const [timeLeft, setTimeLeft] = useState(wantToDoTime);
+  const [isNeedToDoTime, setIsNeedToDoTime] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
     if (isRunning) {
       playBeep();
     }
-  }, [isWorkTime, isRunning]);
+  }, [isNeedToDoTime, isRunning]);
 
   useEffect(() => {
     let timerId;
@@ -22,8 +22,8 @@ export default function useTimer(initialWorkTime, initialBreakTime) {
       timerId = setInterval(() => {
         setTimeLeft((prevTimeLeft) => {
           if (prevTimeLeft === 0) {
-            setIsWorkTime(!isWorkTime);
-            return isWorkTime ? breakTime : workTime;
+            setIsNeedToDoTime(!isNeedToDoTime);
+            return isNeedToDoTime ? wantToDoTime : needToDoTime;
           } else {
             return prevTimeLeft - 1;
           }
@@ -32,23 +32,23 @@ export default function useTimer(initialWorkTime, initialBreakTime) {
     }
 
     return () => clearInterval(timerId);
-  }, [isWorkTime, isRunning, workTime, breakTime]);
+  }, [isNeedToDoTime, isRunning, needToDoTime, wantToDoTime]);
 
   const start = () => setIsRunning(true);
   const stop = () => setIsRunning(false);
   const reset = () => {
     setIsRunning(false);
-    setTimeLeft(isWorkTime ? workTime : breakTime);
+    setTimeLeft(isNeedToDoTime ? needToDoTime : wantToDoTime);
   };
 
   return {
-    workTime,
-    breakTime,
+    needToDoTime,
+    wantToDoTime,
     timeLeft,
-    isWorkTime,
+    isNeedToDoTime,
     isRunning,
-    setWorkTime,
-    setBreakTime,
+    setNeedToDoTime,
+    setWantToDoTime,
     start,
     stop,
     reset
