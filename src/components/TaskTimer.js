@@ -1,3 +1,4 @@
+// components/TaskTimer.js
 import React, { useState } from 'react';
 import ConfigModal from './ConfigModal';
 import TaskTimerDisplayControl from './TaskTimerDisplayControl';
@@ -14,7 +15,8 @@ function TaskTimer() {
     setWantToDoTime,
     start,
     stop,
-    reset
+    reset,
+    isRunning
   } = useTimer(40, 20);
 
   const [isConfigOpen, setIsConfigOpen] = useState(false);
@@ -46,6 +48,7 @@ function TaskTimer() {
         start={start}
         stop={stop}
         reset={reset}
+        isRunning={isRunning}
       />
       <ConfigModal
         isOpen={isConfigOpen}

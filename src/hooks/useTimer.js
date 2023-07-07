@@ -1,56 +1,57 @@
+// hooks/useTimer.js
 import { useState, useEffect } from 'react';
 import { playBeep } from '../utils/audioUtils';
 import { loadFromLocalStorage } from '../utils/localStorage';
 
-export default function useTimer(initialWantToDoTime, initialNeedToDoTime) {
-  const [needToDoTime, setNeedToDoTime] = useState((loadFromLocalStorage('needToDoTime') || initialNeedToDoTime) * 60);
-  const [wantToDoTime, setWantToDoTime] = useState((loadFromLocalStorage('wantToDoTime') || initialWantToDoTime) * 60);
-  const [timeLeft, setTimeLeft] = useState(wantToDoTime);
-  const [isNeedToDoTime, setIsNeedToDoTime] = useState(false);
+export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes) {
+  const [needToDoTime, setNeedToDoTime] = useState((loadFromLocalStorage('needToDoTime') || initialNeedToDoMinutes) * 60);
+  const [wantToDoTime, setWantToDoTime] = useState((loadFromLocalStorage('wantToDoTime') || initialWantToDoMinutes) * 60);
+  const [timeLeft, setTimeLeft] = useState(needToDoTime);
+  const [isNeedToDoTime, setIsNeedToDoTime] = useState(true);
   const [isRunning, setIsRunning] = useState(false);
+  const [intervalId, setIntervalId] = useState(null);
 
-  useEffect(() => {
-    if (isRunning) {
+  const start = () => {
+    if (!isRunning) {
+      setIsRunning(true);
+      const id = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+      setIntervalId(id);
       playBeep();
     }
-  }, [isNeedToDoTime, isRunning]);
+  };
 
-  useEffect(() => {
-    let timerId;
-
+  const stop = () => {
     if (isRunning) {
-      timerId = setInterval(() => {
-        setTimeLeft((prevTimeLeft) => {
-          if (prevTimeLeft === 0) {
-            setIsNeedToDoTime(!isNeedToDoTime);
-            return isNeedToDoTime ? wantToDoTime : needToDoTime;
-          } else {
-            return prevTimeLeft - 1;
-          }
-        });
-      }, 1000);
+      setIsRunning(false);
+      clearInterval(intervalId);
     }
+  };
 
-    return () => clearInterval(timerId);
-  }, [isNeedToDoTime, isRunning, needToDoTime, wantToDoTime]);
-
-  const start = () => setIsRunning(true);
-  const stop = () => setIsRunning(false);
   const reset = () => {
-    setIsRunning(false);
+    stop();
     setTimeLeft(isNeedToDoTime ? needToDoTime : wantToDoTime);
   };
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      setIsNeedToDoTime(!isNeedToDoTime);
+      setTimeLeft(isNeedToDoTime ? wantToDoTime : needToDoTime);
+      playBeep();
+    }
+  }, [timeLeft, isNeedToDoTime, needToDoTime, wantToDoTime]);
 
   return {
     needToDoTime,
     wantToDoTime,
     timeLeft,
     isNeedToDoTime,
-    isRunning,
     setNeedToDoTime,
     setWantToDoTime,
     start,
     stop,
-    reset
+    reset,
+    isRunning
   };
 }

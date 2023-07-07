@@ -1,20 +1,29 @@
-// components/TaskTimerDisplayControl.js
 import React from 'react';
+import { FaPlay, FaStop, FaRedo } from 'react-icons/fa';
 
-function TaskTimerDisplayControl({ minutes, seconds, start, stop, reset }) {
+function TaskTimerDisplayControl({ minutes, seconds, start, stop, reset, isRunning }) {
   return (
-    <>
+    <div className="flex flex-col items-center">
       <div className="text-6xl font-bold my-4">
         <div className="inline-block bg-gray-800 rounded-full p-4">
           {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
         </div>
       </div>
-      <div className="flex justify-between">
-        <button onClick={start} className="bg-gray-500 text-white p-2 rounded-md w-1/3 mr-2">Start</button>
-        <button onClick={stop} className="bg-gray-500 text-white p-2 rounded-md w-1/3 mr-2">Stop</button>
-        <button onClick={reset} className="bg-gray-500 text-white p-2 rounded-md w-1/3">Reset</button>
+      <div className="flex justify-center items-center space-x-4">
+        {isRunning ? (
+          <button onClick={stop} className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors duration-200">
+            <FaStop />
+          </button>
+        ) : (
+          <button onClick={start} className="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors duration-200">
+            <FaPlay />
+          </button>
+        )}
+        <button onClick={reset} className="bg-gray-500 text-white p-2 rounded-full hover:bg-gray-600 transition-colors duration-200">
+          <FaRedo />
+        </button>
       </div>
-    </>
+    </div>
   );
 }
 
