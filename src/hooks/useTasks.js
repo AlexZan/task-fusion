@@ -4,93 +4,66 @@ import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorage'
 import tasksData from '../tasks.json';
 
 export default function useTasks() {
-  const [needToDoTasks, setNeedToDoTasks] = useState(
-    loadFromLocalStorage('needToDoTasks') ||
-      tasksData.needToDoTasks.map((task) => ({ ...task, completed: false }))
+  const [tasks, setTasks] = useState(
+    loadFromLocalStorage('tasks') ||
+      tasksData.tasks.map((task, index) => ({ ...task, completed: false, originalIndex: index }))
   );
-  const [wantToDoTasks, setWantToDoTasks] = useState(
-    loadFromLocalStorage('wantToDoTasks') ||
-      tasksData.wantToDoTasks.map((task) => ({ ...task, completed: false }))
-  );
-  
+
   const [isMoving, setIsMoving] = useState(false);
 
   useEffect(() => {
-    saveToLocalStorage('needToDoTasks', needToDoTasks);
-    saveToLocalStorage('wantToDoTasks', wantToDoTasks);
-  }, [needToDoTasks, wantToDoTasks]);
+    saveToLocalStorage('tasks', tasks);
+  }, [tasks]);
 
   const addTask = (task) => {
     const newTask = {
       ...task,
-      completed: false,  // Add this line
+      completed: false,
     };
-    if (newTask.listType === 'need-to-do') {
-      setNeedToDoTasks((prevTasks) => [newTask, ...prevTasks]);
-    } else {
-      setWantToDoTasks((prevTasks) => [newTask, ...prevTasks]);
-    }
+    setTasks((prevTasks) => [newTask, ...prevTasks]);
   };
-  
-  
 
-  const handleTaskCompletion = (id, listType) => {
-    if (listType === 'need-to-do') {
-      setNeedToDoTasks((prevTasks) => {
-        const updatedTasks = prevTasks.map((task) =>
-          task.id === id ? { ...task, completed: !task.completed } : task
-        );
-        const uncompletedTasks = updatedTasks.filter((task) => !task.completed);
-        const completedTasks = updatedTasks.filter((task) => task.completed);
-        return [...uncompletedTasks, ...completedTasks];
-      });
-    } else {
-      setWantToDoTasks((prevTasks) => {
-        const updatedTasks = prevTasks.map((task) =>
-          task.id === id ? { ...task, completed: !task.completed } : task
-        );
-        const uncompletedTasks = updatedTasks.filter((task) => !task.completed);
-        const completedTasks = updatedTasks.filter((task) => task.completed);
-        return [...uncompletedTasks, ...completedTasks];
-      });
-    }
-  };
-  
-  
-  
-  const handleTaskDeletion = (id, listType) => {
-    if (listType === 'need-to-do') {
-      setNeedToDoTasks((prevTasks) =>
-        prevTasks.filter((task) => task.id !== id)
+  const handleTaskCompletion = (id) => {
+    setTasks((prevTasks) => {
+      const updatedTasks = prevTasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
       );
-    } else {
-      setWantToDoTasks((prevTasks) =>
-        prevTasks.filter((task) => task.id !== id)
-      );
-    }
+      const uncompletedTasks = updatedTasks.filter((task) => !task.completed);
+      const completedTasks = updatedTasks.filter((task) => task.completed);
+      return [...uncompletedTasks, ...completedTasks];
+    });
   };
 
-  const moveTask = async (dragIndex, hoverIndex, listType) => {
-  setIsMoving(true);
+  const handleTaskDeletion = (id) => {
+    setTasks((prevTasks) =>
+      prevTasks.filter((task) => task.id !== id)
+    );
+  };
 
-  const list = listType === 'need-to-do' ? needToDoTasks : wantToDoTasks;
-
-  const newList = [...list];
-  const [draggedTask] = newList.splice(dragIndex, 1);
-  newList.splice(hoverIndex, 0, draggedTask);
-
-  if (listType === 'need-to-do') {
-    await setNeedToDoTasks(newList);
-  } else {
-    await setWantToDoTasks(newList);
-  }
-
-  setIsMoving(false);
-};
+  const moveTask = async (dragIndex, hoverIndex) => {
+    setIsMoving(true);
+  
+    // Create a copy of the current tasks
+    const newList = [...tasks];
+  
+    // Remove the task at the dragIndex from the list and store it in draggedTask
+    const [draggedTask] = newList.splice(dragIndex, 1);
+  
+    console.log(`Dragged: ${draggedTask.task}, hover: ${newList[hoverIndex].task}`);
+  
+    const insertIndex = hoverIndex > dragIndex ? hoverIndex - 1 : hoverIndex;
+    newList.splice(insertIndex, 0, draggedTask);
+  
+    // Update the tasks state with the new list
+    await setTasks(newList);
+  
+    setIsMoving(false);
+  };
+  
+  
 
   return {
-    needToDoTasks,
-    wantToDoTasks,
+    tasks,
     addTask,
     handleTaskCompletion,
     handleTaskDeletion,

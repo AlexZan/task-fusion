@@ -2,10 +2,12 @@
 import React from 'react';
 import Task from './Task';
 
-function TaskList({ tasks, handleTaskCompletion, handleTaskDeletion, listType, moveTask, isMoving  }) {
+function TaskList({ tasks, handleTaskCompletion, handleTaskDeletion, listType, moveTask }) {
+  const filteredTasks = tasks.filter(task => task.listType === listType);
+
   return (
     <div >
-      {tasks.map((task, index) => (
+      {filteredTasks.map((task, index) => (
         <Task
           key={task.id}
           index={index}
@@ -14,6 +16,7 @@ function TaskList({ tasks, handleTaskCompletion, handleTaskDeletion, listType, m
           handleTaskDeletion={handleTaskDeletion}
           listType={listType}
           moveTask={moveTask}
+          tasks={tasks}
         />
       ))}
     </div>

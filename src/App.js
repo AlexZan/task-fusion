@@ -9,8 +9,7 @@ import useTasks from './hooks/useTasks';
 
 function App() {
   const {
-    needToDoTasks,
-    wantToDoTasks,
+    tasks,
     addTask,
     handleTaskCompletion,
     handleTaskDeletion,
@@ -29,11 +28,11 @@ function App() {
           <div className="flex  dark:bg-gray-800 p-6 rounded-lg mt-4">
             <div className="w-1/2 p-4">
               <h2 className="text-2xl mb-4">Need To Do</h2>
-              <TaskList tasks={needToDoTasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="need-to-do" moveTask={moveTask} />
+              <TaskList tasks={tasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="need-to-do" moveTask={moveTask} />
             </div>
             <div className="w-1/2 p-4">
               <h2 className="text-2xl mb-4">Want To Do</h2>
-              <TaskList tasks={wantToDoTasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="want-to-do" moveTask={moveTask} />
+              <TaskList tasks={tasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="want-to-do" moveTask={moveTask} />
             </div>
           </div>
         </DndProvider>

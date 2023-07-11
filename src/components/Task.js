@@ -2,52 +2,69 @@ import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { AiOutlineDelete } from 'react-icons/ai';
 
-function Task({ task, handleTaskCompletion, handleTaskDeletion, listType, moveTask, index }) {
+function Task({ task, handleTaskCompletion, handleTaskDeletion, listType, moveTask, index, tasks}) {
   const ref = useRef(null);
+  
   const [{ isDragging }, drag] = useDrag({
     type: 'task',
-    item: { id: task.id, index },
-    canDrag: !task.completed,  // Add this line
+    item: () => {
+      const currentIndex = tasks.findIndex(t => t.id === task.id);
+      return { id: task.id, index: currentIndex };
+    },
+    canDrag: !task.completed,
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   });
+  
 
 
   const [, drop] = useDrop({
     accept: 'task',
     hover(item, monitor) {
       if (item.id !== task.id) {
-        const hoverIndex = index;
         const dragIndex = item.index;
-
-        if (dragIndex === hoverIndex) {
-          return;
-        }
-
-        // Prevent moving tasks below a completed task
-        if (task.completed) {
-          return;
-        }
+        const sourceListType = item.listType;
+        const targetListType = listType;
 
         const hoverBoundingRect = ref.current.getBoundingClientRect();
         const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
         const clientOffset = monitor.getClientOffset();
         const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+        
+        const hoverIndex = hoverClientY < hoverMiddleY ? index : index + 1;
+        
 
-        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-          return;
-        }
-
-        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-          return;
-        }
-
-        moveTask(dragIndex, hoverIndex, listType);
+  
+        // if (dragIndex === hoverIndex && sourceListType === targetListType) {
+        //   return;
+        // }
+  
+        // // Prevent moving tasks below a completed task
+        // if (task.completed) {
+        //   return;
+        // }
+  
+        // const hoverBoundingRect = ref.current.getBoundingClientRect();
+        // const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+        // const clientOffset = monitor.getClientOffset();
+        // const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+  
+        // if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        //   return;
+        // }
+  
+        // if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        //   return;
+        // }
+  
+        moveTask(dragIndex, hoverIndex, sourceListType, targetListType);
         item.index = hoverIndex;
+        item.listType = targetListType; // Change the listType of the item
       }
     },
   });
+  
 
   drag(drop(ref));
 
