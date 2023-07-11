@@ -2,7 +2,7 @@
 import React from 'react';
 import Task from './Task';
 
-function TaskList({ tasks, handleTaskCompletion, handleTaskDeletion, listType, moveTask }) {
+function TaskList({ tasks, handleTaskCompletion, handleTaskDeletion, listType, moveTask, switchTaskList }) {
   const filteredTasks = tasks.filter(task => task.listType === listType);
 
   return (
@@ -17,6 +17,7 @@ function TaskList({ tasks, handleTaskCompletion, handleTaskDeletion, listType, m
           listType={listType}
           moveTask={moveTask}
           tasks={tasks}
+          switchTaskList={switchTaskList}
         />
       ))}
     </div>

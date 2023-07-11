@@ -13,7 +13,8 @@ function App() {
     addTask,
     handleTaskCompletion,
     handleTaskDeletion,
-    moveTask
+    moveTask,
+    switchTaskList
   } = useTasks();
 
   return (
@@ -28,11 +29,11 @@ function App() {
           <div className="flex  dark:bg-gray-800 p-6 rounded-lg mt-4">
             <div className="w-1/2 p-4">
               <h2 className="text-2xl mb-4">Need To Do</h2>
-              <TaskList tasks={tasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="need-to-do" moveTask={moveTask} />
+              <TaskList tasks={tasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="need-to-do" moveTask={moveTask} switchTaskList={switchTaskList} />
             </div>
             <div className="w-1/2 p-4">
               <h2 className="text-2xl mb-4">Want To Do</h2>
-              <TaskList tasks={tasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="want-to-do" moveTask={moveTask} />
+              <TaskList tasks={tasks} handleTaskCompletion={handleTaskCompletion} handleTaskDeletion={handleTaskDeletion} listType="want-to-do" moveTask={moveTask} switchTaskList={switchTaskList}/>
             </div>
           </div>
         </DndProvider>

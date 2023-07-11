@@ -6,10 +6,10 @@ import tasksData from '../tasks.json';
 export default function useTasks() {
   const [tasks, setTasks] = useState(
     loadFromLocalStorage('tasks') ||
-      tasksData.tasks.map((task, index) => ({ ...task, completed: false, originalIndex: index }))
+    tasksData.tasks.map((task, index) => ({ ...task, completed: false, originalIndex: index }))
   );
 
-  const [isMoving, setIsMoving] = useState(false);
+  const [isMoving] = useState(false);
 
   useEffect(() => {
     saveToLocalStorage('tasks', tasks);
@@ -40,27 +40,34 @@ export default function useTasks() {
     );
   };
 
-  const moveTask = async (dragIndex, hoverIndex) => {
-    setIsMoving(true);
+  const moveTask = (fromIndex, toIndex, listType) => {
+    setTasks(prevTasks => {
+      const tasksOfType = prevTasks.filter(task => task.listType === listType);
+      const allOtherTasks = prevTasks.filter(task => task.listType !== listType);
   
-    // Create a copy of the current tasks
-    const newList = [...tasks];
+      const draggedTask = tasksOfType[fromIndex];
+      const newTasksOfType = [...tasksOfType];
+      newTasksOfType.splice(fromIndex, 1); // remove the dragged task
+      newTasksOfType.splice(toIndex, 0, draggedTask); // insert the dragged task at the new position
   
-    // Remove the task at the dragIndex from the list and store it in draggedTask
-    const [draggedTask] = newList.splice(dragIndex, 1);
-  
-    console.log(`Dragged: ${draggedTask.task}, hover: ${newList[hoverIndex].task}`);
-  
-    const insertIndex = hoverIndex > dragIndex ? hoverIndex - 1 : hoverIndex;
-    newList.splice(insertIndex, 0, draggedTask);
-  
-    // Update the tasks state with the new list
-    await setTasks(newList);
-  
-    setIsMoving(false);
+      // If the list type is 'need-to-do', the new task list should start with tasks of type 'need-to-do'
+      return listType === 'need-to-do' 
+        ? [...newTasksOfType, ...allOtherTasks] 
+        : [...allOtherTasks, ...newTasksOfType];
+    });
+  };
+
+  const switchTaskList = (id, newListType) => {
+    setTasks((prevTasks) => {
+      const updatedTasks = prevTasks.map((task) =>
+        task.id === id ? { ...task, listType: newListType } : task
+      );
+      return updatedTasks;
+    });
   };
   
   
+
 
   return {
     tasks,
@@ -69,5 +76,6 @@ export default function useTasks() {
     handleTaskDeletion,
     moveTask,
     isMoving,
+    switchTaskList,
   };
 }

@@ -3,12 +3,12 @@
 @import 'tailwindcss/utilities';
 
 /* Hide delete button by default */
-.task-container .delete-button {
+.task-container .hide-button {
     display: none;
   }
   
   /* Show delete button when task is hovered over */
-  .task-container:hover .delete-button {
+  .task-container:hover .hide-button {
     display: inline;
   }
   
