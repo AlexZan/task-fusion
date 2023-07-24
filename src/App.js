@@ -22,7 +22,7 @@ function App() {
       <header className="text-center p-4">
         <img src={process.env.PUBLIC_URL + '/logo-thin.PNG'} alt="Logo" className="mx-auto w-1/2 max-w-xs" />
       </header>
-      <div className="container mx-auto max-w-2xl">
+      <div className="container mx-auto max-w-5xl">
         <TaskTimer />
         <TaskForm addTask={addTask} />
         <DndProvider backend={HTML5Backend}>
