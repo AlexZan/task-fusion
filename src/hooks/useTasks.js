@@ -1,81 +1,72 @@
-// hooks/useTasks.js
 import { useState, useEffect } from 'react';
 import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorage';
 import tasksData from '../tasks.json';
 
 export default function useTasks() {
-  const [tasks, setTasks] = useState(
-    loadFromLocalStorage('tasks') ||
-    tasksData.tasks.map((task, index) => ({ ...task, completed: false, originalIndex: index }))
+  const [activeTasks, setActiveTasks] = useState(
+    loadFromLocalStorage('activeTasks') ||
+    tasksData.tasks.map((task, index) => ({ ...task, originalIndex: index }))
   );
-
-  const [isMoving] = useState(false);
-
-  useEffect(() => {
-    saveToLocalStorage('tasks', tasks);
-  }, [tasks]);
+  const [completedTasks, setCompletedTasks] = useState(
+    loadFromLocalStorage('completedTasks') || []
+  );
 
   const addTask = (task) => {
     const newTask = {
       ...task,
-      completed: false,
     };
-    setTasks((prevTasks) => [newTask, ...prevTasks]);
+    setActiveTasks((prevTasks) => [newTask, ...prevTasks]);
   };
 
-  const handleTaskCompletion = (id) => {
-    setTasks((prevTasks) => {
-      const updatedTasks = prevTasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      );
-      const uncompletedTasks = updatedTasks.filter((task) => !task.completed);
-      const completedTasks = updatedTasks.filter((task) => task.completed);
-      return [...uncompletedTasks, ...completedTasks];
-    });
+  const toggleTaskCompletion = (id, listType) => {
+    if (listType.includes('completed')) {
+      const index = completedTasks.findIndex((task) => task.id === id);
+      const taskToUncomplete = completedTasks[index];
+      setActiveTasks((prevActiveTasks) => [
+        taskToUncomplete,
+        ...prevActiveTasks,
+      ]);
+      setCompletedTasks((prevCompletedTasks) => prevCompletedTasks.filter((_, i) => i !== index));
+    } else {
+      const index = activeTasks.findIndex((task) => task.id === id);
+      const taskToComplete = activeTasks[index];
+      setCompletedTasks((prevCompletedTasks) => [
+        taskToComplete,
+        ...prevCompletedTasks,
+      ]);
+      setActiveTasks((prevActiveTasks) => prevActiveTasks.filter((_, i) => i !== index));
+    }
   };
 
   const handleTaskDeletion = (id) => {
-    setTasks((prevTasks) =>
+    setActiveTasks((prevTasks) =>
+      prevTasks.filter((task) => task.id !== id)
+    );
+    setCompletedTasks((prevTasks) =>
       prevTasks.filter((task) => task.id !== id)
     );
   };
 
-  const moveTask = (fromIndex, toIndex, listType) => {
-    setTasks(prevTasks => {
-      const tasksOfType = prevTasks.filter(task => task.listType === listType);
-      const allOtherTasks = prevTasks.filter(task => task.listType !== listType);
-  
-      const draggedTask = tasksOfType[fromIndex];
-      const newTasksOfType = [...tasksOfType];
-      newTasksOfType.splice(fromIndex, 1); // remove the dragged task
-      newTasksOfType.splice(toIndex, 0, draggedTask); // insert the dragged task at the new position
-  
-      // If the list type is 'need-to-do', the new task list should start with tasks of type 'need-to-do'
-      return listType === 'need-to-do' 
-        ? [...newTasksOfType, ...allOtherTasks] 
-        : [...allOtherTasks, ...newTasksOfType];
-    });
-  };
-
   const switchTaskList = (id, newListType) => {
-    setTasks((prevTasks) => {
+    setActiveTasks((prevTasks) => {
       const updatedTasks = prevTasks.map((task) =>
         task.id === id ? { ...task, listType: newListType } : task
       );
       return updatedTasks;
     });
   };
-  
-  
 
+  useEffect(() => {
+    saveToLocalStorage('activeTasks', activeTasks);
+    saveToLocalStorage('completedTasks', completedTasks);
+  }, [activeTasks, completedTasks]);
 
   return {
-    tasks,
+    activeTasks,
+    completedTasks,
     addTask,
-    handleTaskCompletion,
+    toggleTaskCompletion,
     handleTaskDeletion,
-    moveTask,
-    isMoving,
     switchTaskList,
   };
 }
