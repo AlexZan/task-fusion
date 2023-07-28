@@ -34,36 +34,39 @@ function Task({ task, listType, index, tasks }) {
         onChange={() => toggleTaskCompletion(task.id, listType)}
       />
       <p className="dark:text-white">{task.task}</p>
-      {!isCompletedList && index > 0 && (
-        <button
-          className="ml-2 text-gray-500 hover:text-green-500 transition-colors duration-200 hide-button"
-          onClick={moveUp}
-        >
-          <AiOutlineArrowUp />
-        </button>
+      {!isCompletedList && (
+        <>
+          {index > 0 && (
+            <TaskButton onClick={moveUp} className="text-green-500">
+              <AiOutlineArrowUp />
+            </TaskButton>
+          )}
+          {index < tasks.length - 1 && (
+            <TaskButton onClick={moveDown} className="text-green-500">
+              <AiOutlineArrowDown />
+            </TaskButton>
+          )}
+          <TaskButton onClick={switchList} className="text-green-500">
+            {listType === 'need-to-do' ? <AiOutlineArrowRight /> : <AiOutlineArrowLeft />}
+          </TaskButton>
+        </>
       )}
-      {!isCompletedList && index < tasks.length - 1 && (
-        <button
-          className="ml-2 text-gray-500 hover:text-green-500 transition-colors duration-200 hide-button"
-          onClick={moveDown}
-        >
-          <AiOutlineArrowDown />
-        </button>
-      )}
-      <button
-        className="ml-2 text-gray-500 hover:text-green-500 transition-colors duration-200 hide-button"
-        onClick={switchList}
-      >
-        {listType === 'need-to-do' ? <AiOutlineArrowRight /> : <AiOutlineArrowLeft />}
-      </button>
-      <button
-        className="ml-2 text-gray-500 hover:text-red-500 transition-colors duration-200 hide-button"
-        onClick={() => handleTaskDeletion(task.id)}
-      >
+      <TaskButton onClick={() => handleTaskDeletion(task.id)} className="text-red-500">
         <AiOutlineDelete />
-      </button>
+      </TaskButton>
     </div>
   );
+  
 }
+
+const TaskButton = ({ onClick, children, className }) => (
+  <button
+    className={`ml-2 text-gray-500 hover:${className} transition-colors duration-200 hide-button`}
+    onClick={onClick}
+  >
+    {children}
+  </button>
+);
+
 
 export default Task;
