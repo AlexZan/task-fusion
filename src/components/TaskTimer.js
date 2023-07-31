@@ -1,9 +1,8 @@
-// components/TaskTimer.js
 import React, { useState } from 'react';
 import ConfigModal from './ConfigModal';
 import TaskTimerDisplayControl from './TaskTimerDisplayControl';
 import useTimer from '../hooks/useTimer';
-import { FaCog } from 'react-icons/fa';
+import { FaCog, FaExchangeAlt  } from 'react-icons/fa';
 
 function TaskTimer() {
   const {
@@ -16,16 +15,19 @@ function TaskTimer() {
     start,
     stop,
     reset,
-    isRunning
+    isRunning,
+    switchTimer
   } = useTimer(40, 20);
 
   const [isConfigOpen, setIsConfigOpen] = useState(false);
+  console.log("isNeedToDoTime : ", isNeedToDoTime)
+
 
   const handleConfigOpen = () => {
     setIsConfigOpen(true);
   };
 
-  const handleConfigClose = () => {
+  const handleClose = () => {
     setIsConfigOpen(false);
   };
 
@@ -50,9 +52,10 @@ function TaskTimer() {
         reset={reset}
         isRunning={isRunning}
       />
+      <button onClick={switchTimer} className="mt-4 text-gray-500 hover:text-blue-500 transition-colors duration-200"><FaExchangeAlt /></button>
       <ConfigModal
         isOpen={isConfigOpen}
-        onRequestClose={handleConfigClose}
+        onClose={handleClose}
         onConfirm={handleConfigConfirm}
         needToDoTime={needToDoTime}
         wantToDoTime={wantToDoTime}

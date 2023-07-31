@@ -10,24 +10,6 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
   const [isNeedToDoTime, setIsNeedToDoTime] = useState(true);
   const [isRunning, setIsRunning] = useState(loadFromLocalStorage('isRunning') || false);
 
-  const start = () => {
-    if (!isRunning) {
-      setIsRunning(true);
-      playBeep();
-    }
-  };
-
-  const stop = () => {
-    if (isRunning) {
-      setIsRunning(false);
-    }
-  };
-
-  const reset = () => {
-    stop();
-    setTimeLeft(isNeedToDoTime ? needToDoTime : wantToDoTime);
-  };
-
   useEffect(() => {
     if (timeLeft === 0) {
       setIsNeedToDoTime(!isNeedToDoTime);
@@ -56,7 +38,31 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
   
     return () => clearInterval(timerId);
   }, [isNeedToDoTime, isRunning, needToDoTime, wantToDoTime]);
-  
+
+  const start = () => {
+    if (!isRunning) {
+      setIsRunning(true);
+      playBeep();
+    }
+  };
+
+  const stop = () => {
+    if (isRunning) {
+      setIsRunning(false);
+    }
+  };
+
+ const reset = (isNeedToDoTime) => {
+    setTimeLeft(isNeedToDoTime ? needToDoTime : wantToDoTime);
+    setIsRunning(false);
+  };
+
+  const switchTimer = () => {
+    const newIsNeedToDoTime = !isNeedToDoTime;
+    setIsNeedToDoTime(newIsNeedToDoTime);
+    reset(newIsNeedToDoTime);
+  };
+ 
   return {
     needToDoTime,
     wantToDoTime,
@@ -67,6 +73,7 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
     start,
     stop,
     reset,
-    isRunning
+    isRunning,
+    switchTimer
   };
 }
