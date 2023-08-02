@@ -1,6 +1,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import './theme.css';
 
 /* Hide delete button by default */
 .task-container .hide-button {

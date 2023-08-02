@@ -1,0 +1,64 @@
+/* theme.css */
+.theme-bg-darker {
+    @apply dark:bg-gray-900;
+}
+
+.theme-bg-dark {
+    @apply dark:bg-gray-800;
+}
+
+.theme-text-dark {
+    @apply dark:text-white;
+}
+
+.padding-small {
+    @apply p-2;
+}
+
+.padding-medium {
+    @apply p-4;
+}
+
+.padding-large {
+    @apply p-6;
+}
+
+.margin-small {
+    @apply m-2;
+}
+
+.margin-bottom-small {
+    @apply mb-2;
+}
+
+.margin-right-small {
+    @apply mr-2;
+}
+
+.margin-top-medium {
+    @apply mt-4;
+}
+
+.border-radius-medium {
+    @apply rounded-md;  
+}
+
+.border-radius-large {
+    @apply rounded-lg;
+}
+
+.tab-selected-dark {
+    @apply bg-gray-600;
+}
+
+.theme-tab-list-bg {
+    @apply bg-gray-700;
+}
+
+.input-theme {
+    @apply p-2 rounded-md bg-white text-black dark:bg-gray-700 dark:text-white margin-small;
+}
+
+.dropdown-theme {
+    @apply p-2 rounded-md bg-white text-black dark:bg-gray-700 dark:text-white;
+}

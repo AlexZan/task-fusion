@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import RepeatTasksModal from './RepeatTasksModal';
+import { FaClock } from 'react-icons/fa';
 
 function TaskForm({ addTask }) {
   const [task, setTask] = useState('');
   const [listType, setListType] = useState('need-to-do');
   const [recurrence, setRecurrence] = useState('once');
+  const [isRepeatingTasksModalOpen, setIsRepeatingTasksModalOpen] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -49,8 +52,19 @@ function TaskForm({ addTask }) {
             {/* Add more options as needed */}
           </select>
         </div>
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded-md w-1/3">Add Task</button>
+        <div className="w-1/3 flex justify-between">
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded-md w-1/2">Add Task</button>
+          <button
+            type="button"
+            onClick={() => setIsRepeatingTasksModalOpen(true)}
+            className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2"
+          >
+            <FaClock size={16} />
+          </button>
+
+        </div>
       </div>
+      <RepeatTasksModal isOpen={isRepeatingTasksModalOpen} onClose={() => setIsRepeatingTasksModalOpen(false)} />
     </form>
   );
 }

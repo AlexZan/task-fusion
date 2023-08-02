@@ -5,7 +5,10 @@ module.exports = {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: {
+      backgroundColor: ['dark'],
+      textColor: ['dark'],
+    },
   },
-  plugins: [],
+  plugins: [require('@headlessui/tailwindcss'),],
 }

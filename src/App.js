@@ -10,19 +10,19 @@ import TaskTimer from './components/TaskTimer';
 function App() {
   return (
     <TasksProvider>
-      <div className="App dark:bg-gray-900 min-h-screen text-white">
-        <header className="text-center p-4">
+      <div className="App theme-bg-darker min-h-screen theme-text-dark">
+        <header className="text-center padding-medium">
           <img src={process.env.PUBLIC_URL + '/logo-thin.PNG'} alt="Logo" className="mx-auto w-1/2 max-w-xs" />
         </header>
         <div className="container mx-auto max-w-5xl">
           <TaskTimer />
           <TaskForm />
           <DndProvider backend={HTML5Backend}>
-            <div className="flex  dark:bg-gray-800 p-6 rounded-lg mt-4">
+            <div className="flex theme-bg-dark padding-large border-radius-large margin-top-medium">
               <TaskListSection listType="need-to-do" />
               <TaskListSection listType="want-to-do" />
             </div>
-            <div className="flex  dark:bg-gray-800 p-6 rounded-lg mt-4">
+            <div className="flex theme-bg-dark padding-large border-radius-large margin-top-medium">
               <TaskListSection listType="completed-need-to-do" />
               <TaskListSection listType="completed-want-to-do" />
             </div>
@@ -44,12 +44,11 @@ function TaskListSection({ listType }) {
   }
 
   return (
-    <div className="w-1/2 p-4">
-      <h2 className="text-2xl mb-4">{listType.replace('-', ' ')}</h2>
+    <div className="w-1/2 padding-medium">
+      <h2 className="text-2xl margin-bottom-small">{listType.replace('-', ' ')}</h2>
       <TaskList tasks={tasks} listType={listType} />
     </div>
   );
 }
-
 
 export default App;

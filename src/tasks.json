@@ -3,42 +3,50 @@
     {
       "id": 1,
       "task": "Complete project report",
-      "listType": "need-to-do"
+      "listType": "need-to-do",
+      "repeat": null
     },
     {
       "id": 2,
       "task": "Prepare for meeting",
-      "listType": "need-to-do"
+      "listType": "need-to-do",
+      "repeat": null
     },
     {
       "id": 3,
       "task": "Send emails",
-      "listType": "need-to-do"
+      "listType": "need-to-do",
+      "repeat": "1 day"
     },
     {
       "id": 4,
       "task": "Review code",
-      "listType": "need-to-do"
+      "listType": "need-to-do",
+      "repeat": "1 week"
     },
     {
       "id": 5,
       "task": "Read a book",
-      "listType": "want-to-do"
+      "listType": "want-to-do",
+      "repeat": "1 month"
     },
     {
       "id": 6,
       "task": "Practice guitar",
-      "listType": "want-to-do"
+      "listType": "want-to-do",
+      "repeat": "2 days"
     },
     {
       "id": 7,
       "task": "Workout",
-      "listType": "want-to-do"
+      "listType": "want-to-do",
+      "repeat": "2 weeks"
     },
     {
       "id": 8,
       "task": "Meditate",
-      "listType": "want-to-do"
+      "listType": "want-to-do",
+      "repeat": "10 days"
     }
   ]
 }

@@ -20,7 +20,6 @@ function TaskTimer() {
   } = useTimer(40, 20);
 
   const [isConfigOpen, setIsConfigOpen] = useState(false);
-  console.log("isNeedToDoTime : ", isNeedToDoTime)
 
 
   const handleConfigOpen = () => {
