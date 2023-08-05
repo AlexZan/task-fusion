@@ -16,37 +16,37 @@
       "id": 3,
       "task": "Send emails",
       "listType": "need-to-do",
-      "repeat": "1 day"
+      "repeat": 1440
     },
     {
       "id": 4,
       "task": "Review code",
       "listType": "need-to-do",
-      "repeat": "1 week"
+      "repeat": 10080
     },
     {
       "id": 5,
       "task": "Read a book",
       "listType": "want-to-do",
-      "repeat": "1 month"
+      "repeat": 43200
     },
     {
       "id": 6,
       "task": "Practice guitar",
       "listType": "want-to-do",
-      "repeat": "2 days"
+      "repeat": 2880
     },
     {
       "id": 7,
       "task": "Workout",
       "listType": "want-to-do",
-      "repeat": "2 weeks"
+      "repeat": 20160
     },
     {
       "id": 8,
       "task": "Meditate",
       "listType": "want-to-do",
-      "repeat": "10 days"
+      "repeat": 14400
     }
   ]
 }

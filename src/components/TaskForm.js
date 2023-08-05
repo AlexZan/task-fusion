@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import RepeatTasksModal from './RepeatTasksModal';
+import RepeatTasksModal from './RepeatTasks/RepeatTasksModal';
 import { FaClock } from 'react-icons/fa';
+import { convertToMinutes } from '../utils/timeUtils';
 
 function TaskForm({ addTask }) {
   const [task, setTask] = useState('');
   const [listType, setListType] = useState('need-to-do');
-  const [recurrence, setRecurrence] = useState('once');
+  const [recurrence, setRecurrence] = useState({ value: 1, unit: 'once' });
   const [isRepeatingTasksModalOpen, setIsRepeatingTasksModalOpen] = useState(false);
 
   const handleSubmit = (event) => {
@@ -15,7 +16,7 @@ function TaskForm({ addTask }) {
       id: Date.now().toString(),
       task,
       listType,
-      recurrence,
+      recurrence: convertToMinutes(recurrence.value, recurrence.unit),
       status: 'not-completed',
       completionTime: null,
       completed: false,
@@ -23,7 +24,13 @@ function TaskForm({ addTask }) {
 
     setTask('');
     setListType('need-to-do');
-    setRecurrence('once');
+    setRecurrence({ value: 1, unit: 'once' });
+  };
+
+  const handleRecurrenceChange = (e) => {
+    const value = e.target.value.split(' ')[0];
+    const unit = e.target.value.split(' ')[1] || 'once';
+    setRecurrence({ value, unit });
   };
 
   return (
@@ -45,7 +52,7 @@ function TaskForm({ addTask }) {
         </div>
         <div className="w-1/3 mr-2">
           <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2" htmlFor="recurrence">Recurrence</label>
-          <select id="recurrence" value={recurrence} onChange={(e) => setRecurrence(e.target.value)} className="dark:bg-gray-700 dark:text-white p-2 rounded-md w-full">
+          <select id="recurrence" value={`${recurrence.value} ${recurrence.unit}`} onChange={handleRecurrenceChange} className="dark:bg-gray-700 dark:text-white p-2 rounded-md w-full">
             <option value="once">Once</option>
             <option value="1 day">1 Day</option>
             <option value="1 week">1 Week</option>
@@ -70,3 +77,4 @@ function TaskForm({ addTask }) {
 }
 
 export default TaskForm;
+

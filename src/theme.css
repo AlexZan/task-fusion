@@ -56,9 +56,19 @@
 }
 
 .input-theme {
-    @apply p-2 rounded-md bg-white text-black dark:bg-gray-700 dark:text-white margin-small;
+    @apply p-2 rounded-md bg-white dark:text-white dark:bg-gray-700 margin-small;
+    height: 2.6rem;
+
 }
 
 .dropdown-theme {
-    @apply p-2 rounded-md bg-white text-black dark:bg-gray-700 dark:text-white;
+    @apply p-2 rounded-md bg-white dark:text-white dark:bg-gray-700;
+    height: 2.5rem;
+
 }
+
+.input-group {
+    display: flex;
+    align-items: center;
+  }
+  
