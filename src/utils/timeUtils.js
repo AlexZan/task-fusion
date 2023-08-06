@@ -51,7 +51,7 @@ export function formatRepeatTime(minutes) {
     } else if (minutes % 1440 === 0) {
         return `${minutes / 1440} day`;
     } else {
-        return `${minutes} minutes`;
+        return `${minutes} minute`;
     }
 }
 

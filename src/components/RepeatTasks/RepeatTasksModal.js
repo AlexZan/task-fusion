@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { FaTimes } from 'react-icons/fa';
 import { loadFromLocalStorage } from '../../utils/localStorage';
 import ThemedDialog from '../ThemedDialog';
 import useTasks from '../../hooks/useTasks';
 import RepeatTaskTimeControl from './RepeatTaskTimeControl';
+import { saveToLocalStorage } from '../../utils/localStorage';
 
 function TaskTitleColumn({ task }) {
   return <div className="theme-text-dark">{task.task}</div>;
@@ -34,6 +36,11 @@ export default function RepeatTasksModal({ isOpen, onClose }) {
 
   // Track the ID of the recently added task
   const [recentlyAddedTaskId, setRecentlyAddedTaskId] = useState(null);
+
+  useEffect(() => {
+    saveToLocalStorage('repeatTasks', tasks);
+  }, [tasks]);
+  
 
   const handleInputKeyPress = (e) => {
     if (e.key === 'Enter' && newTask.task.trim() !== '' && newTask.repeat > 0) { // Validate task and repeat time
