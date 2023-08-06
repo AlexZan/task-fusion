@@ -5,35 +5,45 @@
 
 /* Hide delete button by default */
 .task-container .hide-button {
-    display: none;
+  display: none;
+}
+
+/* Show delete button when task is hovered over */
+.task-container:hover .hide-button {
+  display: inline;
+}
+
+.task-container {
+  transition: all 0.3s ease;
+  /* Smooth transition for all properties */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Add a soft shadow */
+  border-radius: 8px;
+  /* Rounded corners */
+  padding-left: 12px;
+}
+
+@keyframes highlight {
+  0% {
+    background-color: #a4c6e465;
+    /* Starting color */
+    transform: scale(1.02);
+    /* Slightly enlarging the task */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Increase shadow */
   }
-  
-  /* Show delete button when task is hovered over */
-  .task-container:hover .hide-button {
-    display: inline;
+
+  100% {
+    background-color: transparent;
+    /* Final state */
+    transform: scale(1);
+    /* Return to normal size */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Return to normal shadow */
   }
-  
-  .task-container {
-    transition: all 0.3s ease; /* Smooth transition for all properties */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a soft shadow */
-    border-radius: 8px; /* Rounded corners */
-    padding-left: 12px;
-  }
-  
-  @keyframes highlight {
-    0% {
-      background-color: #a4c6e465; /* Starting color */
-      transform: scale(1.02); /* Slightly enlarging the task */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase shadow */
-    }
-    100% {
-      background-color: transparent; /* Final state */
-      transform: scale(1); /* Return to normal size */
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Return to normal shadow */
-    }
-  }
-  
-  .highlight-task {
-    animation: highlight 1s ease-out; /* 1-second animation */
-  }
-  
+}
+
+.highlight-task {
+  animation: highlight 1s ease-out;
+  /* 1-second animation */
+}
