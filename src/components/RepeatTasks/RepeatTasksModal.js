@@ -3,7 +3,7 @@ import { FaTimes } from 'react-icons/fa';
 import { saveToLocalStorage, loadFromLocalStorage } from '../../utils/localStorage'; // Adjust the path accordingly
 import ThemedDialog from '../ThemedDialog';
 import useTasks from '../../hooks/useTasks';
-import RepeatTimeDropdownColumn from './RepeatTimeDropdownColumn';
+import RepeatTaskTimeControl from './RepeatTaskTimeControl';
 
 // Components for table columns
 function TaskTitleColumn({ task }) {
@@ -27,7 +27,7 @@ export default function RepeatTasksModal({ isOpen, onClose }) {
   const allTasks = [...activeTasks, ...completedTasks];
   
   // Load tasks from localStorage when the component mounts
-  const [tasks, setTasks] = useState(() => loadFromLocalStorage('repeatTasks') || allTasks.filter(task => task.repeat !== null));
+  const [tasks, setTasks] = useState(() => loadFromLocalStorage('repeatTasks') || allTasks.filter(task => task.repeat && task.repeat > 0));
 
   useEffect(() => {
     // Save tasks to localStorage whenever they change
@@ -50,7 +50,7 @@ export default function RepeatTasksModal({ isOpen, onClose }) {
         <RepeatTasksTable tasks={tasks} setTasks={setTasks}>
           {(task, setTask) => [
             <TaskTitleColumn task={task} />,
-            <RepeatTimeDropdownColumn task={task} setTask={setTask} />
+            <RepeatTaskTimeControl task={task} setTask={setTask} />
           ]}
         </RepeatTasksTable>
       </div>

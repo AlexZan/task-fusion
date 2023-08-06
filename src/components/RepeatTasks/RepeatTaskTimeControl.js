@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { convertToMinutes, formatRepeatTime } from '../../utils/timeUtils';
 
-export default function RepeatTimeDropdownColumn({ task, setTask }) {
+export default function RepeatTaskTimeControl({ task, setTask }) {
   const repeatString = formatRepeatTime(task.repeat);
   const [value, setValue] = useState(repeatString.split(' ')[0]);
   const [unit, setUnit] = useState(repeatString.split(' ')[1]); // Add unit state

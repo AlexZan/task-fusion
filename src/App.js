@@ -1,9 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { TasksProvider, useTasksContext } from './context/TasksContext';
-import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 import TaskTimer from './components/TaskTimer';
 
@@ -16,7 +15,6 @@ function App() {
         </header>
         <div className="container mx-auto max-w-5xl">
           <TaskTimer />
-          <TaskForm />
           <DndProvider backend={HTML5Backend}>
             <div className="flex theme-bg-dark padding-large border-radius-large margin-top-medium">
               <TaskListSection listType="need-to-do" />
@@ -34,11 +32,27 @@ function App() {
 }
 
 function TaskListSection({ listType }) {
-  const { activeTasks, completedTasks } = useTasksContext();
-  let tasks;
+  const { activeTasks, completedTasks, addTask } = useTasksContext();
+  const [newTask, setNewTask] = useState('');
 
+  const handleInputChange = (e) => {
+    setNewTask(e.target.value);
+  };
+
+  const handleInputKeyPress = (e) => {
+    if (e.key === 'Enter' && newTask.trim() !== '') {
+      addTask({
+        task: newTask,
+        listType,
+        repeat: null,
+      });
+      setNewTask(''); // Clear the input after adding the task
+    }
+  };
+
+  let tasks;
   if (listType.startsWith('completed')) {
-    tasks = completedTasks.filter(task => task.listType === listType.slice(10)); // remove 'completed-' from listType
+    tasks = completedTasks.filter(task => task.listType === listType.slice(10));
   } else {
     tasks = activeTasks.filter(task => task.listType === listType);
   }
@@ -46,9 +60,21 @@ function TaskListSection({ listType }) {
   return (
     <div className="w-1/2 padding-medium">
       <h2 className="text-2xl margin-bottom-small">{listType.replace('-', ' ')}</h2>
+      {/* Input box for adding new tasks - only for active lists */}
+      {listType !== 'completed-need-to-do' && listType !== 'completed-want-to-do' && (
+        <input
+          type="text"
+          value={newTask}
+          onChange={handleInputChange}
+          onKeyPress={handleInputKeyPress}
+          className="input-theme"
+          placeholder="Type a new task and press Enter"
+        />
+      )}
       <TaskList tasks={tasks} listType={listType} />
     </div>
   );
 }
+
 
 export default App;
