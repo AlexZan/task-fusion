@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import { TasksContext } from '../context/TasksContext';
-import { AiOutlineDelete, AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
+import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
+import DeleteButton from './DeleteButton';
 
-function Task({ task, listType, index, tasks, recentlyAdded  }) {
+function Task({ task, listType, index, tasks, recentlyAdded }) {
   const { toggleTaskCompletion, handleTaskDeletion, moveTask, switchTaskList } = useContext(TasksContext);
 
   const isCompletedList = listType.includes('completed');
@@ -60,9 +61,7 @@ function Task({ task, listType, index, tasks, recentlyAdded  }) {
           </TaskButton>
         </>
       )}
-      <TaskButton onClick={() => handleTaskDeletion(task.id)} className="text-red-500">
-        <AiOutlineDelete />
-      </TaskButton>
+      <DeleteButton onClick={() => handleTaskDeletion(task.id)} className="text-red-500" />
     </div>
   );
 }

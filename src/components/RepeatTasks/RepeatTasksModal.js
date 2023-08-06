@@ -6,17 +6,24 @@ import ThemedDialog from '../ThemedDialog';
 import useTasks from '../../hooks/useTasks';
 import RepeatTaskTimeControl from './RepeatTaskTimeControl';
 import { saveToLocalStorage } from '../../utils/localStorage';
+import DeleteButton from '../DeleteButton';
 
 function TaskTitleColumn({ task }) {
   return <div className="theme-text-dark">{task.task}</div>;
 }
 
-function RepeatTasksTable({ tasks, setTasks, children, recentlyAddedTaskId }) {
+function RepeatTasksTable({ tasks, setTasks, children, recentlyAddedTaskId, deleteTask }) {
   return tasks.map((task) => (
-    <div key={task.id} className={`flex justify-between items-center ${task.id === recentlyAddedTaskId ? 'highlight-task' : ''}`}>
-      {children(task, (newTask) => setTasks(prevTasks => prevTasks.map(t => t.id === newTask.id ? newTask : t))).map((Child, index) => (
-        <React.Fragment key={index}>{Child}</React.Fragment>
-      ))}
+    <div
+      key={task.id}
+      className={`task-container flex justify-between items-center ${task.id === recentlyAddedTaskId ? 'highlight-task' : ''}`}
+    >
+      <div className="flex-grow flex justify-between items-center">
+        {children(task, (newTask) => setTasks(prevTasks => prevTasks.map(t => t.id === newTask.id ? newTask : t))).map((Child, index) => (
+          <React.Fragment key={index}>{Child}</React.Fragment>
+        ))}
+      </div>
+      <DeleteButton onDelete={() => deleteTask(task.id)} className="text-red-500 mr-2" />
     </div>
   ));
 }
@@ -34,13 +41,17 @@ export default function RepeatTasksModal({ isOpen, onClose }) {
     repeat: 1,
   });
 
+  const deleteTask = (taskId) => {
+    setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+  };
+
   // Track the ID of the recently added task
   const [recentlyAddedTaskId, setRecentlyAddedTaskId] = useState(null);
 
   useEffect(() => {
     saveToLocalStorage('repeatTasks', tasks);
   }, [tasks]);
-  
+
 
   const handleInputKeyPress = (e) => {
     if (e.key === 'Enter' && newTask.task.trim() !== '' && newTask.repeat > 0) { // Validate task and repeat time
@@ -84,7 +95,7 @@ export default function RepeatTasksModal({ isOpen, onClose }) {
           />
           <RepeatTaskTimeControl task={newTask} setTask={setNewTask} onKeyPress={handleInputKeyPress} />
         </div>
-        <RepeatTasksTable tasks={tasks} setTasks={setTasks} recentlyAddedTaskId={recentlyAddedTaskId}>
+        <RepeatTasksTable tasks={tasks} setTasks={setTasks} recentlyAddedTaskId={recentlyAddedTaskId} deleteTask={deleteTask}>
           {(task, setTask) => [
             <TaskTitleColumn task={task} />,
             <RepeatTaskTimeControl task={task} setTask={setTask} />,
