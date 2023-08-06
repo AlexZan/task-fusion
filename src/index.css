@@ -22,7 +22,7 @@
   
   @keyframes highlight {
     0% {
-      background-color: #8db0cea6; /* Starting color */
+      background-color: #a4c6e465; /* Starting color */
       transform: scale(1.02); /* Slightly enlarging the task */
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase shadow */
     }

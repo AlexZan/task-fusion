@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { convertToMinutes, formatRepeatTime } from '../../utils/timeUtils';
 
-export default function RepeatTaskTimeControl({ task, setTask }) {
+export default function RepeatTaskTimeControl({ task, setTask, onKeyPress }) {
   const repeatString = formatRepeatTime(task.repeat);
   const [value, setValue] = useState(repeatString.split(' ')[0]);
   const [unit, setUnit] = useState(repeatString.split(' ')[1]); // Add unit state
@@ -37,10 +37,11 @@ export default function RepeatTaskTimeControl({ task, setTask }) {
         type="text"
         value={value}
         onChange={handleChangeValue}
+        onKeyDown={onKeyPress} // Handle Enter key press in the time value input
       />
       <select
-        value={unit} // Set the value to the unit state
-        onChange={handleChangeUnit} // Use the renamed function
+        value={unit}
+        onChange={handleChangeUnit}
         className="dropdown-theme"
       >
         {options.map(option => (

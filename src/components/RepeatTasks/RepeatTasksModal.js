@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react'; // Added useEffect
+import React, { useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
-import { saveToLocalStorage, loadFromLocalStorage } from '../../utils/localStorage'; // Adjust the path accordingly
+import { loadFromLocalStorage } from '../../utils/localStorage';
 import ThemedDialog from '../ThemedDialog';
 import useTasks from '../../hooks/useTasks';
 import RepeatTaskTimeControl from './RepeatTaskTimeControl';
 
-// Components for table columns
 function TaskTitleColumn({ task }) {
   return <div className="theme-text-dark">{task.task}</div>;
 }
 
-// The table component
-function RepeatTasksTable({ tasks, setTasks, children }) {
+function RepeatTasksTable({ tasks, setTasks, children, recentlyAddedTaskId }) {
   return tasks.map((task) => (
-    <div key={task.id} className="flex justify-between items-center">
+    <div key={task.id} className={`flex justify-between items-center ${task.id === recentlyAddedTaskId ? 'highlight-task' : ''}`}>
       {children(task, (newTask) => setTasks(prevTasks => prevTasks.map(t => t.id === newTask.id ? newTask : t))).map((Child, index) => (
         <React.Fragment key={index}>{Child}</React.Fragment>
       ))}
@@ -21,39 +19,73 @@ function RepeatTasksTable({ tasks, setTasks, children }) {
   ));
 }
 
+
 // The modal
 export default function RepeatTasksModal({ isOpen, onClose }) {
   const { activeTasks, completedTasks } = useTasks();
   const allTasks = [...activeTasks, ...completedTasks];
-  
-  // Load tasks from localStorage when the component mounts
+
   const [tasks, setTasks] = useState(() => loadFromLocalStorage('repeatTasks') || allTasks.filter(task => task.repeat && task.repeat > 0));
 
-  useEffect(() => {
-    // Save tasks to localStorage whenever they change
-    saveToLocalStorage('repeatTasks', tasks);
-  }, [tasks]);
+  const [newTask, setNewTask] = useState({
+    task: '',
+    repeat: 1,
+  });
+
+  // Track the ID of the recently added task
+  const [recentlyAddedTaskId, setRecentlyAddedTaskId] = useState(null);
+
+  const handleInputKeyPress = (e) => {
+    if (e.key === 'Enter' && newTask.task.trim() !== '' && newTask.repeat > 0) { // Validate task and repeat time
+      const newTaskId = Date.now().toString();
+      setTasks([...tasks, { ...newTask, id: newTaskId }]);
+      setNewTask({ task: '', repeat: 1 }); // Set the repeat value to 1 instead of null
+      setRecentlyAddedTaskId(newTaskId); // Set the recently added task ID
+    }
+  };
+
+  const handleCloseModal = () => {
+    setRecentlyAddedTaskId(null); // Reset the recently added task ID
+    onClose(); // Call the provided onClose function
+  };
+
+
+
 
   return (
     <ThemedDialog open={isOpen} onClose={onClose} width="max-w-4xl">
       <button
-        onClick={onClose}
+        onClick={handleCloseModal}
         className="absolute top-2 right-2 p-2 bg-gray-800 text-white rounded-full hover:bg-gray-700"
         aria-label="Close modal"
       >
         <FaTimes />
       </button>
+
       <ThemedDialog.Title className="text-3xl leading-6 font-medium theme-text-dark padding-large">
         Repeat Tasks
       </ThemedDialog.Title>
       <div className="padding-medium text-lg">
-        <RepeatTasksTable tasks={tasks} setTasks={setTasks}>
+        <div className="flex justify-between items-center">
+          <input
+            type="text"
+            value={newTask.task}
+            onChange={(e) => setNewTask({ ...newTask, task: e.target.value })}
+            onKeyDown={handleInputKeyPress} // Handle Enter key press
+            className="input-theme w-full -ml-1" // Apply a negative left margin
+            placeholder="Type a new repeat task and press Enter"
+          />
+          <RepeatTaskTimeControl task={newTask} setTask={setNewTask} onKeyPress={handleInputKeyPress} />
+        </div>
+        <RepeatTasksTable tasks={tasks} setTasks={setTasks} recentlyAddedTaskId={recentlyAddedTaskId}>
           {(task, setTask) => [
             <TaskTitleColumn task={task} />,
-            <RepeatTaskTimeControl task={task} setTask={setTask} />
+            <RepeatTaskTimeControl task={task} setTask={setTask} />,
           ]}
         </RepeatTasksTable>
+
       </div>
     </ThemedDialog>
   );
 }
+
