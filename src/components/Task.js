@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { TasksContext } from '../context/TasksContext';
 import { AiOutlineDelete, AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 
-function Task({ task, listType, index, tasks }) {
+function Task({ task, listType, index, tasks, recentlyAdded  }) {
   const { toggleTaskCompletion, handleTaskDeletion, moveTask, switchTaskList } = useContext(TasksContext);
 
   const isCompletedList = listType.includes('completed');
@@ -25,8 +25,17 @@ function Task({ task, listType, index, tasks }) {
     switchTaskList(task.id, newListType);
   };
 
+  const TaskButton = ({ onClick, children, className }) => (
+    <button
+      className={`ml-2 text-gray-500 hover:${className} transition-colors duration-200 hide-button`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+
   return (
-    <div className="flex items-center mb-2 task-container">
+    <div className={`flex items-center mb-2 task-container ${recentlyAdded ? 'highlight-task' : ''}`}>
       <input
         type="checkbox"
         checked={isCompletedList}
@@ -56,17 +65,6 @@ function Task({ task, listType, index, tasks }) {
       </TaskButton>
     </div>
   );
-  
 }
-
-const TaskButton = ({ onClick, children, className }) => (
-  <button
-    className={`ml-2 text-gray-500 hover:${className} transition-colors duration-200 hide-button`}
-    onClick={onClick}
-  >
-    {children}
-  </button>
-);
-
 
 export default Task;

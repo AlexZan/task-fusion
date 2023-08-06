@@ -1,9 +1,8 @@
-import React from 'react';
 import Task from './Task';
 
-function TaskList({ tasks, listType }) {
+function TaskList({ tasks, listType, recentlyAddedTaskId }) {
   return (
-    <div >
+    <div>
       {tasks.map((task, index) => (
         <Task
           key={task.id}
@@ -11,6 +10,7 @@ function TaskList({ tasks, listType }) {
           task={task}
           listType={listType}
           tasks={tasks}
+          recentlyAdded={task.id === recentlyAddedTaskId} // Pass the recentlyAdded prop
         />
       ))}
     </div>
