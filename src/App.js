@@ -36,13 +36,13 @@ function App() {
             <div className="relative">
             <RepeatTasksButton onClick={() => setIsRepeatingTasksModalOpen(true)} />
               <div className="flex theme-bg-dark padding-large border-radius-large margin-top-medium">
-                <TaskListSection listType="need-to-do" />
-                <TaskListSection listType="want-to-do" />
+                <TaskListSection listType="need-to-do" title="Need to Do" />
+                <TaskListSection listType="want-to-do" title="Want to Do" />
               </div>
             </div>
             <div className="flex theme-bg-dark padding-large border-radius-large margin-top-medium">
-              <TaskListSection listType="completed-need-to-do" />
-              <TaskListSection listType="completed-want-to-do" />
+              <TaskListSection listType="completed-need-to-do" title="Completed Need to Do" />
+              <TaskListSection listType="completed-want-to-do" title="Completed Want to Do" />
             </div>
           </DndProvider>
         </div>

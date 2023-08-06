@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTasksContext } from '../context/TasksContext';
 import TaskList from '../components/TaskList';
 
-export default function TaskListSection({ listType }) {
+export default function TaskListSection({ listType, title }) {
     const { activeTasks, completedTasks, addTask } = useTasksContext();
     const [newTask, setNewTask] = useState('');
   
@@ -39,7 +39,7 @@ export default function TaskListSection({ listType }) {
   
     return (
         <div className="w-1/2 padding-medium relative"> {/* Add relative positioning here */}
-          <h2 className="text-2xl margin-bottom-small">{listType.replace('-', ' ')}</h2>
+          <h2 className="text-2xl margin-bottom-small">{title}</h2>
           {/* Input box for adding new tasks - only for active lists */}
           {listType !== 'completed-need-to-do' && listType !== 'completed-want-to-do' && (
             <input
