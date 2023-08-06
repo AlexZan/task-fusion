@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-
 import { FaTimes } from 'react-icons/fa';
+import { AiOutlineDelete } from 'react-icons/ai';
+
 import { loadFromLocalStorage } from '../../utils/localStorage';
 import ThemedDialog from '../ThemedDialog';
 import useTasks from '../../hooks/useTasks';
 import RepeatTaskTimeControl from './RepeatTaskTimeControl';
 import { saveToLocalStorage } from '../../utils/localStorage';
-import DeleteButton from '../DeleteButton';
+import { IconButton } from '../IconButton';
+
 
 function TaskTitleColumn({ task }) {
   return <div className="theme-text-dark">{task.task}</div>;
@@ -23,7 +25,9 @@ function RepeatTasksTable({ tasks, setTasks, children, recentlyAddedTaskId, dele
           <React.Fragment key={index}>{Child}</React.Fragment>
         ))}
       </div>
-      <DeleteButton onDelete={() => deleteTask(task.id)} className="text-red-500 mr-2" />
+      <IconButton onClick={() => deleteTask(task.id)} hoverClassName="hover:text-red-500">
+        <AiOutlineDelete />
+      </IconButton>
     </div>
   ));
 }

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { TasksContext } from '../context/TasksContext';
-import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
-import DeleteButton from './DeleteButton';
+import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineArrowRight, AiOutlineArrowLeft, AiOutlineDelete } from 'react-icons/ai';
+import { IconButton } from './IconButton';
 
 function Task({ task, listType, index, tasks, recentlyAdded }) {
   const { toggleTaskCompletion, handleTaskDeletion, moveTask, switchTaskList } = useContext(TasksContext);
@@ -26,15 +26,6 @@ function Task({ task, listType, index, tasks, recentlyAdded }) {
     switchTaskList(task.id, newListType);
   };
 
-  const TaskButton = ({ onClick, children, className }) => (
-    <button
-      className={`ml-2 text-gray-500 hover:${className} transition-colors duration-200 hide-button`}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-
   return (
     <div className={`flex items-center mb-2 task-container ${recentlyAdded ? 'highlight-task' : ''}`}>
       <input
@@ -47,23 +38,24 @@ function Task({ task, listType, index, tasks, recentlyAdded }) {
       {!isCompletedList && (
         <>
           {index > 0 && (
-            <TaskButton onClick={moveUp} className="text-green-500">
+            <IconButton onClick={moveUp} hoverClassName="hover:text-green-500">
               <AiOutlineArrowUp />
-            </TaskButton>
+            </IconButton>
           )}
           {index < tasks.length - 1 && (
-            <TaskButton onClick={moveDown} className="text-green-500">
+            <IconButton onClick={moveDown} hoverClassName="hover:text-green-500">
               <AiOutlineArrowDown />
-            </TaskButton>
+            </IconButton>
           )}
-          <TaskButton onClick={switchList} className="text-green-500">
+          <IconButton onClick={switchList} hoverClassName="hover:text-green-500">
             {listType === 'need-to-do' ? <AiOutlineArrowRight /> : <AiOutlineArrowLeft />}
-          </TaskButton>
+          </IconButton>
         </>
       )}
-      <DeleteButton onClick={() => handleTaskDeletion(task.id)} className="text-red-500" />
+      <IconButton onClick={() => handleTaskDeletion(task.id)} hoverClassName="hover:text-red-500">
+        <AiOutlineDelete />
+      </IconButton>
     </div>
   );
 }
-
 export default Task;
