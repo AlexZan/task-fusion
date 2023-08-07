@@ -13,7 +13,12 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
 
   const isFinished = useCallback(() => timeLeft === 0, [timeLeft]);
 
-
+  const hasProgressed = () => {
+    const initialTime = isNeedToDoTime ? needToDoTime : wantToDoTime;
+    console.log("timeleft", timeLeft, "initialtime:", initialTime, timeLeft !== initialTime)
+    return isRunning || timeLeft !== initialTime;
+  };
+  
   useEffect(() => {
     if (!isRunning) return;
   
@@ -73,10 +78,12 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
 
 
 
-  const reset = (isNeedToDoTime) => {
-    setTimeLeft(isNeedToDoTime ? needToDoTime : wantToDoTime);
-    setIsRunning(false);
-  };
+const reset = () => {
+  const newTime = isNeedToDoTime ? needToDoTime : wantToDoTime;
+  setTimeLeft(newTime);
+  setIsRunning(false);
+};
+
 
   const switchTimer = () => {
     const newIsNeedToDoTime = !isNeedToDoTime;
@@ -97,6 +104,7 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
     isRunning,
     switchTimer,
     isAlarmPlaying,
+    hasProgressed
   };
 }
 

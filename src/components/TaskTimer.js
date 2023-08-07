@@ -28,12 +28,7 @@ function TaskTimer() {
 
   const handleClose = () => {
     setIsConfigOpen(false);
-  };
-
-  const handleConfigConfirm = (e) => {
-    e.preventDefault();
-    setIsConfigOpen(false);
-    reset(); // Reset the timer when the times are updated
+    reset();
   };
 
   const minutes = Math.floor(timeLeft / 60);
@@ -55,7 +50,6 @@ function TaskTimer() {
       <ConfigModal
         isOpen={isConfigOpen}
         onClose={handleClose}
-        onConfirm={handleConfigConfirm}
         needToDoTime={needToDoTime}
         wantToDoTime={wantToDoTime}
         setNeedToDoTime={setNeedToDoTime}
