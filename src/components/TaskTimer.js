@@ -17,7 +17,7 @@ function TaskTimer() {
     reset,
     isRunning,
     switchTimer
-  } = useTimer(0.05, 0.1 );
+  } = useTimer(20, 40);
 
   const [isConfigOpen, setIsConfigOpen] = useState(false);
 
