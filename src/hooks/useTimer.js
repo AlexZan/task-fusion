@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback  } from 'react';
-import { loadFromLocalStorage } from '../utils/localStorage';
+import { loadFromLocalStorage, saveToLocalStorage } from '../utils/localStorage';
 import { useAlarm } from './useAlarm';
 
 export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes) {
   const [needToDoTime, setNeedToDoTime] = useState((loadFromLocalStorage('needToDoTime') || initialNeedToDoMinutes) * 60);
   const [wantToDoTime, setWantToDoTime] = useState((loadFromLocalStorage('wantToDoTime') || initialWantToDoMinutes) * 60);
-  const [timeLeft, setTimeLeft] = useState(loadFromLocalStorage('timeLeft') || needToDoTime);
   const [isNeedToDoTime, setIsNeedToDoTime] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(
+    loadFromLocalStorage('timeLeft') || (isNeedToDoTime ? needToDoTime : wantToDoTime)
+  ); 
   const [isRunning, setIsRunning] = useState(loadFromLocalStorage('isRunning') || false);
 
   const { isAlarmPlaying, startContinuousAlarm, stopContinuousAlarm } = useAlarm();
@@ -18,6 +20,11 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
     console.log("timeleft", timeLeft, "initialtime:", initialTime, timeLeft !== initialTime)
     return isRunning || timeLeft !== initialTime;
   };
+
+  useEffect(() => {
+    saveToLocalStorage('timeLeft', timeLeft);
+  }, [timeLeft]);
+  
   
   useEffect(() => {
     if (!isRunning) return;
@@ -37,16 +44,18 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
       lastUpdateTime = currentTime; // Update the last update time
     };
   
-    const intervalId = setInterval(tick, 1000);
+    let intervalId = setInterval(tick, 1000);
+
   
     const handleVisibilityChange = () => {
       if (document.hidden) {
         clearInterval(intervalId);
       } else {
         tick(); // Adjust timeLeft based on the actual elapsed time
-        setInterval(tick, 1000); // Restart the interval
+        intervalId = setInterval(tick, 1000); // Restart the interval
       }
     };
+    
   
     // Listen for visibility changes
     document.addEventListener('visibilitychange', handleVisibilityChange);
