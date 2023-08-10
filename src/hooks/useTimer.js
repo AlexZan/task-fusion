@@ -88,10 +88,17 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
 
 
   const switchTimer = useCallback(() => {
+    // Toggle the value of isNeedToDoTime
     const newIsNeedToDoTime = !isNeedToDoTime;
     setIsNeedToDoTime(newIsNeedToDoTime);
-    reset(newIsNeedToDoTime);
-  }, [isNeedToDoTime, reset]);
+  
+    // Set the time based on the new value of isNeedToDoTime
+    const newTime = newIsNeedToDoTime ? needToDoTime : wantToDoTime;
+    setTimeLeft(newTime);
+    setIsRunning(false);
+    resetTimerInServiceWorker();
+  }, [isNeedToDoTime, needToDoTime, wantToDoTime]);
+  
 
 
   const stop = useCallback(() => {
