@@ -40,7 +40,7 @@ const startTimer = (duration) => {
     // Notify the user when the timer is finished
     self.registration.showNotification('Timer Finished!', {
       body: 'Your timer has ended.',
-      icon: '/path/to/icon.png', // Optional: specify an icon
+      icon: '/logo-icon.png', 
       requireInteraction: true // Keep the notification until the user interacts with it
     });
   }, duration * 1000); // Convert duration to milliseconds
