@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaPlay, FaStop, FaRedo } from 'react-icons/fa';
 
-function TaskTimerDisplayControl({ minutes, seconds, start, stop, reset, isRunning }) {
+function TaskTimerDisplayControl({ minutes, seconds, start, stop, reset, isRunning, disableStart }) {
   return (
     <div className="flex flex-col items-center">
       <div className="text-6xl font-bold my-4">
@@ -15,9 +15,14 @@ function TaskTimerDisplayControl({ minutes, seconds, start, stop, reset, isRunni
             <FaStop />
           </button>
         ) : (
-          <button onClick={start} className="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors duration-200">
-            <FaPlay />
-          </button>
+          <button
+          onClick={start}
+          disabled={disableStart}
+          title={disableStart ? "You are in tracking mode and cannot start the timer." : ""}
+          className={`bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors duration-200 ${disableStart ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          <FaPlay />
+        </button>
         )}
         <button onClick={reset} className="bg-gray-500 text-white p-2 rounded-full hover:bg-gray-600 transition-colors duration-200">
           <FaRedo />

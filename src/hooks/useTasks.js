@@ -5,13 +5,21 @@
   import tasksData from '../tasks.json';
 
   export default function useTasks() {
+    const [isTrackingMode, setTrackingMode] = useState(false);
+
     const [activeTasks, setActiveTasks] = useState(
       loadFromLocalStorage('activeTasks') ||
       tasksData.tasks.map((task, index) => ({ ...task, originalIndex: index }))
     );
+
     const [completedTasks, setCompletedTasks] = useState(
       loadFromLocalStorage('completedTasks') || []
     );
+    
+    useEffect(() => {
+      saveToLocalStorage('activeTasks', activeTasks);
+      saveToLocalStorage('completedTasks', completedTasks);
+    }, [activeTasks, completedTasks]);
 
     const addTask = (task) => {
       const newTask = {
@@ -77,10 +85,15 @@
       });
     };
 
-    useEffect(() => {
-      saveToLocalStorage('activeTasks', activeTasks);
-      saveToLocalStorage('completedTasks', completedTasks);
-    }, [activeTasks, completedTasks]);
+  const enterTrackingMode = () => {
+    setTrackingMode(true);
+  };
+
+  const exitTrackingMode = () => {
+    setTrackingMode(false);
+  };
+
+
 
     return {
       activeTasks,
@@ -89,6 +102,9 @@
       toggleTaskCompletion,
       handleTaskDeletion,
       switchTaskList,
-      moveTask
+      moveTask,
+      isTrackingMode,
+      enterTrackingMode,
+      exitTrackingMode,
     };
   }

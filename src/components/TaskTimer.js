@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import ConfigModal from './ConfigModal';
 import TaskTimerDisplayControl from './TaskTimerDisplayControl';
 import useTimer from '../hooks/useTimer';
-import { FaCog, FaExchangeAlt  } from 'react-icons/fa';
+import { FaCog, FaExchangeAlt } from 'react-icons/fa';
+import { useTasksContext } from '../context/TasksContext';
 
 function TaskTimer() {
+  const { enterTrackingMode, exitTrackingMode, isTrackingMode } = useTasksContext();
+
   const {
     needToDoTime,
     wantToDoTime,
@@ -31,6 +34,13 @@ function TaskTimer() {
     reset();
   };
 
+  const handleStop = () => {
+    stop();
+    if (!isNeedToDoTime) {
+      enterTrackingMode();
+    }
+  };
+
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
@@ -42,11 +52,22 @@ function TaskTimer() {
         minutes={minutes}
         seconds={seconds}
         start={start}
-        stop={stop}
+        stop={handleStop}
         reset={reset}
         isRunning={isRunning}
+        disableStart={isTrackingMode}
       />
       <button onClick={switchTimer} className="mt-4 text-gray-500 hover:text-blue-500 transition-colors duration-200"><FaExchangeAlt /></button>
+      {isTrackingMode && (
+        <div className="mt-6">
+          <button
+            onClick={exitTrackingMode}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 font-bold"
+          >
+            Exit Tracking Mode
+          </button>
+        </div>
+      )}
       <ConfigModal
         isOpen={isConfigOpen}
         onClose={handleClose}
