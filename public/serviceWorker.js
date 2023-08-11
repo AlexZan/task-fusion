@@ -1,6 +1,31 @@
 // Declare a variable to store the current timer
 let timerId = null;
 
+const repeatTasks = {};
+
+const startRepeatTask = (taskId, duration) => {
+  // Clear any existing repeat task timer
+  if (repeatTasks[taskId]) {
+    clearTimeout(repeatTasks[taskId]);
+  }
+
+  // Set a new timer with the given duration
+  repeatTasks[taskId] = setTimeout(() => {
+    // TODO: Add the repeat task to the "need to do" list
+    // You will need to implement the logic to add the task here
+    // Then, restart the repeat task timer
+    startRepeatTask(taskId, duration);
+  }, duration * 1000); // Convert duration to milliseconds
+};
+
+const stopRepeatTask = (taskId) => {
+  if (repeatTasks[taskId]) {
+    clearTimeout(repeatTasks[taskId]);
+    delete repeatTasks[taskId];
+  }
+};
+
+
 self.addEventListener('message', (event) => {
   if (event.data === 'skipWaiting') {
     self.skipWaiting();
@@ -21,7 +46,7 @@ self.addEventListener('notificationclick', (event) => {
         if (client.url === 'http://localhost:3000/' && 'focus' in client) {
           return client.focus();
         }
-        
+
       }
       // If the app's tab is not open, open it
       return self.clients.openWindow('/');
@@ -35,12 +60,12 @@ const startTimer = (duration) => {
     clearTimeout(timerId);
   }
 
-   // Set a new timer with the given duration
+  // Set a new timer with the given duration
   timerId = setTimeout(() => {
     // Notify the user when the timer is finished
     self.registration.showNotification('Timer Finished!', {
       body: 'Your timer has ended.',
-      icon: '/logo-icon.png', 
+      icon: '/logo-icon.png',
       requireInteraction: true // Keep the notification until the user interacts with it
     });
   }, duration * 1000); // Convert duration to milliseconds
@@ -79,7 +104,12 @@ self.addEventListener('message', (event) => {
       })
         .then(() => console.log('Notification shown'))
         .catch((error) => console.log('Failed to show notification:', error));
-
+      break;
+    case 'startRepeatTask':
+      startRepeatTask(taskId, duration);
+      break;
+    case 'stopRepeatTask':
+      stopRepeatTask(taskId);
       break;
     default:
       console.error('Unknown action:', action);

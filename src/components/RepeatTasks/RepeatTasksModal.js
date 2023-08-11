@@ -36,6 +36,7 @@ function RepeatTasksTable({ tasks, setTasks, children, recentlyAddedTaskId, dele
 // The modal
 export default function RepeatTasksModal({ isOpen, onClose }) {
   const { activeTasks, completedTasks } = useTasks();
+  
   const allTasks = [...activeTasks, ...completedTasks];
 
   const [tasks, setTasks] = useState(() => loadFromLocalStorage('repeatTasks') || allTasks.filter(task => task.repeat && task.repeat > 0));
