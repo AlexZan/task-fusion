@@ -47,3 +47,7 @@
   animation: highlight 1s ease-out;
   /* 1-second animation */
 }
+
+.selected-task {
+  background-color: #34498693;
+}

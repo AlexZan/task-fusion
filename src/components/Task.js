@@ -1,12 +1,25 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { TasksContext } from '../context/TasksContext';
 import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineArrowRight, AiOutlineArrowLeft, AiOutlineDelete } from 'react-icons/ai';
 import { IconButton } from './IconButton';
 
 function Task({ task, listType, index, tasks, recentlyAdded }) {
-  const { toggleTaskCompletion, handleTaskDeletion, moveTask, switchTaskList } = useContext(TasksContext);
+  const [isSelected, setIsSelected] = useState(false);
+
+  const { toggleTaskCompletion, handleTaskDeletion, moveTask, switchTaskList, isTrackingMode } = useContext(TasksContext);
 
   const isCompletedList = listType.includes('completed');
+
+  useEffect(() => {
+    if (!isTrackingMode) {
+      setIsSelected(false);
+    }
+  }, [isTrackingMode]);
+
+
+  const handleClick = () => {
+    if (isTrackingMode) setIsSelected(!isSelected);
+  };
 
   const moveUp = () => {
     if (index > 0) {
@@ -27,7 +40,7 @@ function Task({ task, listType, index, tasks, recentlyAdded }) {
   };
 
   return (
-    <div className={`flex items-center mb-2 task-container ${recentlyAdded ? 'highlight-task' : ''}`}>
+    <div onClick={handleClick} className={`flex items-center mb-2 task-container ${recentlyAdded ? 'highlight-task' : ''} ${isSelected ? 'selected-task' : ''}`}>
       <input
         type="checkbox"
         checked={isCompletedList}
