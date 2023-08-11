@@ -11,14 +11,14 @@ root.render(
   </React.StrictMode>
 );
 
-// Notification.requestPermission().then(function (permission) {
-//   if (permission === 'granted') {
-//     console.log('Notification permission granted.');
-//     // You can now use the Notification API or the Push API
-//   } else {
-//     console.log('Unable to get permission to notify.');
-//   }
-// });
+Notification.requestPermission().then(function (permission) {
+  if (permission === 'granted') {
+    console.log('Notification permission granted.');
+    // You can now use the Notification API or the Push API
+  } else {
+    console.log('Unable to get permission to notify.');
+  }
+});
 
 // navigator.serviceWorker.addEventListener('controllerchange', function () {
 //   console.log('Controller changed');
