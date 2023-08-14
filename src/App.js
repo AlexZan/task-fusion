@@ -34,18 +34,16 @@ function App() {
             <TaskTimer />
           </div>  
           <DndProvider backend={HTML5Backend}>
-            <div className="relative">
+          <div className="lg:flex gap-4 padding-large border-radius-large margin-top-medium">
+            <div className="theme-bg-dark border-radius-large lg:flex-grow lg:w-3/4 mb-4 lg:mb-0 relative">
               <RepeatTasksButton onClick={() => setIsRepeatingTasksModalOpen(true)} />
-              <div className="lg:flex gap-4 padding-large border-radius-large margin-top-medium">
-                <div className="theme-bg-dark border-radius-large lg:flex-grow lg:w-3/4 mb-4 lg:mb-0">
-                  <TaskList />
-                </div>
-                <div className="theme-bg-dark border-radius-large lg:w-1/4 mb-4 lg:mb-0">
-                  <Activities />
-                </div>
-              </div>
+              <TaskList />
             </div>
-          </DndProvider>
+            <div className="theme-bg-dark border-radius-large lg:w-1/4 mb-4 lg:mb-0">
+              <Activities />
+            </div>
+          </div>
+        </DndProvider>
         </div>
         <RepeatTasksModal isOpen={isRepeatingTasksModalOpen} onClose={() => setIsRepeatingTasksModalOpen(false)} />
       </div>
