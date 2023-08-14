@@ -51,3 +51,13 @@
 .selected-task {
   background-color: #34498693;
 }
+
+.slide-in {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.slide-in.open {
+  max-height: 2.6rem; /* Match the height of the input */
+}

@@ -1,33 +1,46 @@
 import { useState, useEffect } from 'react';
 import { loadFromLocalStorage, saveToLocalStorage } from '../utils/localStorage';
+import tasksData from '../place-holder-data.json';
+import { v4 as uuidv4 } from 'uuid';
+
 
 export const useRepeatTasks = () => {
   const [repeatTasks, setRepeatTasks] = useState(
-    () => loadFromLocalStorage('repeatTasks') || []
+    () => loadFromLocalStorage('repeatTasks') || tasksData.repeatTasks
   );
 
   const startRepeatTaskInServiceWorker = (taskId, duration) => {
-    navigator.serviceWorker.controller.postMessage({
-      action: 'startRepeatTask',
-      taskId,
-      duration,
-    });
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        action: 'startRepeatTask',
+        taskId,
+        duration,
+      });
+    } else {
+      console.warn('Service worker controller not found. Unable to start repeat task.');
+    }
   };
-
+  
   const stopRepeatTaskInServiceWorker = (taskId) => {
-    navigator.serviceWorker.controller.postMessage({
-      action: 'stopRepeatTask',
-      taskId,
-    });
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        action: 'stopRepeatTask',
+        taskId,
+      });
+    } else {
+      console.warn('Service worker controller not found. Unable to stop repeat task.');
+    }
   };
+  
 
-  const addRepeatTask = (task) => {
-    const newTaskId = Date.now().toString();
-    const newRepeatTask = { ...task, id: newTaskId };
+  const addRepeatTask = (name, repeat) => {
+    const newTaskId = uuidv4();
+    const newRepeatTask = { name, repeat, id: newTaskId };
     setRepeatTasks((prevTasks) => [...prevTasks, newRepeatTask]);
-    startRepeatTaskInServiceWorker(newTaskId, newRepeatTask.repeat);
+    startRepeatTaskInServiceWorker(newTaskId, repeat);
+    return newTaskId; 
   };
-
+  
   const deleteRepeatTask = (taskId) => {
     setRepeatTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
     stopRepeatTaskInServiceWorker(taskId);

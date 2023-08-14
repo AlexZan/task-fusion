@@ -47,7 +47,7 @@ function TaskTimer() {
   return (
     <div className="text-center p-4 dark:bg-gray-800 rounded-lg mb-4 relative">
       <button onClick={handleConfigOpen} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition-colors duration-200"><FaCog /></button>
-      <h2 className="text-2xl">{isNeedToDoTime ? 'Need To Do Time' : 'Want To Do Time'}</h2>
+      <h2 className="text-2xl">{isNeedToDoTime ? 'Productivity' : 'Enjoyment'}</h2>
       <TaskTimerDisplayControl
         minutes={minutes}
         seconds={seconds}
