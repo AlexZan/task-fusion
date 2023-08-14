@@ -55,9 +55,9 @@
 .slide-in {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
+  transition: max-height 0.2s ease-in-out;
 }
 
 .slide-in.open {
-  max-height: 2.6rem; /* Match the height of the input */
+  max-height: 4rem; /* Match the height of the input */
 }

@@ -7,6 +7,7 @@ function TaskList() {
   const { activeTasks, addTask } = useContext(TasksContext);
   const [newTask, setNewTask] = useState('');
   const [recentlyAddedTaskId, setRecentlyAddedTaskId] = useState(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   const tasks = activeTasks.filter(task => !task.isCompleted);
 
@@ -15,7 +16,7 @@ function TaskList() {
       const newTaskId = Date.now().toString();
       const newTaskObj = {
         id: newTaskId,
-        task: newTask,
+        name: newTask,
         repeat: null,
       };
       addTask(newTaskObj);
@@ -24,16 +25,15 @@ function TaskList() {
     }
   };
 
-  const handleInputChange = (e) => {
-    setNewTask(e.target.value);
-  };
-
   return (
-    <div className="padding-medium relative">
+    <div className="padding-medium relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}>
       <h2 className="text-2xl font-semibold mb-4">Tasks</h2>
       <ItemInput
+        isOpen={isHovered}
         value={newTask}
-        onChange={handleInputChange}
+        onChange={(e) => setNewTask(e.target.value)}
         onKeyPress={(e) => { if (e.key === 'Enter') handleInputKeyPress(e); }}
         placeholder="Type a new task and press Enter"
       />
