@@ -1,28 +1,24 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { TasksContext } from '../context/TasksContext';
+import React, { useContext } from 'react';
 import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineDelete } from 'react-icons/ai';
 import { IconButton } from './IconButton';
 
-function Task({ task, index, tasks, recentlyAdded }) {
-  const [isSelected, setIsSelected] = useState(false);
+import { TasksContext } from '../context/TasksContext';
+import { useDeselectIfNotTracking } from '../hooks/useDeselectIfNotTracking';
+
+function Task({ task, index, tasks, recentlyAdded, timeTracking }) {
 
   const { toggleTaskCompletion, handleTaskDeletion, moveTask, isTrackingMode } = useContext(TasksContext);
+  const { isItemSelected, toggleSelection, deselectItem } = timeTracking;
 
-
-  useEffect(() => {
-    if (!isTrackingMode) {
-      setIsSelected(false);
-    }
-  }, [isTrackingMode]);
-
+  useDeselectIfNotTracking(isTrackingMode, task, isItemSelected, deselectItem);
 
   const handleClick = () => {
-    if (isTrackingMode) setIsSelected(!isSelected);
+    if (isTrackingMode) toggleSelection(task);
   };
 
   const moveUp = () => {
     if (index > 0) {
-      moveTask(index, index - 1);
+      moveTask(index, index - 1); 
     }
   };
 
@@ -33,7 +29,7 @@ function Task({ task, index, tasks, recentlyAdded }) {
   };
 
   return (
-    <div onClick={handleClick} className={`flex items-center mb-2 task-container ${recentlyAdded ? 'highlight-task' : ''} ${isSelected ? 'selected-task' : ''}`}>
+    <div onClick={handleClick} className={`flex items-center mb-2 item-container ${recentlyAdded ? 'highlight-task' : ''} ${isItemSelected(task) ? 'selected-item' : ''}`}>
       <input
         type="checkbox"
         checked={task.isCompleted}
