@@ -11,31 +11,22 @@ root.render(
   </React.StrictMode>
 );
 
-Notification.requestPermission().then(function (permission) {
-  if (permission === 'granted') {
-    console.log('Notification permission granted.');
-    // You can now use the Notification API or the Push API
-  } else {
-    console.log('Unable to get permission to notify.');
-  }
+navigator.serviceWorker.addEventListener('controllerchange', function () {
+  console.log('Controller changed');
 });
 
-// navigator.serviceWorker.addEventListener('controllerchange', function () {
-//   console.log('Controller changed');
-// });
 
+navigator.serviceWorker.addEventListener('install', event => {
+  console.log('Service Worker installing.');
+});
 
-// navigator.serviceWorker.addEventListener('install', event => {
-//   console.log('Service Worker installing.');
-// });
+navigator.serviceWorker.addEventListener('activate', event => {
+  console.log('Service Worker activated.');
+});
 
-// navigator.serviceWorker.addEventListener('activate', event => {
-//   console.log('Service Worker activated.');
-// });
-
-// navigator.serviceWorker.addEventListener('controllerchange', event => {
-//   console.log('Controller changed:', navigator.serviceWorker.controller);
-// });
+navigator.serviceWorker.addEventListener('controllerchange', event => {
+  console.log('Controller changed:', navigator.serviceWorker.controller);
+});
 
 // Register the Service Worker
 if ('serviceWorker' in navigator) {

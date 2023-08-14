@@ -71,6 +71,17 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
   }, [isRunning, timeLeft, isNeedToDoTime, isFinished, startContinuousAlarm]);
 
   const start = () => {
+
+    if (Notification.permission !== 'granted') {
+      Notification.requestPermission().then(function (permission) {
+        if (permission === 'granted') {
+          console.log('Notification permission granted.');
+        } else {
+          console.log('Unable to get permission to notify.');
+        }
+      });
+    }
+    
     if (!isRunning) {
       setIsRunning(true);
       startTimerInServiceWorker(timeLeft);
