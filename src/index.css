@@ -4,21 +4,21 @@
 @import './theme.css';
 
 /* Hide delete button by default */
-.task-container .hide-button {
+.item-container .hide-button {
   display: none;
 }
 
 /* Show delete button when task is hovered over */
-.task-container:hover .hide-button {
+.item-container:hover .hide-button {
   display: inline;
 }
 
-.task-container {
+.item-container {
   transition: all 0.3s ease;
   /* Smooth transition for all properties */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   /* Add a soft shadow */
-  border-radius: 8px;
+  border-radius: 3px;
   /* Rounded corners */
   padding-left: 12px;
 }
@@ -48,7 +48,7 @@
   /* 1-second animation */
 }
 
-.selected-task {
+.selected-item {
   background-color: #34498693;
 }
 
