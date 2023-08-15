@@ -34,11 +34,11 @@ function App() {
             <TaskTimer />
           </div>
           <div className="lg:flex gap-4 padding-small">
-            <div className="theme-bg-dark border-radius-medium lg:flex-grow lg:w-3/4 mb-4 lg:mb-0 relative">
+            <div className="theme-bg-dark border-radius-medium lg:flex-grow lg:w-2/3 mb-4 lg:mb-0 relative">
               <RepeatTasksButton onClick={() => setIsRepeatingTasksModalOpen(true)} />
               <TaskList />
             </div>
-            <div className="theme-bg-dark border-radius-medium lg:w-1/4 lg:mb-0">
+            <div className="theme-bg-dark border-radius-medium lg:w-1/3 lg:mb-0">
               <Activities />
             </div>
           </div>
