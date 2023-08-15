@@ -71,5 +71,11 @@
     align-items: center;
   }
 
+  .input-theme::placeholder {
+    color: #777777b2; /* You can adjust this value to make the text as dark or light as you like */
+    opacity: 1; /* Required to make the color apply in some browsers */
+  }
+  
+
   
   

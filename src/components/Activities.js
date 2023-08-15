@@ -35,7 +35,6 @@ function Activity({ activity, onDelete, timeTracking }) {
 export default function Activities() {
   const { activities, addActivity, removeActivity } = useActivities();
   const [newActivity, setNewActivity] = useState('');
-  const [isHovered, setIsHovered] = useState(false);
   const timeTracking = useTimeTracking(); // Initialize the useTimeTracking hook
 
   const handleActivityKeyPress = (e) => {
@@ -46,12 +45,10 @@ export default function Activities() {
   };
 
   return (
-    <div className="padding-medium relative"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}>
-      <h2 className="text-2xl font-semibold mb-4 theme-text-dark">Activities</h2>
+    <div className="padding-medium relative">
+      <h2 className="text-2xl font-semibold theme-text-dark">Activities</h2>
       <ItemInput
-          isOpen={isHovered}
+          isOpen={true}
           value={newActivity}
           onChange={(e) => setNewActivity(e.target.value)}
           onKeyPress={handleActivityKeyPress}

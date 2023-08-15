@@ -7,7 +7,6 @@ import { useTimeTracking } from '../hooks/useTimeTracking';
 function TaskList() {
   const [newTask, setNewTask] = useState('');
   const [recentlyAddedTaskId, setRecentlyAddedTaskId] = useState(null);
-  const [isHovered, setIsHovered] = useState(false);
 
   const { activeTasks, addTask } = useContext(TasksContext);
   const timeTracking = useTimeTracking();
@@ -31,12 +30,10 @@ function TaskList() {
   };
 
   return (
-    <div className="padding-medium relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}>
-      <h2 className="text-2xl font-semibold mb-4">Tasks</h2>
+    <div className="padding-medium relative">
+      <h2 className="text-2xl font-semibold">Tasks</h2>
       <ItemInput
-        isOpen={isHovered}
+        isOpen={true}
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}
         onKeyPress={(e) => { if (e.key === 'Enter') handleInputKeyPress(e); }}
