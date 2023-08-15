@@ -12,12 +12,13 @@ function RepeatTasksButton({ onClick }) {
   return (
     <button
       onClick={onClick}
-      className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center absolute top-0 right-0 m-2 hover:bg-blue-700 transition-colors duration-200 cursor-pointer z-10"
+      className="bg-gray-500 text-white rounded-full w-8 h-8 flex items-center justify-center absolute top-0 right-0 m-2 hover:bg-blue-500 transition-colors duration-200 cursor-pointer z-10"
     >
-      <FaClock size={16} className="text-white-500 hover:text-gray-700 transition-colors duration-200" />
+      <FaClock size={16} className="text-white-500 hover:text-white transition-colors duration-200" />
     </button>
   );
 }
+
 
 function App() {
   const [isRepeatingTasksModalOpen, setIsRepeatingTasksModalOpen] = useState(false);
