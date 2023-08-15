@@ -14,7 +14,7 @@ function RepeatTasksTable({ tasks, children, recentlyAddedTaskId, deleteTask }) 
   return tasks.map((task) => (
     <div
       key={task.id}
-      className={`task-container flex justify-between items-center ${task.id === recentlyAddedTaskId ? 'highlight-task' : ''}`}
+      className={`item-container flex justify-between items-center ${task.id === recentlyAddedTaskId ? 'highlight-task' : ''}`}
     >
       <div className="flex-grow flex justify-between items-center">
         {children(task).map((Child, index) => (
