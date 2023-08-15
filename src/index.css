@@ -61,3 +61,20 @@
 .slide-in.open {
   max-height: 4rem; /* Match the height of the input */
 }
+
+/* Add this to your CSS file */
+.completed-task-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* In your CSS file */
+.completed-task-container:hover .uncomplete-checkbox {
+  opacity: 1;
+}
+
+.uncomplete-checkbox {
+  opacity: 0;
+  transition: opacity 0.3s;
+}

@@ -40,7 +40,7 @@
       });
     };
     
-    const toggleTaskCompletion = (id) => {
+    const completeTask = (id) => {
       const index = activeTasks.findIndex((task) => task.id === id);
       const taskToComplete = activeTasks[index];
       setCompletedTasks((prevCompletedTasks) => [
@@ -48,6 +48,13 @@
         ...prevCompletedTasks,
       ]);
       setActiveTasks((prevActiveTasks) => prevActiveTasks.filter((_, i) => i !== index));
+    };
+
+    const uncompleteTask = (id) => {
+      const index = completedTasks.findIndex((task) => task.id === id);
+      const taskToUncomplete = completedTasks[index];
+      setActiveTasks((prevActiveTasks) => [taskToUncomplete, ...prevActiveTasks]);
+      setCompletedTasks((prevCompletedTasks) => prevCompletedTasks.filter((_, i) => i !== index));
     };
 
     const handleTaskDeletion = (id) => {
@@ -72,8 +79,9 @@
     return {
       activeTasks,
       completedTasks,
+      completeTask,
+      uncompleteTask,
       addTask,
-      toggleTaskCompletion,
       handleTaskDeletion,
       moveTask,
       isTrackingMode,

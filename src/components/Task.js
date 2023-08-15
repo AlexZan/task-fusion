@@ -7,7 +7,7 @@ import { useDeselectIfNotTracking } from '../hooks/useDeselectIfNotTracking';
 
 function Task({ task, index, tasks, recentlyAdded, timeTracking }) {
 
-  const { toggleTaskCompletion, handleTaskDeletion, moveTask, isTrackingMode } = useContext(TasksContext);
+  const { completeTask, handleTaskDeletion, moveTask, isTrackingMode } = useContext(TasksContext);
   const { isItemSelected, toggleSelection, deselectItem } = timeTracking;
 
   useDeselectIfNotTracking(isTrackingMode, task, isItemSelected, deselectItem);
@@ -34,7 +34,7 @@ function Task({ task, index, tasks, recentlyAdded, timeTracking }) {
         type="checkbox"
         checked={task.isCompleted}
         className="mr-2 form-checkbox text-blue-600"
-        onChange={() => toggleTaskCompletion(task.id)}
+        onChange={() => completeTask(task.id)}
       />
       <p className="dark:text-white">{task.name}</p>
       {!task.isCompleted && (
