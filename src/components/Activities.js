@@ -45,7 +45,7 @@ export default function Activities() {
   };
 
   return (
-    <div className="padding-medium relative">
+    <div className="padding-medium">
       <h2 className="text-2xl font-semibold theme-text-dark">Activities</h2>
       <ItemInput
           isOpen={true}

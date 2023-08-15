@@ -137,13 +137,10 @@
 
 .input-theme {
   @apply p-2 rounded-md bg-white dark:text-white dark:bg-gray-700 margin-small;
-  height: 2.6rem;
 }
 
 .dropdown-theme {
-  @apply p-2 rounded-md bg-white dark:text-white dark:bg-gray-700;
-  height: 2.5rem;
-
+  @apply p-2 rounded-md bg-white dark:text-white dark:bg-gray-700 margin-small;
 }
 
 .input-group {
@@ -156,5 +153,8 @@
   opacity: 1; /* Required to make the color apply in some browsers */
 }
 
+.item-input-theme {
+  @apply p-2 rounded-md bg-white dark:text-white dark:bg-gray-700 margin-bottom-small margin-top-medium;
+}
 
 
