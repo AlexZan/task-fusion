@@ -7,7 +7,7 @@ import {
   resetTimerInServiceWorker,
 } from '../utils/serviceWorkerUtils';
 
-export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes) {
+export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes, onTick) {
   const [needToDoTime, setNeedToDoTime] = useState((loadFromLocalStorage('needToDoTime') || initialNeedToDoMinutes) * 60);
   const [wantToDoTime, setWantToDoTime] = useState((loadFromLocalStorage('wantToDoTime') || initialWantToDoMinutes) * 60);
   const [isNeedToDoTime, setIsNeedToDoTime] = useState(true);
@@ -43,9 +43,10 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
     const tick = () => {
       const currentTime = Date.now();
       const elapsedSeconds = Math.floor((currentTime - lastUpdateTime) / 1000);
+      if (onTick) onTick(elapsedSeconds);
       const newTimeLeft = timeLeft - elapsedSeconds;
       setTimeLeft(Math.max(newTimeLeft, 0));
-      lastUpdateTime = currentTime; // Update the last update time
+      lastUpdateTime = currentTime;
     };
 
     let intervalId = setInterval(tick, 1000);
@@ -68,7 +69,7 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes)
       clearInterval(intervalId);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [isRunning, timeLeft, isNeedToDoTime, isFinished, startContinuousAlarm]);
+  }, [isRunning, timeLeft, isNeedToDoTime, isFinished, startContinuousAlarm, onTick]);
 
   const start = () => {
 

@@ -6,11 +6,13 @@ import { FaCog, FaExchangeAlt } from 'react-icons/fa';
 import { useTasksContext } from '../context/TasksContext';
 
 function TaskTimer() {
-  const [startTime, setStartTime] = useState(null);
 
   const { getCurrentTask, enterTrackingMode, exitTrackingMode, isTrackingMode, updateTimeSpent } = useTasksContext();
   const currentTask = getCurrentTask();
 
+  const updateTimeSpentOnTask = (elapsedTime) => {
+    updateTimeSpent(currentTask, elapsedTime / 60);
+  };
 
   const {
     needToDoTime,
@@ -24,7 +26,7 @@ function TaskTimer() {
     reset,
     isRunning,
     switchTimer
-  } = useTimer(20, 40);
+  } = useTimer(20, 40, updateTimeSpentOnTask);
 
   const [isConfigOpen, setIsConfigOpen] = useState(false);
 
@@ -39,27 +41,16 @@ function TaskTimer() {
   };
 
   const handleStart = () => {
-    setStartTime(new Date());
+    // setStartTime(new Date());
     start();
   };
 
   const handleStop = () => {
-    updateTimeSpentOnTask();
     stop();
     if (!isNeedToDoTime) {
       enterTrackingMode();
     }
   };
-  
-  const updateTimeSpentOnTask = () => {
-    if (startTime) {
-      const endTime = new Date();
-      const timeSpent = (endTime - startTime) / 1000 / 60; // Time in minutes
-      updateTimeSpent(currentTask, timeSpent);
-      setStartTime(null); // Reset the start time
-    }
-  };
-
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
