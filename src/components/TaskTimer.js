@@ -8,7 +8,7 @@ import { useTasksContext } from '../context/TasksContext';
 function TaskTimer() {
   const [startTime, setStartTime] = useState(null);
 
-  const { getCurrentTask, enterTrackingMode, exitTrackingMode, isTrackingMode, updateTimeSpentOnTask } = useTasksContext();
+  const { getCurrentTask, enterTrackingMode, exitTrackingMode, isTrackingMode, updateTimeSpent } = useTasksContext();
   const currentTask = getCurrentTask();
 
 
@@ -44,18 +44,18 @@ function TaskTimer() {
   };
 
   const handleStop = () => {
-    updateTimeSpent();
+    updateTimeSpentOnTask();
     stop();
     if (!isNeedToDoTime) {
       enterTrackingMode();
     }
   };
   
-  const updateTimeSpent = () => {
+  const updateTimeSpentOnTask = () => {
     if (startTime) {
       const endTime = new Date();
       const timeSpent = (endTime - startTime) / 1000 / 60; // Time in minutes
-      updateTimeSpentOnTask(timeSpent);
+      updateTimeSpent(currentTask, timeSpent);
       setStartTime(null); // Reset the start time
     }
   };
