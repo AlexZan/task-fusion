@@ -27,6 +27,7 @@ function App() {
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleShowInfoPanel = (item) => {
+    console.log('Item clicked:', item);
     setSelectedItem(item);
     setIsInfoPanelOpen(true);
   };
@@ -41,7 +42,8 @@ function App() {
           <div className="gap-4 padding-small ">
             <TaskTimer />
           </div>
-          <InfoPanel isOpen={isInfoPanelOpen} item={selectedItem} onClose={() => setIsInfoPanelOpen(false)} />
+          <InfoPanel isOpen={isInfoPanelOpen} itemId={selectedItem?.id} onClose={() => setIsInfoPanelOpen(false)} />
+
           <div className="lg:flex gap-4 padding-small">
             <div className="theme-bg-dark border-radius-medium lg:flex-grow lg:w-2/3 mb-4 lg:mb-0 relative">
               <RepeatTasksButton onClick={() => setIsRepeatingTasksModalOpen(true)} />

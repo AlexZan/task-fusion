@@ -63,3 +63,22 @@ export const TIME_IN_MINUTES = {
     MONTH: 60 * 24 * 30,
     CUSTOM: -1, // used to move to the custom tab
 };
+
+export function formatTimeSpent(seconds) {
+    if (isNaN(seconds)) return "0 second(s)";
+    
+    if (seconds < 60) {
+      return `${Math.floor(seconds)} second(s)`;
+    } else if (seconds < 60 * 60) {
+      return `${Math.floor(seconds / 60)} minute(s)`;
+    } else if (seconds < 60 * 60 * 24) {
+      return `${Math.floor(seconds / (60 * 60))} hour(s)`;
+    } else if (seconds < 60 * 60 * 24 * 7) {
+      return `${Math.floor(seconds / (60 * 60 * 24))} day(s)`;
+    } else if (seconds < 60 * 60 * 24 * 30) {
+      return `${Math.floor(seconds / (60 * 60 * 24 * 7))} week(s)`;
+    } else {
+      return `${Math.floor(seconds / (60 * 60 * 24 * 30))} month(s)`;
+    }
+  }
+  
