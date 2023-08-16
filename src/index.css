@@ -157,4 +157,18 @@
   @apply p-2 rounded-md bg-white dark:text-white dark:bg-gray-700 margin-bottom-small margin-top-medium;
 }
 
+.info-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.info-container.open {
+  max-height: 200px; /* Adjust this value based on the content height */
+}
+
+.info-panel {
+  /* Style as needed */
+}
+
 

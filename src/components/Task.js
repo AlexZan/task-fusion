@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineDelete } from 'react-icons/ai';
+import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineDelete,AiOutlineInfoCircle } from 'react-icons/ai';
 import { IconButton } from './IconButton';
 
 import { TasksContext } from '../context/TasksContext';
 import { useDeselectIfNotTracking } from '../hooks/useDeselectIfNotTracking';
 
-function Task({ task, index, tasks, recentlyAdded, timeTracking }) {
+function Task({ task, index, tasks, recentlyAdded, timeTracking, onShowInfoPanel }) {
 
   const { completeTask, handleTaskDeletion, moveTask, isTrackingMode } = useContext(TasksContext);
   const { isItemSelected, toggleSelection, deselectItem } = timeTracking;
@@ -18,7 +18,7 @@ function Task({ task, index, tasks, recentlyAdded, timeTracking }) {
 
   const moveUp = () => {
     if (index > 0) {
-      moveTask(index, index - 1); 
+      moveTask(index, index - 1);
     }
   };
 
@@ -51,6 +51,9 @@ function Task({ task, index, tasks, recentlyAdded, timeTracking }) {
           )}
         </>
       )}
+      <IconButton onClick={() => onShowInfoPanel(task)} hoverClassName="hover:text-blue-500">
+        <AiOutlineInfoCircle />
+      </IconButton>
       <IconButton onClick={() => handleTaskDeletion(task.id)} hoverClassName="hover:text-red-500">
         <AiOutlineDelete />
       </IconButton>

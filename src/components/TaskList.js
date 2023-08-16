@@ -4,7 +4,7 @@ import Task from './Task';
 import ItemInput from './ItemInput';
 import { useTimeTracking } from '../hooks/useTimeTracking';
 
-function TaskList() {
+function TaskList({ onShowInfoPanel }) {
   const [newTask, setNewTask] = useState('');
   const [recentlyAddedTaskId, setRecentlyAddedTaskId] = useState(null);
 
@@ -48,6 +48,7 @@ function TaskList() {
             tasks={tasks}
             timeTracking={timeTracking}
             recentlyAdded={task.id === recentlyAddedTaskId}
+            onShowInfoPanel={onShowInfoPanel}
           />
         ))}
       </div>

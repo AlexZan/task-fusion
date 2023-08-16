@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { AiOutlineDelete } from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
 import { useActivities } from '../hooks/useActivities';
 import { useTimeTracking } from '../hooks/useTimeTracking'; // Import the useTimeTracking hook
 import { TasksContext } from '../context/TasksContext';
@@ -7,16 +7,13 @@ import { useDeselectIfNotTracking } from '../hooks/useDeselectIfNotTracking';
 import { IconButton } from './IconButton';
 import ItemInput from './ItemInput';
 
-function Activity({ activity, onDelete, timeTracking }) {
+function Activity({ activity, onDelete, timeTracking, onShowInfoPanel  }) {
   const { isTrackingMode } = useContext(TasksContext);
-  const { isItemSelected, toggleSelection, deselectItem } = timeTracking    ;
+  const { isItemSelected, toggleSelection, deselectItem } = timeTracking;
 
   const isSelected = isItemSelected(activity);
 
-
-
   useDeselectIfNotTracking(isTrackingMode, activity, isItemSelected, deselectItem);
-
 
   const handleClick = () => {
     if (isTrackingMode) toggleSelection(activity);
@@ -25,6 +22,9 @@ function Activity({ activity, onDelete, timeTracking }) {
   return (
     <div onClick={handleClick} className={`flex items-center mb-2 item-container ${isSelected ? 'selected-item' : ''}`}>
       <div className="theme-text-dark">{activity.name}</div>
+      <IconButton onClick={() => onShowInfoPanel(activity)} hoverClassName="hover:text-blue-500">
+        <AiOutlineInfoCircle />
+      </IconButton>
       <IconButton onClick={() => onDelete(activity.id)} hoverClassName="hover:text-red-500">
         <AiOutlineDelete />
       </IconButton>
@@ -32,7 +32,7 @@ function Activity({ activity, onDelete, timeTracking }) {
   );
 }
 
-export default function Activities() {
+export default function Activities({ onShowInfoPanel }) {
   const { activities, addActivity, removeActivity } = useActivities();
   const [newActivity, setNewActivity] = useState('');
   const timeTracking = useTimeTracking(); // Initialize the useTimeTracking hook
@@ -48,14 +48,14 @@ export default function Activities() {
     <div className="padding-medium">
       <h2 className="text-2xl font-semibold theme-text-dark">Activities</h2>
       <ItemInput
-          isOpen={true}
-          value={newActivity}
-          onChange={(e) => setNewActivity(e.target.value)}
-          onKeyPress={handleActivityKeyPress}
-          placeholder="Type a new activity and press Enter"
+        isOpen={true}
+        value={newActivity}
+        onChange={(e) => setNewActivity(e.target.value)}
+        onKeyPress={handleActivityKeyPress}
+        placeholder="Type a new activity and press Enter"
       />
       {activities.map((activity) => (
-        <Activity key={activity.id} activity={activity} onDelete={removeActivity} timeTracking={timeTracking} />
+        <Activity key={activity.id} activity={activity} onDelete={removeActivity} timeTracking={timeTracking} onShowInfoPanel={onShowInfoPanel}/>
       ))}
     </div>
   );
