@@ -11,6 +11,8 @@ function TaskTimer() {
   const currentTask = getCurrentTask();
 
   const updateTimeSpentOnTask = (elapsedTime) => {
+    if (!isNeedToDoTime) return;
+
     updateTimeSpent(currentTask, elapsedTime / 60);
   };
 
