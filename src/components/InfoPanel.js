@@ -7,7 +7,6 @@ import { formatTimeSpent } from '../utils/timeUtils';
 function InfoPanel({ isOpen, item }) {
   if (!item) return null;
 
-  console.log('here', item.name)
   return (
     <div className={`info-container ${isOpen ? 'open' : ''}`}>
         <div className="flex items-center">
