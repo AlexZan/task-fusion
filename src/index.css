@@ -13,9 +13,10 @@
 }
 
 .item-container {
+  background-color: rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
   /* Smooth transition for all properties */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   /* Add a soft shadow */
   border-radius: 3px;
   /* Rounded corners */
@@ -158,17 +159,15 @@
 }
 
 .info-container {
+  @apply pl-4;  
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
+  transition: max-height 0.2s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .info-container.open {
-  max-height: 200px; /* Adjust this value based on the content height */
+  max-height: 30px; 
 }
-
-.info-panel {
-  /* Style as needed */
-}
-
-

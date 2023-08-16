@@ -65,20 +65,28 @@ export const TIME_IN_MINUTES = {
 };
 
 export function formatTimeSpent(seconds) {
-    if (isNaN(seconds)) return "0 second(s)";
-    
+    if (isNaN(seconds)) return "0 seconds";
+  
+    const pluralize = (value, singular) => value === 1 ? singular : singular + 's';
+  
     if (seconds < 60) {
-      return `${Math.floor(seconds)} second(s)`;
+      return `${Math.floor(seconds)} ${pluralize(seconds, 'second')}`;
     } else if (seconds < 60 * 60) {
-      return `${Math.floor(seconds / 60)} minute(s)`;
+      const minutes = Math.floor(seconds / 60);
+      return `${minutes} ${pluralize(minutes, 'minute')}`;
     } else if (seconds < 60 * 60 * 24) {
-      return `${Math.floor(seconds / (60 * 60))} hour(s)`;
+      const hours = Math.floor(seconds / (60 * 60));
+      return `${hours} ${pluralize(hours, 'hour')}`;
     } else if (seconds < 60 * 60 * 24 * 7) {
-      return `${Math.floor(seconds / (60 * 60 * 24))} day(s)`;
+      const days = Math.floor(seconds / (60 * 60 * 24));
+      return `${days} ${pluralize(days, 'day')}`;
     } else if (seconds < 60 * 60 * 24 * 30) {
-      return `${Math.floor(seconds / (60 * 60 * 24 * 7))} week(s)`;
+      const weeks = Math.floor(seconds / (60 * 60 * 24 * 7));
+      return `${weeks} ${pluralize(weeks, 'week')}`;
     } else {
-      return `${Math.floor(seconds / (60 * 60 * 24 * 30))} month(s)`;
+      const months = Math.floor(seconds / (60 * 60 * 24 * 30));
+      return `${months} ${pluralize(months, 'month')}`;
     }
   }
+  
   

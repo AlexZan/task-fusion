@@ -1,14 +1,20 @@
-import React, { useContext } from 'react';
-import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineDelete,AiOutlineInfoCircle } from 'react-icons/ai';
+import React, { useContext, useState } from 'react';
+import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
 import { IconButton } from './IconButton';
 
 import { TasksContext } from '../context/TasksContext';
 import { useDeselectIfNotTracking } from '../hooks/useDeselectIfNotTracking';
+import InfoPanel from './InfoPanel';
 
 function Task({ task, index, tasks, recentlyAdded, timeTracking, onShowInfoPanel }) {
 
   const { completeTask, handleTaskDeletion, moveTask, isTrackingMode } = useContext(TasksContext);
   const { isItemSelected, toggleSelection, deselectItem } = timeTracking;
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+
+  const handleInfoClick = () => {
+    setIsInfoOpen(!isInfoOpen); // Toggle the info panel state
+  };
 
   useDeselectIfNotTracking(isTrackingMode, task, isItemSelected, deselectItem);
 
@@ -29,34 +35,37 @@ function Task({ task, index, tasks, recentlyAdded, timeTracking, onShowInfoPanel
   };
 
   return (
-    <div onClick={handleClick} className={`flex items-center mb-2 item-container ${recentlyAdded ? 'highlight-task' : ''} ${isItemSelected(task) ? 'selected-item' : ''}`}>
-      <input
-        type="checkbox"
-        checked={task.isCompleted}
-        className="mr-2 form-checkbox text-blue-600"
-        onChange={() => completeTask(task.id)}
-      />
-      <p className="dark:text-white">{task.name}</p>
-      {!task.isCompleted && (
-        <>
-          {index > 0 && (
-            <IconButton onClick={moveUp} hoverClassName="hover:text-green-500">
-              <AiOutlineArrowUp />
-            </IconButton>
-          )}
-          {index < tasks.length - 1 && (
-            <IconButton onClick={moveDown} hoverClassName="hover:text-green-500">
-              <AiOutlineArrowDown />
-            </IconButton>
-          )}
-        </>
-      )}
-      <IconButton onClick={() => onShowInfoPanel(task)} hoverClassName="hover:text-blue-500">
-        <AiOutlineInfoCircle />
-      </IconButton>
-      <IconButton onClick={() => handleTaskDeletion(task.id)} hoverClassName="hover:text-red-500">
-        <AiOutlineDelete />
-      </IconButton>
+    <div>
+      <div onClick={handleClick} className={`flex items-center mt-2 item-container ${recentlyAdded ? 'highlight-task' : ''} ${isItemSelected(task) ? 'selected-item' : ''}`}>
+        <input
+          type="checkbox"
+          checked={task.isCompleted}
+          className="mr-2 form-checkbox text-blue-600"
+          onChange={() => completeTask(task.id)}
+        />
+        <p className="dark:text-white">{task.name}</p>
+        {!task.isCompleted && (
+          <>
+            {index > 0 && (
+              <IconButton onClick={moveUp} hoverClassName="hover:text-green-500">
+                <AiOutlineArrowUp />
+              </IconButton>
+            )}
+            {index < tasks.length - 1 && (
+              <IconButton onClick={moveDown} hoverClassName="hover:text-green-500">
+                <AiOutlineArrowDown />
+              </IconButton>
+            )}
+          </>
+        )}
+        <IconButton onClick={handleInfoClick} hoverClassName="hover:text-blue-500">
+          <AiOutlineInfoCircle />
+        </IconButton>
+        <IconButton onClick={() => handleTaskDeletion(task.id)} hoverClassName="hover:text-red-500">
+          <AiOutlineDelete />
+        </IconButton>
+      </div>
+      <InfoPanel isOpen={isInfoOpen} task={task} />
     </div>
   );
 }
