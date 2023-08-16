@@ -11,8 +11,6 @@ const initialState = {
 };
 
 const actionTypes = {
-  ENTER_TRACKING_MODE: 'ENTER_TRACKING_MODE',
-  EXIT_TRACKING_MODE: 'EXIT_TRACKING_MODE',
   ADD_TASK: 'ADD_TASK',
   MOVE_TASK: 'MOVE_TASK',
   COMPLETE_TASK: 'COMPLETE_TASK',
@@ -23,10 +21,6 @@ const actionTypes = {
 
 const tasksReducer = (state, action) => {
   switch (action.type) {
-    case actionTypes.ENTER_TRACKING_MODE:
-      return { ...state, isTrackingMode: true };
-    case actionTypes.EXIT_TRACKING_MODE:
-      return { ...state, isTrackingMode: false };
     case actionTypes.ADD_TASK:
       const newTask = { id: uuidv4(), ...action.payload };
       return { ...state, activeTasks: [newTask, ...state.activeTasks] };
@@ -80,8 +74,6 @@ export default function useTasks() {
     saveToLocalStorage('completedTasks', state.completedTasks);
   }, [state.activeTasks, state.completedTasks]);
 
-  const enterTrackingMode = () => dispatch({ type: actionTypes.ENTER_TRACKING_MODE });
-  const exitTrackingMode = () => dispatch({ type: actionTypes.EXIT_TRACKING_MODE });
   const addTask = (task) => dispatch({ type: actionTypes.ADD_TASK, payload: task });
   const moveTask = (fromIndex, toIndex) => dispatch({ type: actionTypes.MOVE_TASK, payload: { fromIndex, toIndex } });
   const completeTask = (id) => dispatch({ type: actionTypes.COMPLETE_TASK, payload: id });
@@ -100,8 +92,6 @@ export default function useTasks() {
     deleteTask,
     moveTask,
     isTrackingMode: state.isTrackingMode,
-    enterTrackingMode,
-    exitTrackingMode,
     getCurrentTask,
     updateTimeSpent,
   };

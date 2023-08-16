@@ -3,23 +3,15 @@ import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineDelete, AiOutlineInfoCir
 import { IconButton } from './IconButton';
 
 import { TasksContext } from '../context/TasksContext';
-import { useDeselectIfNotTracking } from '../hooks/useDeselectIfNotTracking';
 import InfoPanel from './InfoPanel';
 
-function Task({ task, index, tasks, recentlyAdded, timeTracking }) {
+function Task({ task, index, tasks, recentlyAdded  }) {
 
-  const { completeTask, handleTaskDeletion, moveTask, isTrackingMode } = useContext(TasksContext);
-  const { isItemSelected, toggleSelection, deselectItem } = timeTracking;
+  const { completeTask, deleteTask, moveTask } = useContext(TasksContext);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   const handleInfoClick = () => {
     setIsInfoOpen(!isInfoOpen); // Toggle the info panel state
-  };
-
-  useDeselectIfNotTracking(isTrackingMode, task, isItemSelected, deselectItem);
-
-  const handleClick = () => {
-    if (isTrackingMode) toggleSelection(task);
   };
 
   const moveUp = () => {
@@ -36,7 +28,7 @@ function Task({ task, index, tasks, recentlyAdded, timeTracking }) {
 
   return (
     <div>
-      <div onClick={handleClick} className={`flex items-center item-container ${recentlyAdded ? 'highlight-task' : ''} ${isItemSelected(task) ? 'selected-item' : ''}`}>
+      <div className={`flex items-center item-container ${recentlyAdded ? 'highlight-task' : ''}`}>
         <input
           type="checkbox"
           checked={task.isCompleted}
@@ -61,7 +53,7 @@ function Task({ task, index, tasks, recentlyAdded, timeTracking }) {
         <IconButton onClick={handleInfoClick} hoverClassName="hover:text-blue-500">
           <AiOutlineInfoCircle />
         </IconButton>
-        <IconButton onClick={() => handleTaskDeletion(task.id)} hoverClassName="hover:text-red-500">
+        <IconButton onClick={() => deleteTask(task.id)} hoverClassName="hover:text-red-500">
           <AiOutlineDelete />
         </IconButton>
       </div>

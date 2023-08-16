@@ -2,14 +2,12 @@ import React, { useState, useContext } from 'react';
 import { TasksContext } from '../context/TasksContext';
 import Task from './Task';
 import ItemInput from './ItemInput';
-import { useTimeTracking } from '../hooks/useTimeTracking';
 
 function TaskList({ onShowInfoPanel }) {
   const [newTask, setNewTask] = useState('');
   const [recentlyAddedTaskId, setRecentlyAddedTaskId] = useState(null);
 
   const { activeTasks, addTask } = useContext(TasksContext);
-  const timeTracking = useTimeTracking();
 
   const tasks = activeTasks.filter(task => !task.isCompleted);
 
@@ -46,7 +44,6 @@ function TaskList({ onShowInfoPanel }) {
             index={index}
             task={task}
             tasks={tasks}
-            timeTracking={timeTracking}
             recentlyAdded={task.id === recentlyAddedTaskId}
             onShowInfoPanel={onShowInfoPanel}
           />
