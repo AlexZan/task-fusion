@@ -8,7 +8,6 @@ import TaskList from './components/TaskList';
 import RepeatTasksModal from './components/RepeatTasks/RepeatTasksModal';
 import Activities from './components/Activities';
 import CompletedTasks from './components/CompletedTasks';
-import InfoPanel from './components/InfoPanel';
 
 function RepeatTasksButton({ onClick }) {
   return (
@@ -24,16 +23,6 @@ function RepeatTasksButton({ onClick }) {
 
 function App() {
   const [isRepeatingTasksModalOpen, setIsRepeatingTasksModalOpen] = useState(false);
-  const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedItemType, setSelectedItemType] = useState(null);
-
-  const handleShowInfoPanel = (item, type) => {
-    console.log('Item clicked:', item);
-    setSelectedItem(item);
-    setSelectedItemType(type);
-    setIsInfoPanelOpen(true);
-  };
 
   return (
     <TasksProvider>
@@ -46,14 +35,13 @@ function App() {
             <div className="gap-4 padding-small ">
               <TaskTimer />
             </div>
-            <InfoPanel isOpen={isInfoPanelOpen} itemId={selectedItem?.id} itemType={selectedItemType} onClose={() => setIsInfoPanelOpen(false)} />
             <div className="lg:flex gap-4 padding-small">
               <div className="theme-bg-dark border-radius-medium lg:flex-grow lg:w-2/3 mb-4 lg:mb-0 relative">
                 <RepeatTasksButton onClick={() => setIsRepeatingTasksModalOpen(true)} />
-                <TaskList onShowInfoPanel={(item) => handleShowInfoPanel(item, 'task')} />
+                <TaskList />
               </div>
               <div className="theme-bg-dark border-radius-medium lg:w-1/3 lg:mb-0">
-                <Activities onShowInfoPanel={(item) => handleShowInfoPanel(item, 'activity')} />
+                <Activities />
               </div>
             </div>
             <div className="gap-4 padding-small">

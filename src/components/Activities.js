@@ -6,10 +6,12 @@ import { TasksContext } from '../context/TasksContext';
 import { useDeselectIfNotTracking } from '../hooks/useDeselectIfNotTracking';
 import { IconButton } from './IconButton';
 import ItemInput from './ItemInput';
+import InfoPanel from './InfoPanel';
 
-function Activity({ activity, onDelete, timeTracking, onShowInfoPanel  }) {
+function Activity({ activity, onDelete, timeTracking }) {
   const { isTrackingMode } = useContext(TasksContext);
   const { isItemSelected, toggleSelection, deselectItem } = timeTracking;
+  const [isInfoOpen, setInfoOpen] = React.useState(false);
 
   const isSelected = isItemSelected(activity);
 
@@ -19,20 +21,28 @@ function Activity({ activity, onDelete, timeTracking, onShowInfoPanel  }) {
     if (isTrackingMode) toggleSelection(activity);
   };
 
+  const handleInfoClick = () => {
+    setInfoOpen(!isInfoOpen);
+    console.log(isInfoOpen)
+  };
+
   return (
-    <div onClick={handleClick} className={`flex items-center mb-2 item-container ${isSelected ? 'selected-item' : ''}`}>
-      <div className="theme-text-dark">{activity.name}</div>
-      <IconButton onClick={() => onShowInfoPanel(activity)} hoverClassName="hover:text-blue-500">
-        <AiOutlineInfoCircle />
-      </IconButton>
-      <IconButton onClick={() => onDelete(activity.id)} hoverClassName="hover:text-red-500">
-        <AiOutlineDelete />
-      </IconButton>
+    <div>
+      <div onClick={handleClick} className={`flex items-center item-container ${isSelected ? 'selected-item' : ''}`}>
+        <div className="theme-text-dark">{activity.name}</div>
+        <IconButton onClick={handleInfoClick} hoverClassName="hover:text-blue-500">
+          <AiOutlineInfoCircle />
+        </IconButton>
+        <IconButton onClick={() => onDelete(activity.id)} hoverClassName="hover:text-red-500">
+          <AiOutlineDelete />
+        </IconButton>
+      </div>
+      <InfoPanel isOpen={isInfoOpen} item={activity} />
     </div>
   );
 }
 
-export default function Activities({ onShowInfoPanel }) {
+export default function Activities() {
   const { activities, addActivity, removeActivity } = useActivitiesContext();
   const [newActivity, setNewActivity] = useState('');
   const timeTracking = useTimeTracking(); // Initialize the useTimeTracking hook
@@ -55,7 +65,7 @@ export default function Activities({ onShowInfoPanel }) {
         placeholder="Type a new activity and press Enter"
       />
       {activities.map((activity) => (
-        <Activity key={activity.id} activity={activity} onDelete={removeActivity} timeTracking={timeTracking} onShowInfoPanel={onShowInfoPanel}/>
+        <Activity key={activity.id} activity={activity} onDelete={removeActivity} timeTracking={timeTracking} />
       ))}
     </div>
   );

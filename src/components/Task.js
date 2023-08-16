@@ -6,7 +6,7 @@ import { TasksContext } from '../context/TasksContext';
 import { useDeselectIfNotTracking } from '../hooks/useDeselectIfNotTracking';
 import InfoPanel from './InfoPanel';
 
-function Task({ task, index, tasks, recentlyAdded, timeTracking, onShowInfoPanel }) {
+function Task({ task, index, tasks, recentlyAdded, timeTracking }) {
 
   const { completeTask, handleTaskDeletion, moveTask, isTrackingMode } = useContext(TasksContext);
   const { isItemSelected, toggleSelection, deselectItem } = timeTracking;
@@ -36,7 +36,7 @@ function Task({ task, index, tasks, recentlyAdded, timeTracking, onShowInfoPanel
 
   return (
     <div>
-      <div onClick={handleClick} className={`flex items-center mt-2 item-container ${recentlyAdded ? 'highlight-task' : ''} ${isItemSelected(task) ? 'selected-item' : ''}`}>
+      <div onClick={handleClick} className={`flex items-center item-container ${recentlyAdded ? 'highlight-task' : ''} ${isItemSelected(task) ? 'selected-item' : ''}`}>
         <input
           type="checkbox"
           checked={task.isCompleted}
@@ -65,7 +65,7 @@ function Task({ task, index, tasks, recentlyAdded, timeTracking, onShowInfoPanel
           <AiOutlineDelete />
         </IconButton>
       </div>
-      <InfoPanel isOpen={isInfoOpen} task={task} />
+      <InfoPanel isOpen={isInfoOpen} item={task} />
     </div>
   );
 }
