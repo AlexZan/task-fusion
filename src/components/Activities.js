@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
-import { useActivities } from '../hooks/useActivities';
-import { useTimeTracking } from '../hooks/useTimeTracking'; // Import the useTimeTracking hook
+import { useActivitiesContext } from '../context/ActivitiesContext';
+import { useTimeTracking } from '../hooks/useTimeTracking';
 import { TasksContext } from '../context/TasksContext';
 import { useDeselectIfNotTracking } from '../hooks/useDeselectIfNotTracking';
 import { IconButton } from './IconButton';
@@ -33,7 +33,7 @@ function Activity({ activity, onDelete, timeTracking, onShowInfoPanel  }) {
 }
 
 export default function Activities({ onShowInfoPanel }) {
-  const { activities, addActivity, removeActivity } = useActivities();
+  const { activities, addActivity, removeActivity } = useActivitiesContext();
   const [newActivity, setNewActivity] = useState('');
   const timeTracking = useTimeTracking(); // Initialize the useTimeTracking hook
 

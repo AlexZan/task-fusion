@@ -1,11 +1,16 @@
 import { AiOutlineClose } from 'react-icons/ai';
-
 import { useTasksContext } from '../context/TasksContext';
+import { useActivitiesContext } from '../context/ActivitiesContext'; // Import the Activities context
 import { formatTimeSpent } from '../utils/timeUtils';
 
-function InfoPanel({ isOpen, onClose, itemId }) {
+function InfoPanel({ isOpen, onClose, itemId, itemType }) {
   const { activeTasks } = useTasksContext();
-  const item = activeTasks.find((task) => task.id === itemId);
+  const { activities } = useActivitiesContext(); // Retrieve activities
+
+  // Determine the item based on its type
+  const item = itemType === 'task'
+    ? activeTasks.find((task) => task.id === itemId)
+    : activities.find((activity) => activity.id === itemId);
 
   if (!isOpen || !item) return null;
 
@@ -23,6 +28,5 @@ function InfoPanel({ isOpen, onClose, itemId }) {
     </div>
   );
 }
-
 
 export default InfoPanel;
