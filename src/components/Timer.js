@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import ConfigModal from './ConfigModal';
-import TaskTimerDisplayControl from './TaskTimerDisplayControl';
+import TimerDisplayControl from './TimerDisplayControl';
 import useTimer from '../hooks/useTimer';
 import { FaCog, FaExchangeAlt } from 'react-icons/fa';
 import { useTasksContext } from '../context/TasksContext';
+import { useTimeContext } from '../context/TimeContext';
 
-function TaskTimer() {
+
+function Timer() {
 
   const { getCurrentTask, updateTimeSpent } = useTasksContext();
+  const { isProductivityTime, setIsProductivityTime } = useTimeContext();
+
   const currentTask = getCurrentTask();
 
   const updateTimeSpentOnTask = (elapsedTime) => {
-    if (!isNeedToDoTime) return;
+    if (!isProductivityTime) return;
 
     updateTimeSpent(currentTask, elapsedTime / 60);
   };
@@ -20,7 +24,6 @@ function TaskTimer() {
     needToDoTime,
     wantToDoTime,
     timeLeft,
-    isNeedToDoTime,
     setNeedToDoTime,
     setWantToDoTime,
     start,
@@ -49,10 +52,10 @@ function TaskTimer() {
   return (
     <div className="text-center p-4 dark:bg-gray-800 rounded-lg mb-2   relative">
       <button onClick={handleConfigOpen} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition-colors duration-200"><FaCog /></button>
-      <h2 className="text-2xl">{isNeedToDoTime ? 'Productivity' : 'Enjoyment'}</h2>
-      {isNeedToDoTime && <h3 className="text-xl text-gray-600">{currentTask ? currentTask.name : 'No task selected'}</h3>}
+      <h2 className="text-2xl">{isProductivityTime ? 'Productivity' : 'Enjoyment'}</h2>
+      {isProductivityTime && <h3 className="text-xl text-gray-600">{currentTask ? currentTask.name : 'No task selected'}</h3>}
 
-      <TaskTimerDisplayControl
+      <TimerDisplayControl
         minutes={minutes}
         seconds={seconds}
         start={start}
@@ -73,4 +76,4 @@ function TaskTimer() {
   );
 }
 
-export default TaskTimer;
+export default Timer;

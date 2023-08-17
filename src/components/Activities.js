@@ -1,20 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
 import { useActivitiesContext } from '../context/ActivitiesContext';
+import { useTimeContext } from '../context/TimeContext';
+
 import { IconButton } from './IconButton';
 import ItemInput from './ItemInput';
 import InfoPanel from './InfoPanel';
 
-function Activity({ activity, onDelete}) {
+function Activity({ activity, onDelete, index }) {
   const [isInfoOpen, setInfoOpen] = React.useState(false);
+
+  const { selectedItem, selectItem, isProductivityTime } = useTimeContext();
+  
+  //set default selection if none
+  useEffect(() => {
+    if (index === 0 && !selectedItem) {
+      selectItem(activity);
+    }
+  }, [index, selectedItem, activity, selectItem]);
+
+  const handleSelection = (activity) => {
+    if (isProductivityTime) return;
+
+    selectItem(activity);
+  };
 
   const handleInfoClick = () => {
     setInfoOpen(!isInfoOpen);
   };
 
+  const isSelected = (activity) => !isProductivityTime && selectedItem?.id === activity.id;
+
   return (
-    <div>
-      <div className={`flex items-center item-container`}>
+    <div onClick={() => handleSelection(activity)}>
+      <div className={`flex items-center item-container ${isSelected(activity) ? 'selected-item' : ''}`}>
         <div className="theme-text-dark">{activity.name}</div>
         <IconButton onClick={handleInfoClick} hoverClassName="hover:text-blue-500">
           <AiOutlineInfoCircle />
@@ -29,8 +48,9 @@ function Activity({ activity, onDelete}) {
 }
 
 export default function Activities() {
-  const { activities, addActivity, removeActivity } = useActivitiesContext();
   const [newActivity, setNewActivity] = useState('');
+
+  const { activities, addActivity, removeActivity } = useActivitiesContext();
 
   const handleActivityKeyPress = (e) => {
     if (e.key === 'Enter' && newActivity.trim() !== '') {
@@ -38,6 +58,8 @@ export default function Activities() {
       setNewActivity('');
     }
   };
+
+
 
   return (
     <div className="padding-medium">
@@ -49,8 +71,8 @@ export default function Activities() {
         onKeyPress={handleActivityKeyPress}
         placeholder="Type a new activity and press Enter"
       />
-      {activities.map((activity) => (
-        <Activity key={activity.id} activity={activity} onDelete={removeActivity} />
+      {activities.map((activity,index) => (
+        <Activity key={activity.id} index={index} activity={activity} onDelete={removeActivity} />
       ))}
     </div>
   );

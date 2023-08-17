@@ -5,6 +5,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 function activitiesReducer(state, action) {
   switch (action.type) {
+    case 'UPDATE_TIME_SPENT':
+      return state.map(activity => {
+        if (activity.id === action.id) {
+          return { ...activity, timeSpent: activity.timeSpent + action.time };
+        }
+        return activity;
+      });
     case 'ADD_ACTIVITY':
       return [...state, { name: action.name, id: uuidv4() }];
     case 'REMOVE_ACTIVITY':
@@ -17,8 +24,13 @@ function activitiesReducer(state, action) {
 export default function useActivities() {
   const [activities, dispatch] = useReducer(
     activitiesReducer,
-    loadFromLocalStorage('activities') || activitiesData.activities
+    loadFromLocalStorage('activities') || activitiesData.activities.map((activity) => ({ ...activity, timeSpent: 0 })),
   );
+
+  const updateTimeSpent = (id, time) => {
+    dispatch({ type: 'UPDATE_TIME_SPENT', id, time });
+  };
+  
 
   const addActivity = (name) => {
     dispatch({ type: 'ADD_ACTIVITY', name });
@@ -27,7 +39,7 @@ export default function useActivities() {
   const removeActivity = (activityId) => {
     dispatch({ type: 'REMOVE_ACTIVITY', id: activityId });
   };
-  
+
   useEffect(() => {
     saveToLocalStorage('activities', activities);
   }, [activities]);
@@ -36,5 +48,6 @@ export default function useActivities() {
     activities,
     addActivity,
     removeActivity,
+    updateTimeSpent,
   };
 };

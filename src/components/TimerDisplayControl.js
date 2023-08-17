@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaPlay, FaStop, FaRedo } from 'react-icons/fa';
 
-function TaskTimerDisplayControl({ minutes, seconds, start, stop, reset, isRunning, disableStart }) {
+function TimerDisplayControl({ minutes, seconds, start, stop, reset, isRunning, disableStart }) {
   return (
     <div className="flex flex-col items-center">
       <div className="text-6xl font-bold my-4">
@@ -32,4 +32,4 @@ function TaskTimerDisplayControl({ minutes, seconds, start, stop, reset, isRunni
   );
 }
 
-export default TaskTimerDisplayControl;
+export default TimerDisplayControl;

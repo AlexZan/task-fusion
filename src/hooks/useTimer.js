@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
+
 import { loadFromLocalStorage, saveToLocalStorage } from '../utils/localStorage';
 import { useAlarm } from './useAlarm';
+import { useTimeContext } from '../context/TimeContext';
+import { useActivitiesContext } from '../context/ActivitiesContext'
+
 import {
   startTimerInServiceWorker,
   stopTimerInServiceWorker,
@@ -10,9 +14,12 @@ import {
 export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes, onTick) {
   const [needToDoTime, setNeedToDoTime] = useState((loadFromLocalStorage('needToDoTime') || initialNeedToDoMinutes) * 60);
   const [wantToDoTime, setWantToDoTime] = useState((loadFromLocalStorage('wantToDoTime') || initialWantToDoMinutes) * 60);
-  const [isNeedToDoTime, setIsNeedToDoTime] = useState(true);
+  
+  const { isProductivityTime, setIsProductivityTime, selectedItem } = useTimeContext();
+  const { updateTimeSpent } = useActivitiesContext();
+
   const [timeLeft, setTimeLeft] = useState(
-    loadFromLocalStorage('timeLeft') || (isNeedToDoTime ? needToDoTime : wantToDoTime)
+    loadFromLocalStorage('timeLeft') || (isProductivityTime ? needToDoTime : wantToDoTime)
   );
   const [isRunning, setIsRunning] = useState(loadFromLocalStorage('isRunning') || false);
 
@@ -21,7 +28,7 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
   const isFinished = useCallback(() => timeLeft === 0, [timeLeft]);
 
   const hasProgressed = () => {
-    const initialTime = isNeedToDoTime ? needToDoTime : wantToDoTime;
+    const initialTime = isProductivityTime ? needToDoTime : wantToDoTime;
     console.log("timeleft", timeLeft, "initialtime:", initialTime, timeLeft !== initialTime)
     return isRunning || timeLeft !== initialTime;
   };
@@ -43,6 +50,11 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
     const tick = () => {
       const currentTime = Date.now();
       const elapsedSeconds = Math.floor((currentTime - lastUpdateTime) / 1000);
+
+      if (!isProductivityTime) {
+        updateTimeSpent(selectedItem.id, elapsedSeconds / 60);
+      }
+
       if (onTick) onTick(elapsedSeconds);
       const newTimeLeft = timeLeft - elapsedSeconds;
       setTimeLeft(Math.max(newTimeLeft, 0));
@@ -69,7 +81,7 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
       clearInterval(intervalId);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [isRunning, timeLeft, isNeedToDoTime, isFinished, startContinuousAlarm, onTick]);
+  }, [isRunning, timeLeft, isProductivityTime, isFinished, startContinuousAlarm, onTick]);
 
   const start = () => {
 
@@ -91,25 +103,25 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
   
 
   const reset = useCallback(() => {
-    const newTime = isNeedToDoTime ? needToDoTime : wantToDoTime;
+    const newTime = isProductivityTime ? needToDoTime : wantToDoTime;
     setTimeLeft(newTime);
     setIsRunning(false);
     resetTimerInServiceWorker();
-  }, [isNeedToDoTime, needToDoTime, wantToDoTime]);
+  }, [isProductivityTime, needToDoTime, wantToDoTime]);
 
 
 
   const switchTimer = useCallback(() => {
-    // Toggle the value of isNeedToDoTime
-    const newIsNeedToDoTime = !isNeedToDoTime;
-    setIsNeedToDoTime(newIsNeedToDoTime);
+    // Toggle the value of isProductivityTime
+    const newIsProductivityTime = !isProductivityTime;
+    setIsProductivityTime(newIsProductivityTime);
   
-    // Set the time based on the new value of isNeedToDoTime
-    const newTime = newIsNeedToDoTime ? needToDoTime : wantToDoTime;
+    // Set the time based on the new value of isProductivityTime
+    const newTime = newIsProductivityTime ? needToDoTime : wantToDoTime;
     setTimeLeft(newTime);
     setIsRunning(false);
     resetTimerInServiceWorker();
-  }, [isNeedToDoTime, needToDoTime, wantToDoTime]);
+  }, [isProductivityTime, needToDoTime, wantToDoTime, setIsProductivityTime]);
   
 
 
@@ -148,7 +160,6 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
     needToDoTime,
     wantToDoTime,
     timeLeft,
-    isNeedToDoTime,
     setNeedToDoTime,
     setWantToDoTime,
     start,
