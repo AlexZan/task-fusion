@@ -3,15 +3,22 @@ import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineDelete, AiOutlineInfoCir
 import { IconButton } from './IconButton';
 
 import { TasksContext } from '../context/TasksContext';
+import { useTimeContext } from '../context/TimeContext';
 import InfoPanel from './InfoPanel';
 
-function Task({ task, index, tasks, recentlyAdded  }) {
+function Task({ task, index, tasks, recentlyAdded }) {
 
   const { completeTask, deleteTask, moveTask } = useContext(TasksContext);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const { selectedItem, selectTask, isProductivityTime } = useTimeContext();
 
   const handleInfoClick = () => {
     setIsInfoOpen(!isInfoOpen); // Toggle the info panel state
+  };
+
+  // Function to handle task selection
+  const handleTaskClick = () => {
+    selectTask(task.id);
   };
 
   const moveUp = () => {
@@ -26,9 +33,12 @@ function Task({ task, index, tasks, recentlyAdded  }) {
     }
   };
 
+  const isSelected = (task) => !isProductivityTime && selectedItem?.id === task.id && selectedItem?.type === "task";
+
+
   return (
     <div>
-      <div className={`flex items-center item-container ${recentlyAdded ? 'highlight-task' : ''}`}>
+      <div className={`flex items-center item-container ${recentlyAdded ? 'highlight-task' : ''} ${isSelected(task) ? 'selected-item' : ''}`} onClick={handleTaskClick}>
         <input
           type="checkbox"
           checked={task.isCompleted}

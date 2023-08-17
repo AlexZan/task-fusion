@@ -27,7 +27,7 @@ export default function useActivities() {
     loadFromLocalStorage('activities') || activitiesData.activities.map((activity) => ({ ...activity, timeSpent: 0 })),
   );
 
-  const updateTimeSpent = (id, time) => {
+  const updateActivityTimeSpent = (id, time) => {
     dispatch({ type: 'UPDATE_TIME_SPENT', id, time });
   };
   
@@ -48,6 +48,6 @@ export default function useActivities() {
     activities,
     addActivity,
     removeActivity,
-    updateTimeSpent,
+    updateActivityTimeSpent,
   };
 };

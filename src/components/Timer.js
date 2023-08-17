@@ -9,7 +9,7 @@ import { useTimeContext } from '../context/TimeContext';
 
 function Timer() {
 
-  const { getCurrentTask, updateTimeSpent } = useTasksContext();
+  const { getCurrentTask, updateTaskTimeSpent } = useTasksContext();
   const { isProductivityTime, setIsProductivityTime } = useTimeContext();
 
   const currentTask = getCurrentTask();
@@ -17,7 +17,7 @@ function Timer() {
   const updateTimeSpentOnTask = (elapsedTime) => {
     if (!isProductivityTime) return;
 
-    updateTimeSpent(currentTask, elapsedTime / 60);
+    updateTaskTimeSpent(currentTask.id, elapsedTime / 60);
   };
 
   const {

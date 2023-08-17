@@ -8,13 +8,17 @@ export const useTimeContext = () => {
 
 export const TimeProvider = ({ children }) => {
   // State to manage the selected item during the enjoyment timer
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState({ id: null, type: null });
+
   const [isProductivityTime, setIsProductivityTime] = useState(true);
 
-  // Function to set the selected item
-  const selectItem = (item) => {
-    setSelectedItem(item);
-  };
+  const selectTask = (taskId) => {
+    setSelectedItem({ id: taskId, type: 'task' });
+};
+
+const selectActivity = (activityId) => {
+    setSelectedItem({ id: activityId, type: 'activity' });
+};
 
   // Function to clear the selected item
   const clearSelectedItem = () => {
@@ -25,7 +29,8 @@ export const TimeProvider = ({ children }) => {
     <TimeContext.Provider
       value={{
         selectedItem,
-        selectItem,
+        selectTask,
+        selectActivity,
         clearSelectedItem,
         isProductivityTime,
         setIsProductivityTime,

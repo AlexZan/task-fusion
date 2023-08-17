@@ -53,14 +53,15 @@ const tasksReducer = (state, action) => {
         activeTasks: state.activeTasks.filter((task) => task.id !== action.payload),
         completedTasks: state.completedTasks.filter((task) => task.id !== action.payload),
       };
-    case actionTypes.UPDATE_TIME_SPENT:
-      const updatedTasks = state.activeTasks.map((task) => {
-        if (task === action.payload.task) {
-          return { ...task, timeSpent: (task.timeSpent || 0) + action.payload.timeSpent };
-        }
-        return task;
-      });
-      return { ...state, activeTasks: updatedTasks };
+      case actionTypes.UPDATE_TIME_SPENT:
+        const updatedTasks = state.activeTasks.map((task) => {
+            if (task.id === action.payload.id) {
+                return { ...task, timeSpent: (task.timeSpent || 0) + action.payload.timeSpent };
+            }
+            return task;
+        });
+        return { ...state, activeTasks: updatedTasks };
+    
     default:
       return state;
   }
@@ -79,7 +80,7 @@ export default function useTasks() {
   const completeTask = (id) => dispatch({ type: actionTypes.COMPLETE_TASK, payload: id });
   const uncompleteTask = (id) => dispatch({ type: actionTypes.UNCOMPLETE_TASK, payload: id });
   const deleteTask = (id) => dispatch({ type: actionTypes.DELETE_TASK, payload: id });
-  const updateTimeSpent = (task, timeSpent) => dispatch({ type: actionTypes.UPDATE_TIME_SPENT, payload: { task, timeSpent } });
+  const updateTaskTimeSpent = (id, time) => dispatch({ type: 'UPDATE_TIME_SPENT', payload: { id: id, timeSpent: time } });
 
   const getCurrentTask = () => state.activeTasks.find((task) => !task.isCompleted);
 
@@ -93,6 +94,6 @@ export default function useTasks() {
     moveTask,
     isTrackingMode: state.isTrackingMode,
     getCurrentTask,
-    updateTimeSpent,
+    updateTaskTimeSpent,
   };
 }

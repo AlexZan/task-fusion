@@ -10,26 +10,26 @@ import InfoPanel from './InfoPanel';
 function Activity({ activity, onDelete, index }) {
   const [isInfoOpen, setInfoOpen] = React.useState(false);
 
-  const { selectedItem, selectItem, isProductivityTime } = useTimeContext();
+  const { selectedItem, selectActivity, isProductivityTime } = useTimeContext();
   
   //set default selection if none
   useEffect(() => {
-    if (index === 0 && !selectedItem) {
-      selectItem(activity);
+    if (index === 0 && !selectedItem.id) {
+      selectActivity(activity.id);
     }
-  }, [index, selectedItem, activity, selectItem]);
+  }, [index, selectedItem, activity, selectActivity]);
 
   const handleSelection = (activity) => {
     if (isProductivityTime) return;
 
-    selectItem(activity);
+    selectActivity(activity.id);
   };
 
   const handleInfoClick = () => {
     setInfoOpen(!isInfoOpen);
   };
 
-  const isSelected = (activity) => !isProductivityTime && selectedItem?.id === activity.id;
+  const isSelected = (activity) => !isProductivityTime && selectedItem?.id === activity.id && selectedItem?.type === "activity";
 
   return (
     <div onClick={() => handleSelection(activity)}>

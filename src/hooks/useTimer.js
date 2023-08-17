@@ -4,6 +4,7 @@ import { loadFromLocalStorage, saveToLocalStorage } from '../utils/localStorage'
 import { useAlarm } from './useAlarm';
 import { useTimeContext } from '../context/TimeContext';
 import { useActivitiesContext } from '../context/ActivitiesContext'
+import { useTasksContext } from '../context/TasksContext';
 
 import {
   startTimerInServiceWorker,
@@ -14,9 +15,10 @@ import {
 export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes, onTick) {
   const [needToDoTime, setNeedToDoTime] = useState((loadFromLocalStorage('needToDoTime') || initialNeedToDoMinutes) * 60);
   const [wantToDoTime, setWantToDoTime] = useState((loadFromLocalStorage('wantToDoTime') || initialWantToDoMinutes) * 60);
-  
+
   const { isProductivityTime, setIsProductivityTime, selectedItem } = useTimeContext();
-  const { updateTimeSpent } = useActivitiesContext();
+  const { updateActivityTimeSpent } = useActivitiesContext();
+  const { updateTaskTimeSpent } = useTasksContext();
 
   const [timeLeft, setTimeLeft] = useState(
     loadFromLocalStorage('timeLeft') || (isProductivityTime ? needToDoTime : wantToDoTime)
@@ -52,7 +54,12 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
       const elapsedSeconds = Math.floor((currentTime - lastUpdateTime) / 1000);
 
       if (!isProductivityTime) {
-        updateTimeSpent(selectedItem.id, elapsedSeconds / 60);
+        console.log(selectedItem.id, selectedItem.name, selectedItem.type )
+        if (selectedItem.type === 'task') {
+          updateTaskTimeSpent(selectedItem.id, elapsedSeconds / 60);
+        } else if (selectedItem.type === 'activity') {
+          updateActivityTimeSpent(selectedItem.id, elapsedSeconds / 60);
+        }
       }
 
       if (onTick) onTick(elapsedSeconds);
@@ -81,7 +88,7 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
       clearInterval(intervalId);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [isRunning, timeLeft, isProductivityTime, isFinished, startContinuousAlarm, onTick]);
+  }, [isRunning, timeLeft, isProductivityTime, isFinished, startContinuousAlarm, onTick, selectedItem, updateActivityTimeSpent]);
 
   const start = () => {
 
@@ -94,13 +101,13 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
         }
       });
     }
-    
+
     if (!isRunning) {
       setIsRunning(true);
       startTimerInServiceWorker(timeLeft);
     }
   };
-  
+
 
   const reset = useCallback(() => {
     const newTime = isProductivityTime ? needToDoTime : wantToDoTime;
@@ -115,14 +122,14 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
     // Toggle the value of isProductivityTime
     const newIsProductivityTime = !isProductivityTime;
     setIsProductivityTime(newIsProductivityTime);
-  
+
     // Set the time based on the new value of isProductivityTime
     const newTime = newIsProductivityTime ? needToDoTime : wantToDoTime;
     setTimeLeft(newTime);
     setIsRunning(false);
     resetTimerInServiceWorker();
   }, [isProductivityTime, needToDoTime, wantToDoTime, setIsProductivityTime]);
-  
+
 
 
   const stop = useCallback(() => {
