@@ -10,7 +10,7 @@ import { useTimeContext } from '../context/TimeContext';
 function Timer() {
 
   const { getCurrentTask, updateTaskTimeSpent } = useTasksContext();
-  const { isProductivityTime, setIsProductivityTime } = useTimeContext();
+  const { isProductivityTime } = useTimeContext();
 
   const currentTask = getCurrentTask();
 
@@ -46,8 +46,9 @@ function Timer() {
   };
 
 
-  const minutes = Math.floor(timeLeft / 60);
+  const minutes = timeLeft >= 0 ? Math.floor(timeLeft / 60) : Math.ceil(timeLeft / 60);
   const seconds = timeLeft % 60;
+  
 
   return (
     <div className="text-center p-4 dark:bg-gray-800 rounded-lg mb-2   relative">

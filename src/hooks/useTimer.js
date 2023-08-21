@@ -27,7 +27,7 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
 
   const { isAlarmPlaying, startContinuousAlarm, stopContinuousAlarm } = useAlarm();
 
-  const isFinished = useCallback(() => timeLeft === 0, [timeLeft]);
+  const isFinished = useCallback(() => timeLeft <= 0, [timeLeft]);
 
   const hasProgressed = () => {
     const initialTime = isProductivityTime ? needToDoTime : wantToDoTime;
@@ -42,10 +42,10 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
   useEffect(() => {
     if (!isRunning) return;
 
-    if (isFinished()) {
+    if (isFinished() && !isAlarmPlaying) {
       startContinuousAlarm();
-      return;
-    }
+  }
+  
 
     let lastUpdateTime = Date.now();
 
@@ -54,7 +54,6 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
       const elapsedSeconds = Math.floor((currentTime - lastUpdateTime) / 1000);
 
       if (!isProductivityTime) {
-        console.log(selectedItem.id, selectedItem.name, selectedItem.type )
         if (selectedItem.type === 'task') {
           updateTaskTimeSpent(selectedItem.id, elapsedSeconds / 60);
         } else if (selectedItem.type === 'activity') {
@@ -64,7 +63,7 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
 
       if (onTick) onTick(elapsedSeconds);
       const newTimeLeft = timeLeft - elapsedSeconds;
-      setTimeLeft(Math.max(newTimeLeft, 0));
+      setTimeLeft(newTimeLeft);
       lastUpdateTime = currentTime;
     };
 
@@ -88,7 +87,7 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
       clearInterval(intervalId);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [isRunning, timeLeft, isProductivityTime, isFinished, startContinuousAlarm, onTick, selectedItem, updateActivityTimeSpent]);
+  }, [isRunning, timeLeft, isProductivityTime, isFinished, startContinuousAlarm, onTick, selectedItem, updateActivityTimeSpent, updateTaskTimeSpent, isAlarmPlaying]);
 
   const start = () => {
 
