@@ -2,11 +2,11 @@
   "tasks": [
     {
       "id": "1",
-      "name": "Finish report"
+      "name": "Finish Report"
     },
     {
       "id": "2",
-      "name": "Prepare presentation"
+      "name": "Prepare Presentation"
     }
   ],
   "repeatTasks": [
@@ -28,7 +28,7 @@
     },
     {
       "id": "2",
-      "name": "Playing guitar"
+      "name": "Playing Guitar"
     }
   ]
 }
