@@ -10,7 +10,7 @@ function InfoPanel({ isOpen, item }) {
   return (
     <div className={`info-container ${isOpen ? 'open' : ''}`}>
         <div className="flex items-center">
-          <FaClock size={14} className="text-white" />
+          <FaClock size={14} className="text-white" title="Time Spent on Item" />
           <span className="text-white ml-2">{formatTimeSpent(item.timeSpent * 60)}</span>
         </div>
     </div>
