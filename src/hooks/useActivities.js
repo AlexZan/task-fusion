@@ -13,7 +13,7 @@ function activitiesReducer(state, action) {
         return activity;
       });
     case 'ADD_ACTIVITY':
-      return [...state, { name: action.name, id: uuidv4() }];
+      return [...state, { name: action.name, id: uuidv4(),  timeSpent: 0 }];
     case 'REMOVE_ACTIVITY':
       return state.filter((activity) => activity.id !== action.id);
     default:
