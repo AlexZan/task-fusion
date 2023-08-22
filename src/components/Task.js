@@ -12,22 +12,30 @@ function Task({ task, index, tasks, recentlyAdded }) {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const { selectedItem, selectTask, isProductivityTime } = useTimeContext();
 
-  const handleInfoClick = () => {
+  const handleInfoClick = (event) => {
+    event.stopPropagation();
     setIsInfoOpen(!isInfoOpen); // Toggle the info panel state
   };
+
+  const handleDelete = (event) => {
+    event.stopPropagation();
+    deleteTask(task.id);
+  }
 
   // Function to handle task selection
   const handleTaskClick = () => {
     selectTask(task.id);
   };
 
-  const moveUp = () => {
+  const moveUp = (event) => {
+    event.stopPropagation();
     if (index > 0) {
       moveTask(index, index - 1);
     }
   };
 
-  const moveDown = () => {
+  const moveDown = (event) => {
+    event.stopPropagation();
     if (index < tasks.length - 1) {
       moveTask(index, index + 1);
     }
@@ -35,10 +43,16 @@ function Task({ task, index, tasks, recentlyAdded }) {
 
   const isSelected = (task) => !isProductivityTime && selectedItem?.id === task.id && selectedItem?.type === "task";
 
-
   return (
     <div>
-      <div className={`flex items-center item-container ${recentlyAdded ? 'highlight-task' : ''} ${isSelected(task) ? 'selected-item' : ''}`} onClick={handleTaskClick}>
+      <div
+        className={`
+      flex items-center item-container 
+      ${recentlyAdded ? 'highlight-task' : ''} 
+      ${isSelected(task) || (isProductivityTime && index === 0) ? 'selected-item' : ''}
+    `}
+        onClick={handleTaskClick}
+      >
         <input
           type="checkbox"
           checked={task.isCompleted}
@@ -63,11 +77,11 @@ function Task({ task, index, tasks, recentlyAdded }) {
         <IconButton onClick={handleInfoClick} hoverClassName="hover:text-blue-500">
           <AiOutlineInfoCircle />
         </IconButton>
-        <IconButton onClick={() => deleteTask(task.id)} hoverClassName="hover:text-red-500">
+        <IconButton onClick={handleDelete} hoverClassName="hover:text-red-500">
           <AiOutlineDelete />
         </IconButton>
       </div>
-      <InfoPanel isOpen={isInfoOpen} item={task} />
+      <InfoPanel isOpen={isInfoOpen || (isProductivityTime && index === 0)} item={task} />
     </div>
   );
 }
