@@ -76,7 +76,9 @@ export function formatTimeSpent(seconds) {
       return `${minutes} ${pluralize(minutes, 'minute')}`;
     } else if (seconds < 60 * 60 * 24) {
       const hours = Math.floor(seconds / (60 * 60));
-      return `${hours} ${pluralize(hours, 'hour')}`;
+      const remainingSeconds = seconds % (60 * 60);
+      const minutes = Math.floor(remainingSeconds / 60);
+      return `${hours} ${pluralize(hours, 'hour')} ${minutes} ${pluralize(minutes, 'minute')}`;
     } else if (seconds < 60 * 60 * 24 * 7) {
       const days = Math.floor(seconds / (60 * 60 * 24));
       return `${days} ${pluralize(days, 'day')}`;
@@ -88,5 +90,6 @@ export function formatTimeSpent(seconds) {
       return `${months} ${pluralize(months, 'month')}`;
     }
   }
+  
   
   

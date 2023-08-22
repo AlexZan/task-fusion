@@ -1,39 +1,38 @@
-import React, { useContext } from 'react';
-import { TasksContext } from '../context/TasksContext';
+import React, { useState } from 'react';
+import useTasks from '../hooks/useTasks';
+import CompletedTasksTable from './CompletedTasksTable';
 
-function CompletedTask({ task, onUncomplete }) {
-  return (
-    <div className="completed-task-container flex items-center">
-      <input
-        type="checkbox"
-        checked={true}
-        className="mr-2 form-checkbox text-blue-600 hover:cursor-pointer uncomplete-checkbox"
-        onChange={() => onUncomplete(task.id)}
-      />
-      <div className="theme-text-dark">{task.name}</div>
-    </div>
-  );
-}
+const CompletedTasks = () => {
+  const { completedTasks } = useTasks();
+  const [filter, setFilter] = useState("");
 
+  if (!completedTasks) {
+    return null; // Or a loading spinner, or some placeholder content.
+  }
 
-
-export default function CompletedTasks() {
-  const { completedTasks, uncompleteTask } = useContext(TasksContext);
-
-  const handleUncomplete = (id) => {
-    uncompleteTask(id);
-  };
+  // Filtered data based on search input
+  const filteredTasks = completedTasks.filter(task => task.name.toLowerCase().includes(filter.toLowerCase()));
 
   return (
-    <div className="padding-medium theme-bg-dark border-radius-large mb-4">
-      <h2 className="text-2xl font-semibold mb-4 theme-text-dark">Completed Tasks</h2>
-      {completedTasks.length === 0 ? (
-        <div className="text-center text-gray-500">No completed tasks</div>
-      ) : (
-        completedTasks.map((task) => (
-          <CompletedTask key={task.id} task={task} onUncomplete={handleUncomplete} />
-        ))
-      )}
+    <div className="theme-bg-dark border-radius-medium relative padding-medium">
+      <h2 className="text-2xl font-semibold theme-text-dark">Completed Tasks</h2>
+
+      {/* Search Input */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search completed tasks..."
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
+          className="item-input-theme w-full dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors duration-200"
+        />
+
+      </div>
+
+      {/* Table View */}
+      <CompletedTasksTable data={filteredTasks} />
     </div>
   );
-}
+};
+
+export default CompletedTasks;
