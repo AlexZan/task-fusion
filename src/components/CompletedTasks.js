@@ -3,7 +3,7 @@ import useTasks from '../hooks/useTasks';
 import CompletedTasksTable from './CompletedTasksTable';
 
 const CompletedTasks = () => {
-  const { completedTasks } = useTasks();
+  const { completedTasks, uncompleteTask } = useTasks();
   const [filter, setFilter] = useState("");
 
   if (!completedTasks) {
@@ -30,7 +30,7 @@ const CompletedTasks = () => {
       </div>
 
       {/* Table View */}
-      <CompletedTasksTable data={filteredTasks} />
+      <CompletedTasksTable data={filteredTasks} handleUndoCompletion={uncompleteTask} />
     </div>
   );
 };

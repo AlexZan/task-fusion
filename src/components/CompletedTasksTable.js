@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTable, useSortBy, useFilters } from 'react-table';
-import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { FaArrowUp, FaArrowDown, FaUndo } from 'react-icons/fa';
+
 import { formatTimeSpent } from '../utils/timeUtils';
 
-const CompletedTasksTable = ({ data }) => {
+const CompletedTasksTable = ({ data, handleUndoCompletion }) => {
+    const [hoveredRowId, setHoveredRowId] = React.useState(null);
+
     const columns = React.useMemo(
         () => [
             {
@@ -14,9 +17,19 @@ const CompletedTasksTable = ({ data }) => {
                 Header: 'Time Spent',
                 accessor: 'timeSpent',
                 Cell: ({ value }) => formatTimeSpent(value * 60),
-              }
+            },
+            {
+                Header: 'Actions',
+                Cell: ({ row }) => (
+                    hoveredRowId === row.original.id && (
+                        <button onClick={() => handleUndoCompletion(row.original.id)} className="text-gray-500 hover:text-red-500 duration-300">
+                            <FaUndo size={14}/>
+                        </button>
+                    )
+                )
+            }
         ],
-        []
+        [handleUndoCompletion, hoveredRowId]
     );
 
     const {
@@ -29,7 +42,7 @@ const CompletedTasksTable = ({ data }) => {
 
     return (
         <table {...getTableProps()} className="min-w-full">
-            <thead> 
+            <thead>
                 {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()} className="theme-text-dark">
                         {headerGroup.headers.map(column => (
@@ -45,7 +58,6 @@ const CompletedTasksTable = ({ data }) => {
                                             : <FaArrowUp />
                                         : ''}
                                 </span>
-
                             </th>
                         ))}
                     </tr>
@@ -55,7 +67,11 @@ const CompletedTasksTable = ({ data }) => {
                 {rows.map(row => {
                     prepareRow(row);
                     return (
-                        <tr {...row.getRowProps()}>
+                        <tr
+                            {...row.getRowProps()}
+                            onMouseEnter={() => setHoveredRowId(row.original.id)}
+                            onMouseLeave={() => setHoveredRowId(null)}
+                        >
                             {row.cells.map(cell => (
                                 <td {...cell.getCellProps()} className="px-6 py-2 whitespace-no-wrap">
                                     {cell.render('Cell')}
