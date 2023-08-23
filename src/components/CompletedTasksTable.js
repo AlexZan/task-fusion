@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTable, useSortBy, useFilters } from 'react-table';
 import { FaArrowUp, FaArrowDown, FaUndo } from 'react-icons/fa';
 
