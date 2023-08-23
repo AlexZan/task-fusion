@@ -29,12 +29,6 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
 
   const isFinished = useCallback(() => timeLeft <= 0, [timeLeft]);
 
-  const hasProgressed = () => {
-    const initialTime = isProductivityTime ? needToDoTime : wantToDoTime;
-    console.log("timeleft", timeLeft, "initialtime:", initialTime, timeLeft !== initialTime)
-    return isRunning || timeLeft !== initialTime;
-  };
-
   useEffect(() => {
     saveToLocalStorage('timeLeft', timeLeft);
   }, [timeLeft]);
@@ -90,17 +84,6 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
   }, [isRunning, timeLeft, isProductivityTime, isFinished, startContinuousAlarm, onTick, selectedItem, updateActivityTimeSpent, updateTaskTimeSpent, isAlarmPlaying]);
 
   const start = () => {
-
-    if (Notification.permission !== 'granted') {
-      Notification.requestPermission().then(function (permission) {
-        if (permission === 'granted') {
-          console.log('Notification permission granted.');
-        } else {
-          console.log('Unable to get permission to notify.');
-        }
-      });
-    }
-
     if (!isRunning) {
       setIsRunning(true);
       startTimerInServiceWorker(timeLeft);
@@ -173,8 +156,7 @@ export default function useTimer(initialNeedToDoMinutes, initialWantToDoMinutes,
     reset,
     isRunning,
     switchTimer,
-    isAlarmPlaying,
-    hasProgressed
+    isAlarmPlaying
   };
 }
 
