@@ -1,7 +1,8 @@
-import { useReducer, useEffect } from 'react';
+import { useReducer, useEffect, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorage';
 import tasksData from '../place-holder-data.json';
+import { useTimeContext } from '../context/TimeContext';
 
 const initialState = {
   isTrackingMode: false,
@@ -70,6 +71,16 @@ const tasksReducer = (state, action) => {
 export default function useTasks() {
   const [state, dispatch] = useReducer(tasksReducer, initialState);
 
+  const { setProductivityTickFunction } = useTimeContext();
+
+  const getCurrentTask = () => state.activeTasks.find((task) => !task.isCompleted);
+
+
+
+
+  
+  
+
   useEffect(() => {
     saveToLocalStorage('activeTasks', state.activeTasks);
     saveToLocalStorage('completedTasks', state.completedTasks);
@@ -82,7 +93,18 @@ export default function useTasks() {
   const deleteTask = (id) => dispatch({ type: actionTypes.DELETE_TASK, payload: id });
   const updateTaskTimeSpent = (id, time) => dispatch({ type: 'UPDATE_TIME_SPENT', payload: { id: id, timeSpent: time } });
 
-  const getCurrentTask = () => state.activeTasks.find((task) => !task.isCompleted);
+  const productivityTickHandler = useCallback((timeSpent) => {
+    // Get the current top task every time the handler is called
+    const topTask = getCurrentTask();
+  
+    if (topTask) {
+      updateTaskTimeSpent(topTask.id, timeSpent);
+    }
+  }, [getCurrentTask, updateTaskTimeSpent]); // Dependencies that could change
+  
+  useEffect(() => {
+    setProductivityTickFunction(productivityTickHandler);
+  }, [setProductivityTickFunction, productivityTickHandler]); // Dependency on productivityTickHandler
 
   return {
     activeTasks: state.activeTasks,

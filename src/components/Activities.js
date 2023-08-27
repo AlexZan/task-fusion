@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
+
 import { useActivitiesContext } from '../context/ActivitiesContext';
 import { useTimeContext } from '../context/TimeContext';
 
@@ -9,27 +10,26 @@ import InfoPanel from './InfoPanel';
 
 function Activity({ activity, onDelete, index }) {
   const [isInfoOpen, setInfoOpen] = React.useState(false);
+  const { selectEnjoymentItem, isProductivityTime, selectedEnjoymentItem } = useTimeContext();
+  const { updateActivityTimeSpent } = useActivitiesContext();
 
-  const { selectedItem, selectActivity, isProductivityTime } = useTimeContext();
-  
-  //set default selection if none
-  useEffect(() => {
-    if (index === 0 && !selectedItem.id) {
-      selectActivity(activity.id);
-    }
-  }, [index, selectedItem, activity, selectActivity]);
 
   const handleSelection = (activity) => {
     if (isProductivityTime) return;
+    
+    // Handler to update the time spent for the selected activity
+    const updateTimeSpentHandler = (timeSpent) => {
+      updateActivityTimeSpent(activity.id, timeSpent);
+    };
 
-    selectActivity(activity.id);
+    selectEnjoymentItem({ ...activity, type: 'activity' }, updateTimeSpentHandler);
   };
+
+  const isSelected = (activity) => !isProductivityTime && selectedEnjoymentItem?.id === activity.id && selectedEnjoymentItem?.type === 'activity';
 
   const handleInfoClick = () => {
     setInfoOpen(!isInfoOpen);
   };
-
-  const isSelected = (activity) => !isProductivityTime && selectedItem?.id === activity.id && selectedItem?.type === "activity";
 
   return (
     <div onClick={() => handleSelection(activity)}>
@@ -71,7 +71,7 @@ export default function Activities() {
         onKeyPress={handleActivityKeyPress}
         placeholder="Type a new activity and press Enter"
       />
-      {activities.map((activity,index) => (
+      {activities.map((activity, index) => (
         <Activity key={activity.id} index={index} activity={activity} onDelete={removeActivity} />
       ))}
     </div>

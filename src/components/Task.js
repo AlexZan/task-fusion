@@ -8,9 +8,10 @@ import InfoPanel from './InfoPanel';
 
 function Task({ task, index, tasks, recentlyAdded }) {
 
-  const { completeTask, deleteTask, moveTask } = useContext(TasksContext);
+  const { completeTask, deleteTask, moveTask, updateTaskTimeSpent } = useContext(TasksContext);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
-  const { selectedItem, selectTask, isProductivityTime } = useTimeContext();
+  const { selectEnjoymentItem, isProductivityTime, selectedEnjoymentItem } = useTimeContext();
+
 
   const handleInfoClick = (event) => {
     event.stopPropagation();
@@ -23,8 +24,14 @@ function Task({ task, index, tasks, recentlyAdded }) {
   }
 
   // Function to handle task selection
-  const handleTaskClick = () => {
-    selectTask(task.id);
+  const handleSelection = (task) => {
+    if (isProductivityTime) return;
+
+    const updateTimeSpentHandler = (timeSpent) => {
+      updateTaskTimeSpent(task.id, timeSpent);
+    };
+
+    selectEnjoymentItem({ ...task, type: 'task' }, updateTimeSpentHandler);
   };
 
   const moveUp = (event) => {
@@ -41,7 +48,8 @@ function Task({ task, index, tasks, recentlyAdded }) {
     }
   };
 
-  const isSelected = (task) => !isProductivityTime && selectedItem?.id === task.id && selectedItem?.type === "task";
+  const isSelected = (task) => (isProductivityTime && index === 0) || (!isProductivityTime && selectedEnjoymentItem?.id === task.id && selectedEnjoymentItem?.type === 'task');
+
 
   return (
     <div>
@@ -51,7 +59,7 @@ function Task({ task, index, tasks, recentlyAdded }) {
       ${recentlyAdded ? 'highlight-task' : ''} 
       ${isSelected(task) || (isProductivityTime && index === 0) ? 'selected-item' : ''}
     `}
-        onClick={handleTaskClick}
+        onClick={() => handleSelection(task)}
       >
         <input
           type="checkbox"

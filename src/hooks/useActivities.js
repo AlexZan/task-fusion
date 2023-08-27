@@ -1,7 +1,9 @@
 import { useReducer, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
 import { loadFromLocalStorage, saveToLocalStorage } from '../utils/localStorage';
 import activitiesData from '../place-holder-data.json';
-import { v4 as uuidv4 } from 'uuid';
+
 
 function activitiesReducer(state, action) {
   switch (action.type) {
@@ -44,10 +46,11 @@ export default function useActivities() {
     saveToLocalStorage('activities', activities);
   }, [activities]);
 
+
   return {
     activities,
     addActivity,
     removeActivity,
-    updateActivityTimeSpent,
+    updateActivityTimeSpent
   };
 };

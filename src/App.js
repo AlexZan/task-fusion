@@ -44,14 +44,14 @@ const router = createBrowserRouter([
 function App() {
 
   return (
-    <TasksProvider>
-      <ActivitiesProvider>
-        <TimeProvider>
-          <RouterProvider router={router}>
-          </RouterProvider>
-        </TimeProvider>
-      </ActivitiesProvider>
-    </TasksProvider>
+    <TimeProvider>
+      <TasksProvider>
+        <ActivitiesProvider>
+            <RouterProvider router={router}>
+            </RouterProvider>
+        </ActivitiesProvider>
+      </TasksProvider>
+    </TimeProvider>
   );
 }
 
