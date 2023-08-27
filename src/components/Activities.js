@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
 
 import { useActivitiesContext } from '../context/ActivitiesContext';
@@ -13,6 +13,12 @@ function Activity({ activity, onDelete, index }) {
   const { selectEnjoymentItem, isProductivityTime, selectedEnjoymentItem } = useTimeContext();
   const { updateActivityTimeSpent } = useActivitiesContext();
 
+  //set default selection if none
+  useEffect(() => {
+    if (index === 0 && !selectedEnjoymentItem?.id) {
+      selectEnjoymentItem({ ...activity, type: 'activity' });
+    }
+  }, [index, selectedEnjoymentItem, activity, selectEnjoymentItem]);
 
   const handleSelection = (activity) => {
     if (isProductivityTime) return;
