@@ -1,13 +1,19 @@
 import React from 'react';
 import { useTimeContext } from '../context/TimeContext';
-import {formatTimeSpent} from '../utils/timeUtils'
-
+import { formatTimeSpent } from '../utils/timeUtils'
+import TimeSpentPieChart from './TimeSpentPieChart';
 
 function Insights() {
   // Destructure the time data from TimeContext
   const { productiveTime, passionTime, leisureTime } = useTimeContext();
 
   const descriptionClass = "text-gray-500 text-sm";
+
+  const data = [
+    { name: 'Productive Time', value: productiveTime * 60 },
+    { name: 'Passion Time', value: passionTime * 60 },
+    { name: 'Leisure Time', value: leisureTime * 60 }
+  ];
 
   return (
     <div className="theme-bg-darker theme-text-dark">
@@ -43,6 +49,12 @@ function Insights() {
               This time represents pure leisure activities you've engaged in.
               It's your time to relax and recharge.
             </small>
+          </div>
+        </div>
+        <div className="gap-4 padding-small">
+          <div className="theme-bg-dark border-radius-medium p-4">
+            <h2>Time Spent Breakdown</h2>
+            <TimeSpentPieChart data={data} />
           </div>
         </div>
       </div>
