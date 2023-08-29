@@ -10,7 +10,7 @@ function Timer() {
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isInfoModalOpen, setInfoModalOpen] = useState(false);
 
-  const { getCurrentTask, updateTaskTimeSpent } = useTasksContext();
+  const { getCurrentTask } = useTasksContext();
   const {
     isProductivityTime,
     needToDoTime,
@@ -29,7 +29,6 @@ function Timer() {
 
   const handleClose = () => {
     setIsConfigOpen(false);
-    reset();
   };
 
   const minutes = timeLeft >= 0 ? Math.floor(timeLeft / 60) : Math.ceil(timeLeft / 60);

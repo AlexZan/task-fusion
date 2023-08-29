@@ -2,12 +2,20 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { FaCog } from 'react-icons/fa';
 import { saveToLocalStorage } from '../utils/localStorage';
+import { useTimeContext } from '../context/TimeContext';
+
+
+
 
 function ConfigModal({ isOpen, onClose, needToDoTime, wantToDoTime, setNeedToDoTime, setWantToDoTime }) {
+
+  const { reset } = useTimeContext();
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
     saveToLocalStorage('needToDoTime', needToDoTime / 60);
     saveToLocalStorage('wantToDoTime', wantToDoTime / 60);
+    reset();
     onClose();
   };
 
