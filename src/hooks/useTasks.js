@@ -73,11 +73,9 @@ export default function useTasks() {
 
   const { setProductivityTickFunction } = useTimeContext();
 
-  const getCurrentTask = () => state.activeTasks.find((task) => !task.isCompleted);
-
-
-
-
+  const getCurrentTask = useCallback(() => {
+    return state.activeTasks.find((task) => !task.isCompleted);
+  }, [state.activeTasks]);
   
   
 
@@ -91,7 +89,10 @@ export default function useTasks() {
   const completeTask = (id) => dispatch({ type: actionTypes.COMPLETE_TASK, payload: id });
   const uncompleteTask = (id) => dispatch({ type: actionTypes.UNCOMPLETE_TASK, payload: id });
   const deleteTask = (id) => dispatch({ type: actionTypes.DELETE_TASK, payload: id });
-  const updateTaskTimeSpent = (id, time) => dispatch({ type: 'UPDATE_TIME_SPENT', payload: { id: id, timeSpent: time } });
+  
+  const updateTaskTimeSpent = useCallback((id, time) => {
+    dispatch({ type: 'UPDATE_TIME_SPENT', payload: { id: id, timeSpent: time } });
+  }, []);
 
   const productivityTickHandler = useCallback((timeSpent) => {
     // Get the current top task every time the handler is called
