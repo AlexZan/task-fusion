@@ -7,6 +7,10 @@ import {
   resetTimerInServiceWorker,
 } from '../utils/serviceWorkerUtils';
 
+
+const TASK = 'task';
+const ACTIVITY = 'activity';
+
 const TimeContext = createContext();
 
 export const useTimeContext = () => {
@@ -18,7 +22,11 @@ export const TimeProvider = ({ children, initialNeedToDoMinutes = 20, initialWan
   const [selectedEnjoymentItem, setSelectedEnjoymentItem] = useState({ id: null, type: null });
   const [enjoymentTickHandler, setEnjoymentTickHandler] = useState(null);
   const [isProductivityTime, setIsProductivityTime] = useState(true);
-  const [productivityTickHandler, setProductivityTickHandler] = useState(null);
+  const [productiveTime, setProductiveTime] = useState(loadFromLocalStorage('productiveTime') || 0);
+  const [passionTime, setPassionTime] = useState(loadFromLocalStorage('passionTime') || 0);
+  const [leisureTime, setLeisureTime] = useState(loadFromLocalStorage('leisureTime') || 0);
+  
+
   // States moved from useTimer
   const [needToDoTime, setNeedToDoTime] = useState((loadFromLocalStorage('needToDoTime') || initialNeedToDoMinutes) * 60);
   const [wantToDoTime, setWantToDoTime] = useState((loadFromLocalStorage('wantToDoTime') || initialWantToDoMinutes) * 60);
@@ -40,6 +48,31 @@ export const TimeProvider = ({ children, initialNeedToDoMinutes = 20, initialWan
     setEnjoymentTickHandler(() => handler);
   };
 
+  const increaseProductiveTime = (timeIncrement) => {
+    setProductiveTime((prevTime) => prevTime + timeIncrement);
+  };
+  
+  const increasePassionTime = (timeIncrement) => {
+    setPassionTime((prevTime) => prevTime + timeIncrement);
+  };
+  
+  const increaseLeisureTime = (timeIncrement) => {
+    setLeisureTime((prevTime) => prevTime + timeIncrement);
+  };
+
+    // Save to localStorage whenever time changes
+    useEffect(() => {
+      saveToLocalStorage('productiveTime', productiveTime);
+    }, [productiveTime]);
+  
+    useEffect(() => {
+      saveToLocalStorage('passionTime', passionTime);
+    }, [passionTime]);
+  
+    useEffect(() => {
+      saveToLocalStorage('leisureTime', leisureTime);
+    }, [leisureTime]);
+
 
   useEffect(() => {
     saveToLocalStorage('timeLeft', timeLeft);
@@ -60,10 +93,17 @@ export const TimeProvider = ({ children, initialNeedToDoMinutes = 20, initialWan
   
       if (!isProductivityTime && selectedEnjoymentItem && enjoymentTickHandler) {
         enjoymentTickHandler(elapsedSeconds / 60);
+
+        if (selectedEnjoymentItem.type === TASK) {
+          increasePassionTime(elapsedSeconds / 60);
+        } else if (selectedEnjoymentItem.type === ACTIVITY) {
+          increaseLeisureTime(elapsedSeconds / 60);
+        }
       }
 
       if (isProductivityTime && productivityTickHandlerRef.current) {
         productivityTickHandlerRef.current(elapsedSeconds / 60);
+        increaseProductiveTime(elapsedSeconds / 60);
       }
   
       const newTimeLeft = timeLeft - elapsedSeconds;
@@ -165,7 +205,10 @@ export const TimeProvider = ({ children, initialNeedToDoMinutes = 20, initialWan
     stop,
     reset,
     switchTimer,
-    setProductivityTickFunction
+    setProductivityTickFunction,
+    productiveTime,
+    leisureTime,
+    passionTime
   };
 
   return (
