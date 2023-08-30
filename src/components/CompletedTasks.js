@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import useTasks from '../hooks/useTasks';
+import React, { useState, useContext } from 'react';
+import { TasksContext } from '../context/TasksContext';
 import CompletedTasksTable from './CompletedTasksTable';
 
 const CompletedTasks = () => {
-  const { completedTasks, uncompleteTask } = useTasks();
+  const { completedTasks, uncompleteTask } = useContext(TasksContext);
   const [filter, setFilter] = useState("");
 
   if (!completedTasks) {
