@@ -59,7 +59,7 @@ function Insights() {
         </div>
         <div className="gap-4 padding-small">
           <button onClick={resetDailyInsights} className="bg-blue-500 text-white px-4 py-2 rounded">
-            Reset Daily Insights
+            Reset Insights
           </button>
         </div>
 
