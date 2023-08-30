@@ -60,6 +60,12 @@ export const TimeProvider = ({ children, initialNeedToDoMinutes = 20, initialWan
     setLeisureTime((prevTime) => prevTime + timeIncrement);
   };
 
+  const resetDailyInsights = () => {
+    setProductiveTime(0);
+    setPassionTime(0);
+    setLeisureTime(0);
+  };
+
     // Save to localStorage whenever time changes
     useEffect(() => {
       saveToLocalStorage('productiveTime', productiveTime);
@@ -208,7 +214,8 @@ export const TimeProvider = ({ children, initialNeedToDoMinutes = 20, initialWan
     setProductivityTickFunction,
     productiveTime,
     leisureTime,
-    passionTime
+    passionTime,
+    resetDailyInsights
   };
 
   return (

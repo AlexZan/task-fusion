@@ -5,7 +5,7 @@ import TimeSpentPieChart from './TimeSpentPieChart';
 
 function Insights() {
   // Destructure the time data from TimeContext
-  const { productiveTime, passionTime, leisureTime } = useTimeContext();
+  const { productiveTime, passionTime, leisureTime, resetDailyInsights } = useTimeContext();
 
   const descriptionClass = "text-gray-500 text-sm";
 
@@ -57,6 +57,12 @@ function Insights() {
             <TimeSpentPieChart data={data} />
           </div>
         </div>
+        <div className="gap-4 padding-small">
+          <button onClick={resetDailyInsights} className="bg-blue-500 text-white px-4 py-2 rounded">
+            Reset Daily Insights
+          </button>
+        </div>
+
       </div>
     </div>
   );
