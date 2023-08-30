@@ -54,15 +54,15 @@ const tasksReducer = (state, action) => {
         activeTasks: state.activeTasks.filter((task) => task.id !== action.payload),
         completedTasks: state.completedTasks.filter((task) => task.id !== action.payload),
       };
-      case actionTypes.UPDATE_TIME_SPENT:
-        const updatedTasks = state.activeTasks.map((task) => {
-            if (task.id === action.payload.id) {
-                return { ...task, timeSpent: (task.timeSpent || 0) + action.payload.timeSpent };
-            }
-            return task;
-        });
-        return { ...state, activeTasks: updatedTasks };
-    
+    case actionTypes.UPDATE_TIME_SPENT:
+      const updatedTasks = state.activeTasks.map((task) => {
+        if (task.id === action.payload.id) {
+          return { ...task, timeSpent: (task.timeSpent || 0) + action.payload.timeSpent };
+        }
+        return task;
+      });
+      return { ...state, activeTasks: updatedTasks };
+
     default:
       return state;
   }
@@ -71,13 +71,13 @@ const tasksReducer = (state, action) => {
 export default function useTasks() {
   const [state, dispatch] = useReducer(tasksReducer, initialState);
 
-  const { setProductivityTickFunction } = useTimeContext();
+  const { setProductivityTickFunction, clearSelectedItem } = useTimeContext();
 
   const getCurrentTask = useCallback(() => {
     return state.activeTasks.find((task) => !task.isCompleted);
   }, [state.activeTasks]);
-  
-  
+
+
 
   useEffect(() => {
     saveToLocalStorage('activeTasks', state.activeTasks);
@@ -86,10 +86,13 @@ export default function useTasks() {
 
   const addTask = (task) => dispatch({ type: actionTypes.ADD_TASK, payload: task });
   const moveTask = (fromIndex, toIndex) => dispatch({ type: actionTypes.MOVE_TASK, payload: { fromIndex, toIndex } });
-  const completeTask = (id) => dispatch({ type: actionTypes.COMPLETE_TASK, payload: id });
+  const completeTask = (id) => {
+    clearSelectedItem();
+    dispatch({ type: actionTypes.COMPLETE_TASK, payload: id })
+  };
   const uncompleteTask = (id) => dispatch({ type: actionTypes.UNCOMPLETE_TASK, payload: id });
   const deleteTask = (id) => dispatch({ type: actionTypes.DELETE_TASK, payload: id });
-  
+
   const updateTaskTimeSpent = useCallback((id, time) => {
     dispatch({ type: 'UPDATE_TIME_SPENT', payload: { id: id, timeSpent: time } });
   }, []);
@@ -97,12 +100,12 @@ export default function useTasks() {
   const productivityTickHandler = useCallback((timeSpent) => {
     // Get the current top task every time the handler is called
     const topTask = getCurrentTask();
-  
+
     if (topTask) {
       updateTaskTimeSpent(topTask.id, timeSpent);
     }
   }, [getCurrentTask, updateTaskTimeSpent]); // Dependencies that could change
-  
+
   useEffect(() => {
     setProductivityTickFunction(productivityTickHandler);
   }, [setProductivityTickFunction, productivityTickHandler]); // Dependency on productivityTickHandler
