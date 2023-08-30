@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { createColumnHelper, getCoreRowModel, useReactTable, flexRender } from '@tanstack/react-table';
-import { FaUndo } from 'react-icons/fa';
+import { createColumnHelper, getCoreRowModel, useReactTable, flexRender, getSortedRowModel } from '@tanstack/react-table';
+import { FaUndo, FaSortUp, FaSortDown, FaSort } from 'react-icons/fa';
 
 import { formatTimeSpent } from '../utils/timeUtils';
 
 const CompletedTasksTable = ({ data, handleUndoCompletion }) => {
   const [hoveredRowId, setHoveredRowId] = useState(null);
+  const [sorting, setSorting] = useState([]);
 
   const columnHelper = createColumnHelper();
 
@@ -16,7 +17,23 @@ const CompletedTasksTable = ({ data, handleUndoCompletion }) => {
         cell: info => info.getValue(),
       }),
       columnHelper.accessor('timeSpent', {
-        header: 'Time Spent',
+        header: ({ column }) => (
+            <div
+              style={{ display: 'flex', alignItems: 'center' }}
+              className={column.getCanSort() ? 'cursor-pointer select-none' : ''}
+              onClick={column.getToggleSortingHandler()}
+            >
+              Time Spent&nbsp;
+              {column.getIsSorted() === 'asc' ? (
+                <FaSortUp />
+              ) : column.getIsSorted() === 'desc' ? (
+                <FaSortDown />
+              ) : (
+                <FaSort />
+              )}
+            </div>
+          ),
+          
         cell: info => formatTimeSpent(info.getValue() * 60),
       }),
       columnHelper.accessor('id', {
@@ -36,8 +53,14 @@ const CompletedTasksTable = ({ data, handleUndoCompletion }) => {
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
+
 
   return (
     <table className="min-w-full">
