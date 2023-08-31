@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
 import { useDrag, useDrop } from 'react-dnd';
 
 import { IconButton } from './IconButton';
@@ -42,7 +42,7 @@ function Task({ task, index, tasks, recentlyAdded }) {
 
   const handleInfoClick = (event) => {
     event.stopPropagation();
-    setIsInfoOpen(!isInfoOpen); // Toggle the info panel state
+    setIsInfoOpen(!isInfoOpen);
   };
 
   const handleDelete = (event) => {
@@ -50,7 +50,6 @@ function Task({ task, index, tasks, recentlyAdded }) {
     deleteTask(task.id);
   }
 
-  // Function to handle task selection
   const handleSelection = (task) => {
     if (isProductivityTime) return;
     console.log("hi")
@@ -62,19 +61,6 @@ function Task({ task, index, tasks, recentlyAdded }) {
     selectEnjoymentItem({ ...task, type: 'task' }, updateTimeSpentHandler);
   };
 
-  const moveUp = (event) => {
-    event.stopPropagation();
-    if (index > 0) {
-      moveTask(index, index - 1);
-    }
-  };
-
-  const moveDown = (event) => {
-    event.stopPropagation();
-    if (index < tasks.length - 1) {
-      moveTask(index, index + 1);
-    }
-  };
 
   const isSelected = (task) => (isProductivityTime && index === 0) || (!isProductivityTime && selectedEnjoymentItem?.id === task.id && selectedEnjoymentItem?.type === 'task');
 
@@ -99,20 +85,6 @@ function Task({ task, index, tasks, recentlyAdded }) {
           onChange={() => completeTask(task.id)}
         />
         <p className="dark:text-white">{task.name}</p>
-        {!task.isCompleted && (
-          <>
-            {index > 0 && (
-              <IconButton onClick={moveUp} hoverClassName="hover:text-green-500">
-                <AiOutlineArrowUp />
-              </IconButton>
-            )}
-            {index < tasks.length - 1 && (
-              <IconButton onClick={moveDown} hoverClassName="hover:text-green-500">
-                <AiOutlineArrowDown />
-              </IconButton>
-            )}
-          </>
-        )}
         <IconButton onClick={handleInfoClick} hoverClassName="hover:text-blue-500">
           <AiOutlineInfoCircle />
         </IconButton>
