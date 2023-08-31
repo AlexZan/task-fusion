@@ -171,4 +171,10 @@
 
 .info-container.open {
   max-height: 30px; 
+}   
+.dragging {
+  opacity: 0.8;
+  cursor: 'grab';
+  background-color: #5b647e8a;
 }
+

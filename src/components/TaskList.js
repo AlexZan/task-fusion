@@ -1,4 +1,7 @@
 import React, { useState, useContext } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
 import { TasksContext } from '../context/TasksContext';
 import Task from './Task';
 import ItemInput from './ItemInput';
@@ -28,28 +31,30 @@ function TaskList({ onShowInfoPanel }) {
   };
 
   return (
-    <div className="padding-medium relative">
-      <h2 className="text-2xl font-semibold">Tasks</h2>
-      <ItemInput
-        isOpen={true}
-        value={newTask}
-        onChange={(e) => setNewTask(e.target.value)}
-        onKeyPress={(e) => { if (e.key === 'Enter') handleInputKeyPress(e); }}
-        placeholder="Type a new task and press Enter"
-      />
-      <div>
-        {tasks.map((task, index) => (
-          <Task
-            key={task.id}
-            index={index}
-            task={task}
-            tasks={tasks}
-            recentlyAdded={task.id === recentlyAddedTaskId}
-            onShowInfoPanel={onShowInfoPanel}
-          />
-        ))}
+    <DndProvider backend={HTML5Backend}>
+      <div className="padding-medium relative">
+        <h2 className="text-2xl font-semibold">Tasks</h2>
+        <ItemInput
+          isOpen={true}
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+          onKeyPress={(e) => { if (e.key === 'Enter') handleInputKeyPress(e); }}
+          placeholder="Type a new task and press Enter"
+        />
+        <div>
+          {tasks.map((task, index) => (
+            <Task
+              key={task.id}
+              index={index}
+              task={task}
+              tasks={tasks}
+              recentlyAdded={task.id === recentlyAddedTaskId}
+              onShowInfoPanel={onShowInfoPanel}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </DndProvider>
   );
 }
 
