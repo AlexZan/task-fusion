@@ -5,7 +5,6 @@ import { FaUndo, FaSortUp, FaSortDown, FaSort } from 'react-icons/fa';
 import { formatTimeSpent } from '../utils/timeUtils';
 
 const CompletedTasksTable = ({ data, handleUndoCompletion }) => {
-  const [hoveredRowId, setHoveredRowId] = useState(null);
   const [sorting, setSorting] = useState([]);
 
   const columnHelper = createColumnHelper();
@@ -18,36 +17,37 @@ const CompletedTasksTable = ({ data, handleUndoCompletion }) => {
       }),
       columnHelper.accessor('timeSpent', {
         header: ({ column }) => (
-            <div
-              style={{ display: 'flex', alignItems: 'center' }}
-              className={column.getCanSort() ? 'cursor-pointer select-none' : ''}
-              onClick={column.getToggleSortingHandler()}
-            >
-              Time Spent&nbsp;
-              {column.getIsSorted() === 'asc' ? (
-                <FaSortUp />
-              ) : column.getIsSorted() === 'desc' ? (
-                <FaSortDown />
-              ) : (
-                <FaSort />
-              )}
-            </div>
-          ),
-          
+          <div
+            style={{ display: 'flex', alignItems: 'center' }}
+            className={column.getCanSort() ? 'cursor-pointer select-none' : ''}
+            onClick={column.getToggleSortingHandler()}
+          >
+            Time Spent&nbsp;
+            {column.getIsSorted() === 'asc' ? (
+              <FaSortUp />
+            ) : column.getIsSorted() === 'desc' ? (
+              <FaSortDown />
+            ) : (
+              <FaSort />
+            )}
+          </div>
+        ),
+
         cell: info => formatTimeSpent(info.getValue() * 60),
       }),
       columnHelper.accessor('id', {
         header: 'Actions',
         cell: info => (
-          hoveredRowId === info.row.original.id && (
-            <button onClick={() => handleUndoCompletion(info.row.original.id)} className="text-gray-500 hover:text-red-500 duration-300">
-              <FaUndo size={14} />
-            </button>
-          )
+          <button
+            className="hover-visible text-gray-500 hover:text-red-500 duration-300"
+            onClick={() => handleUndoCompletion(info.row.original.id)}
+          >
+            <FaUndo size={14} />
+          </button>
         ),
       }),
     ],
-    [hoveredRowId, columnHelper, handleUndoCompletion]
+    [columnHelper, handleUndoCompletion]
   );
 
   const table = useReactTable({
@@ -77,11 +77,7 @@ const CompletedTasksTable = ({ data, handleUndoCompletion }) => {
       </thead>
       <tbody>
         {table.getRowModel().rows.map(row => (
-          <tr
-            key={row.id}
-            onMouseEnter={() => setHoveredRowId(row.original.id)}
-            onMouseLeave={() => setHoveredRowId(null)}
-          >
+          <tr className="hoverable-row" key={row.id} >
             {row.getVisibleCells().map(cell => (
               <td key={cell.id}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

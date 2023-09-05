@@ -177,4 +177,13 @@
   cursor: 'grab';
   background-color: #5b647e8a;
 }
+/* Hide the undo button by default */
+.hoverable-row .hover-visible {
+  display: none;
+}
+
+/* Show the undo button when its parent row is hovered */
+.hoverable-row:hover .hover-visible {
+  display: inline-block;
+}
 
