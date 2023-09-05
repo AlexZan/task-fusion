@@ -92,4 +92,15 @@ export function formatTimeSpent(seconds) {
   }
   
   
+  export function convertHHMMSStoMinutes(timeStr) {
+    const timeParts = timeStr.split(":");
+    if (timeParts.length !== 2) return null;
+  
+    const hours = parseInt(timeParts[0], 10);
+    const minutes = parseInt(timeParts[1], 10);
+  
+    if (isNaN(hours) || isNaN(minutes)) return null;
+  
+    return hours * 60 + minutes;
+  }
   
