@@ -37,10 +37,10 @@ const TimeSpentPieChart = ({ data }) => {
 
     return (
         <div className="flex justify-center items-center">
-            <PieChart width={550} height={300}>
+            <PieChart width={600} height={300}>
                 <Pie
                     data={data}
-                    cx={250}
+                    cx={300}
                     cy={150}
                     outerRadius={100}
                     fill="#8884d8"
