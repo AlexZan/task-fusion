@@ -1,10 +1,13 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider, Link, Outlet } from "react-router-dom";
-import TimerMode from './TimerMode';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
+import TimerMode from './TimerMode';
 import { TasksProvider } from './context/TasksContext';
 import { ActivitiesProvider } from './context/ActivitiesContext';
 import { TimeProvider } from './context/TimeContext';
+import { store, persistor } from './store';
 import Insights from './components/Insights';
 
 function Header() {
@@ -44,14 +47,18 @@ const router = createBrowserRouter([
 function App() {
 
   return (
-    <TimeProvider>
-      <TasksProvider>
-        <ActivitiesProvider>
-            <RouterProvider router={router}>
-            </RouterProvider>
-        </ActivitiesProvider>
-      </TasksProvider>
-    </TimeProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <TimeProvider>
+          <TasksProvider>
+            <ActivitiesProvider>
+              <RouterProvider router={router}>
+              </RouterProvider>
+            </ActivitiesProvider>
+          </TasksProvider>
+        </TimeProvider>
+      </PersistGate>
+    </Provider>
   );
 }
 

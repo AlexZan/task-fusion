@@ -1,17 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
 import { useDrag, useDrop } from 'react-dnd';
 
 import { IconButton } from './IconButton';
-import { TasksContext } from '../context/TasksContext';
+import useActiveTasks from '../hooks/useActiveTasks';
 import { useTimeContext } from '../context/TimeContext';
 import InfoPanel from './InfoPanel';
 
 const ItemType = 'TASK';
 
-function Task({ task, index, tasks, recentlyAdded }) {
+function Task({ task, index, recentlyAdded }) {
 
-  const { completeTask, deleteTask, moveTask, updateTaskTimeSpent } = useContext(TasksContext);
+  const { completeTask, deleteTask, moveTask, updateTaskTimeSpent } = useActiveTasks();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const { selectEnjoymentItem, isProductivityTime, selectedEnjoymentItem } = useTimeContext();
 
@@ -52,7 +52,6 @@ function Task({ task, index, tasks, recentlyAdded }) {
 
   const handleSelection = (task) => {
     if (isProductivityTime) return;
-    console.log("hi")
 
     const updateTimeSpentHandler = (timeSpent) => {
       updateTaskTimeSpent(task.id, timeSpent);
@@ -82,7 +81,7 @@ function Task({ task, index, tasks, recentlyAdded }) {
           type="checkbox"
           checked={task.isCompleted}
           className="mr-2 form-checkbox text-blue-600"
-          onChange={() => completeTask(task.id)}
+          onChange={() => completeTask(task)}
         />
         <p className="dark:text-white">{task.name}</p>
         <IconButton onClick={handleInfoClick} hoverClassName="hover:text-blue-500">

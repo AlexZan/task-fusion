@@ -1,32 +1,28 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import { TasksContext } from '../context/TasksContext';
 import Task from './Task';
 import ItemInput from './ItemInput';
+import useActiveTasks from '../hooks/useActiveTasks';
 
 function TaskList({ onShowInfoPanel }) {
   const [newTask, setNewTask] = useState('');
   const [recentlyAddedTaskId, setRecentlyAddedTaskId] = useState(null);
 
-  const { activeTasks, addTask } = useContext(TasksContext);
+  const { activeTasks, handleAddTask } = useActiveTasks();
 
   const tasks = activeTasks.filter(task => !task.isCompleted);
 
-
-
   const handleInputKeyPress = (e) => {
     if (e.key === 'Enter' && newTask.trim() !== '') {
-      const newTaskId = Date.now().toString();
       const newTaskObj = {
-        id: newTaskId,
         name: newTask,
         repeat: null,
       };
-      addTask(newTaskObj);
+      handleAddTask(newTaskObj);
       setNewTask('');
-      setRecentlyAddedTaskId(newTaskId);
+      setRecentlyAddedTaskId(newTaskObj.id);
     }
   };
 
@@ -38,7 +34,7 @@ function TaskList({ onShowInfoPanel }) {
           isOpen={true}
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
-          onKeyPress={(e) => { if (e.key === 'Enter') handleInputKeyPress(e); }}
+          onKeyPress={handleInputKeyPress}
           placeholder="Type a new task and press Enter"
         />
         <div>
@@ -47,7 +43,6 @@ function TaskList({ onShowInfoPanel }) {
               key={task.id}
               index={index}
               task={task}
-              tasks={tasks}
               recentlyAdded={task.id === recentlyAddedTaskId}
               onShowInfoPanel={onShowInfoPanel}
             />

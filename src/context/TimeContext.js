@@ -21,7 +21,7 @@ export const TimeProvider = ({ children, initialNeedToDoMinutes = 20, initialWan
   // Existing states
   const [selectedEnjoymentItem, setSelectedEnjoymentItem] = useState({ id: null, type: null });
   const [enjoymentTickHandler, setEnjoymentTickHandler] = useState(null);
-  const [isProductivityTime, setIsProductivityTime] = useState(loadFromLocalStorage('isProductivityTime') !== null ? loadFromLocalStorage('isProductivityTime') : true);
+  const [isProductivityTime, setIsProductivityTime] = useState(loadFromLocalStorage('isProductivityTime') !== undefined ? loadFromLocalStorage('isProductivityTime') : true);
   const [productiveTime, setProductiveTime] = useState(loadFromLocalStorage('productiveTime') || 0);
   const [passionTime, setPassionTime] = useState(loadFromLocalStorage('passionTime') || 0);
   const [leisureTime, setLeisureTime] = useState(loadFromLocalStorage('leisureTime') || 0);

@@ -1,9 +1,10 @@
-import React, { useState, useContext } from 'react';
-import { TasksContext } from '../context/TasksContext';
+import React, { useState } from 'react';
+import useCompletedTasks from '../hooks/useCompletedTasks';
 import CompletedTasksTable from './CompletedTasksTable';
 
 const CompletedTasks = () => {
-  const { completedTasks, uncompleteTask } = useContext(TasksContext);
+  const { completedTasks, handleUndoCompletion } = useCompletedTasks();
+  // const { completedTasks, uncompleteTask } = useContext(TasksContext);
   const [filter, setFilter] = useState("");
 
   if (!completedTasks) {
@@ -11,7 +12,7 @@ const CompletedTasks = () => {
   }
 
   // Filtered data based on search input
-  const filteredTasks = completedTasks.filter(task => task.name.toLowerCase().includes(filter.toLowerCase()));
+  const filteredTasks = completedTasks.filter(task => task?.name?.toLowerCase().includes(filter.toLowerCase()));
 
   return (
     <div className="theme-bg-dark border-radius-medium relative padding-medium">
@@ -30,7 +31,7 @@ const CompletedTasks = () => {
       </div>
 
       {/* Table View */}
-      <CompletedTasksTable data={filteredTasks} handleUndoCompletion={uncompleteTask} />
+      <CompletedTasksTable data={filteredTasks} handleUndoCompletion={handleUndoCompletion} />
     </div>
   );
 };
