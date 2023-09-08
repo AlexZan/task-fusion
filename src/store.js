@@ -1,9 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import activeTasksReducer from './slices/activeTasksSlice';
-import completedTasksReducer from './slices/completedTasksSlice';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from '@reduxjs/toolkit';
+
+import activeTasksReducer from './slices/activeTasksSlice';
+import completedTasksReducer from './slices/completedTasksSlice';
+import repeatTasksReducer from './slices/repeatTasksSlice';
+import activitiesReducer from './slices/activitiesSlice';
 
 const persistConfig = {
   key: 'root',
@@ -13,6 +16,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   activeTasks: activeTasksReducer,
   completedTasks: completedTasksReducer,
+  repeatTasks: repeatTasksReducer,
+  activities: activitiesReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

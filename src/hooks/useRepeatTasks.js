@@ -1,73 +1,33 @@
-import { useState, useEffect } from 'react';
-import { loadFromLocalStorage, saveToLocalStorage } from '../utils/localStorage';
-import tasksData from '../place-holder-data.json';
+// useRepeatTasks.js
+import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
+
+import { addRepeatTask, deleteRepeatTask } from '../slices/repeatTasksSlice';
+import { startRepeatTaskInServiceWorker, stopRepeatTaskInServiceWorker } from '../services/serviceWorkerHelper';
 
 
 export const useRepeatTasks = () => {
-  const [repeatTasks, setRepeatTasks] = useState(
-    () => loadFromLocalStorage('repeatTasks') || tasksData.repeatTasks
-  );
+  const dispatch = useDispatch();
+  const repeatTasks = useSelector(state => state.repeatTasks);
 
-  const startRepeatTaskInServiceWorker = (taskId, duration) => {
-    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        action: 'startRepeatTask',
-        taskId,
-        duration,
-      });
-    } else {
-      console.warn('Service worker controller not found. Unable to start repeat task.');
-    }
+  const handleAddRepeatTask = (name, repeat) => {
+    const taskId = uuidv4();
+    dispatch(addRepeatTask({ id: taskId, name, repeat }));
+    startRepeatTaskInServiceWorker(taskId, repeat);
+    return taskId;
   };
-  
-  const stopRepeatTaskInServiceWorker = (taskId) => {
-    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        action: 'stopRepeatTask',
-        taskId,
-      });
-    } else {
-      console.warn('Service worker controller not found. Unable to stop repeat task.');
-    }
-  };
-  
 
-  const addRepeatTask = (name, repeat) => {
-    const newTaskId = uuidv4();
-    const newRepeatTask = { name, repeat, id: newTaskId };
-    setRepeatTasks((prevTasks) => [...prevTasks, newRepeatTask]);
-    startRepeatTaskInServiceWorker(newTaskId, repeat);
-    return newTaskId; 
-  };
-  
-  const deleteRepeatTask = (taskId) => {
-    setRepeatTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  const handleDeleteRepeatTask = (taskId) => {
+    dispatch(deleteRepeatTask(taskId));
     stopRepeatTaskInServiceWorker(taskId);
   };
 
-  useEffect(() => {
-    saveToLocalStorage('repeatTasks', repeatTasks);
-  }, [repeatTasks]);
-
-  useEffect(() => {
-    // Message handler to receive messages from the service worker
-    const handleMessage = (event) => {
-      // TODO: Handle messages from the service worker related to repeat tasks
-      // You will need to implement the logic here to update the main application state
-    };
-
-    navigator.serviceWorker.addEventListener('message', handleMessage);
-
-    // Clean up the event listener when the hook unmounts
-    return () => {
-      navigator.serviceWorker.removeEventListener('message', handleMessage);
-    };
-  }, []);
+  // If you have more service worker related logic/events, include them here
+  // ...
 
   return {
     repeatTasks,
-    addRepeatTask,
-    deleteRepeatTask,
+    addRepeatTask: handleAddRepeatTask,
+    deleteRepeatTask: handleDeleteRepeatTask,
   };
 };

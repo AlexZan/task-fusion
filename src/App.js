@@ -4,8 +4,6 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import TimerMode from './TimerMode';
-import { TasksProvider } from './context/TasksContext';
-import { ActivitiesProvider } from './context/ActivitiesContext';
 import { TimeProvider } from './context/TimeContext';
 import { store, persistor } from './store';
 import Insights from './components/Insights';
@@ -50,12 +48,8 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <TimeProvider>
-          <TasksProvider>
-            <ActivitiesProvider>
-              <RouterProvider router={router}>
-              </RouterProvider>
-            </ActivitiesProvider>
-          </TasksProvider>
+            <RouterProvider router={router}>
+            </RouterProvider>
         </TimeProvider>
       </PersistGate>
     </Provider>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
 
-import { useActivitiesContext } from '../context/ActivitiesContext';
+import { useActivities } from '../hooks/useActivities'
 import { useTimeContext } from '../context/TimeContext';
 
 import { IconButton } from './IconButton';
@@ -11,7 +11,7 @@ import InfoPanel from './InfoPanel';
 function Activity({ activity, onDelete}) {
   const [isInfoOpen, setInfoOpen] = React.useState(false);
   const { selectEnjoymentItem, isProductivityTime, selectedEnjoymentItem } = useTimeContext();
-  const { updateActivityTimeSpent } = useActivitiesContext();
+  const { updateActivityTimeSpent } = useActivities();
 
   
 
@@ -51,9 +51,8 @@ function Activity({ activity, onDelete}) {
 export default function Activities() {
   const [newActivity, setNewActivity] = useState('');
 
-  const { activities, addActivity, removeActivity } = useActivitiesContext();
+  const { activities, addActivity, removeActivity, updateActivityTimeSpent } = useActivities();
   const { selectEnjoymentItem, selectedEnjoymentItem } = useTimeContext();
-  const { updateActivityTimeSpent } = useActivitiesContext();
 
 
   const handleActivityKeyPress = (e) => {

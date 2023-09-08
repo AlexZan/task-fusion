@@ -3,7 +3,6 @@
 
   import ConfigModal from './ConfigModal';
   import TimerDisplayControl from './TimerDisplayControl';
-  import { useTasksContext } from '../context/TasksContext';
   import { useTimeContext } from '../context/TimeContext';
 
   function Timer() {
@@ -11,7 +10,6 @@
     const [isInfoPanelOpen, setInfoPanelOpen] = useState(false);
     const [isAlertPanelOpen, setAlertPanelOpen] = useState(false);
 
-    const { getCurrentTask  } = useTasksContext();
     const {
       isProductivityTime,
       needToDoTime,
@@ -26,9 +24,6 @@
       switchTimer,
       selectedEnjoymentItem,
     } = useTimeContext();
-
-    //todo no need
-    const currentTask = getCurrentTask();
 
     const handleStart = () => {
       if (!isProductivityTime && !selectedEnjoymentItem?.id) {
@@ -57,7 +52,6 @@
         </div>
 
         <h2 className="text-2xl">{isProductivityTime ? 'Productivity' : 'Enjoyment'}</h2>
-        {isProductivityTime && <h3 className="text-xl text-gray-600">{currentTask ? currentTask.name : 'No task selected'}</h3>}
 
         <TimerDisplayControl minutes={minutes} seconds={seconds} start={handleStart} stop={stop} reset={reset} isRunning={isRunning} />
         <button onClick={switchTimer} className="mt-4 text-gray-500 hover:text-blue-500 transition-colors duration-200">
