@@ -34,12 +34,18 @@ const activeTasksSlice = createSlice({
     },
     updateTimeSpentAction: (state, action) => {
       const task = state.find(t => t.id === action.payload.id);
+
       if (task) {
-        task.timeSpent = (task.timeSpent || 0) + action.payload.timeSpent;
+        task.timeSpent = (task.timeSpent || 0) + action.payload.elapsedTime;
       }
-    }
+    },
+    updateTopTaskTimeSpentAction: (state, action) => {
+      if (state.length > 0) {
+          state[0].timeSpent += action.payload;
+      }
+  },
   }
 });
 
-export const { addActiveTaskAction, deleteTaskAction, moveTaskAction, updateTimeSpentAction } = activeTasksSlice.actions;
+export const { addActiveTaskAction, deleteTaskAction, moveTaskAction, updateTimeSpentAction, updateTopTaskTimeSpentAction } = activeTasksSlice.actions;
 export default activeTasksSlice.reducer;

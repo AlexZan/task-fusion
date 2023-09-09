@@ -1,32 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
 
 import { useActivities } from '../hooks/useActivities'
-import { useTimeContext } from '../context/TimeContext';
-
+import useTime from '../hooks/useTime';
 import { IconButton } from './IconButton';
 import ItemInput from './ItemInput';
 import InfoPanel from './InfoPanel';
 
-function Activity({ activity, onDelete}) {
+function Activity({ activity, onDelete }) {
   const [isInfoOpen, setInfoOpen] = React.useState(false);
-  const { selectEnjoymentItem, isProductivityTime, selectedEnjoymentItem } = useTimeContext();
-  const { updateActivityTimeSpent } = useActivities();
+  const { selectEnjoymentItem, isProductivity, selectedEnjoymentItem } = useTime();
+  // const { updateActivityTimeSpent } = useActivities();
 
-  
+
 
   const handleSelection = (activity) => {
-    if (isProductivityTime) return;
+    if (isProductivity) return;
     
-    // Handler to update the time spent for the selected activity
-    const updateTimeSpentHandler = (timeSpent) => {
-      updateActivityTimeSpent(activity.id, timeSpent);
-    };
-
-    selectEnjoymentItem({ ...activity, type: 'activity' }, updateTimeSpentHandler);
+    selectEnjoymentItem({ ...activity, type: 'activity' });
   };
+  
 
-  const isSelected = (activity) => !isProductivityTime && selectedEnjoymentItem?.id === activity.id && selectedEnjoymentItem?.type === 'activity';
+  const isSelected = (activity) => !isProductivity && selectedEnjoymentItem?.id === activity.id && selectedEnjoymentItem?.type === 'activity';
 
   const handleInfoClick = () => {
     setInfoOpen(!isInfoOpen);
@@ -52,7 +47,9 @@ export default function Activities() {
   const [newActivity, setNewActivity] = useState('');
 
   const { activities, addActivity, removeActivity, updateActivityTimeSpent } = useActivities();
-  const { selectEnjoymentItem, selectedEnjoymentItem } = useTimeContext();
+  const { selectEnjoymentItem, selectedEnjoymentItem } = useTime();
+
+  const hasSetInitialActivityRef = useRef(false);
 
 
   const handleActivityKeyPress = (e) => {
@@ -63,14 +60,14 @@ export default function Activities() {
   };
 
   useEffect(() => {
-    if (activities.length > 0 && !selectedEnjoymentItem?.id) {
+    if (!hasSetInitialActivityRef.current && activities.length > 0 && !selectedEnjoymentItem?.id) {
       const firstActivity = activities[0];
-      const updateTimeSpentHandler = (timeSpent) => {
-        updateActivityTimeSpent(firstActivity.id, timeSpent);
-      };
-      selectEnjoymentItem({ ...firstActivity, type: 'activity' }, updateTimeSpentHandler);
+      selectEnjoymentItem({ ...firstActivity, type: 'activity' }); // use it here
+
+      // Mark that we've set the initial activity so this logic doesn't run again
+      hasSetInitialActivityRef.current = true;
     }
-  }, [activities, selectedEnjoymentItem, selectEnjoymentItem, updateActivityTimeSpent]);
+  }, [activities, selectedEnjoymentItem, selectEnjoymentItem]);
 
 
 

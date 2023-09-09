@@ -97,18 +97,7 @@ export default function useTasks() {
     dispatch({ type: 'UPDATE_TIME_SPENT', payload: { id: id, timeSpent: time } });
   }, []);
 
-  const productivityTickHandler = useCallback((timeSpent) => {
-    // Get the current top task every time the handler is called
-    const topTask = getCurrentTask();
 
-    if (topTask) {
-      updateTaskTimeSpent(topTask.id, timeSpent);
-    }
-  }, [getCurrentTask, updateTaskTimeSpent]); // Dependencies that could change
-
-  useEffect(() => {
-    setProductivityTickFunction(productivityTickHandler);
-  }, [setProductivityTickFunction, productivityTickHandler]); // Dependency on productivityTickHandler
 
   return {
     activeTasks: state.activeTasks,

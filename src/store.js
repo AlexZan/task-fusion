@@ -7,6 +7,8 @@ import activeTasksReducer from './slices/activeTasksSlice';
 import completedTasksReducer from './slices/completedTasksSlice';
 import repeatTasksReducer from './slices/repeatTasksSlice';
 import activitiesReducer from './slices/activitiesSlice';
+import timeReducer from './slices/timeSlice'
+import timerReducer from './slices/timerSlice'
 
 const persistConfig = {
   key: 'root',
@@ -18,13 +20,11 @@ const rootReducer = combineReducers({
   completedTasks: completedTasksReducer,
   repeatTasks: repeatTasksReducer,
   activities: activitiesReducer,
+  time: timeReducer,
+  timer: timerReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-for (let key in rootReducer) {
-  persistedReducer[key] = persistReducer(persistConfig, rootReducer[key]);
-}
 
 const store = configureStore({
   reducer: persistedReducer,
@@ -39,8 +39,6 @@ const store = configureStore({
     }
   })
 });
-
-
 
 const persistor = persistStore(store);
 

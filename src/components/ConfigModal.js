@@ -2,14 +2,15 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { FaCog } from 'react-icons/fa';
 import { saveToLocalStorage } from '../utils/localStorage';
-import { useTimeContext } from '../context/TimeContext';
+import useTimer from '../hooks/useTimer';
+
 
 
 
 
 function ConfigModal({ isOpen, onClose, needToDoTime, wantToDoTime, setNeedToDoTime, setWantToDoTime }) {
 
-  const { reset } = useTimeContext();
+  const { reset } = useTimer();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();

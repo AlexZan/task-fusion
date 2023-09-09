@@ -4,7 +4,7 @@ import { useDrag, useDrop } from 'react-dnd';
 
 import { IconButton } from './IconButton';
 import useActiveTasks from '../hooks/useActiveTasks';
-import { useTimeContext } from '../context/TimeContext';
+import useTime from '../hooks/useTime';
 import InfoPanel from './InfoPanel';
 
 const ItemType = 'TASK';
@@ -13,7 +13,7 @@ function Task({ task, index, recentlyAdded }) {
 
   const { completeTask, deleteTask, moveTask, updateTaskTimeSpent } = useActiveTasks();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
-  const { selectEnjoymentItem, isProductivityTime, selectedEnjoymentItem } = useTimeContext();
+  const { selectEnjoymentItem, isProductivity, selectedEnjoymentItem } = useTime();
 
   const ref = React.useRef(null);
 
@@ -51,23 +51,19 @@ function Task({ task, index, recentlyAdded }) {
   }
 
   const handleSelection = (task) => {
-    if (isProductivityTime) return;
+    if (isProductivity) return;
 
-    const updateTimeSpentHandler = (timeSpent) => {
-      updateTaskTimeSpent(task.id, timeSpent);
-    };
-
-    selectEnjoymentItem({ ...task, type: 'task' }, updateTimeSpentHandler);
+    selectEnjoymentItem({ ...task, type: 'task' });
   };
 
 
-  const isSelected = (task) => (isProductivityTime && index === 0) || (!isProductivityTime && selectedEnjoymentItem?.id === task.id && selectedEnjoymentItem?.type === 'task');
+  const isSelected = (task) => (isProductivity && index === 0) || (!isProductivity && selectedEnjoymentItem?.id === task.id && selectedEnjoymentItem?.type === 'task');
 
   const className = `
     flex items-center item-container 
   
     ${recentlyAdded ? 'highlight-task' : ''} 
-    ${isSelected(task) || (isProductivityTime && index === 0) ? 'selected-item' : ''}
+    ${isSelected(task) || (isProductivity && index === 0) ? 'selected-item' : ''}
     ${isDragging ? 'dragging' : ''}
 `;
 
@@ -91,7 +87,7 @@ function Task({ task, index, recentlyAdded }) {
           <AiOutlineDelete />
         </IconButton>
       </div>
-      <InfoPanel isOpen={isInfoOpen || (isProductivityTime && index === 0)} item={task} />
+      <InfoPanel isOpen={isInfoOpen || (isProductivity && index === 0)} item={task} />
     </div>
   );
 }

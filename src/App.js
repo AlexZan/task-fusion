@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import TimerMode from './TimerMode';
-import { TimeProvider } from './context/TimeContext';
 import { store, persistor } from './store';
 import Insights from './components/Insights';
 
@@ -47,10 +46,8 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <TimeProvider>
-            <RouterProvider router={router}>
-            </RouterProvider>
-        </TimeProvider>
+        <RouterProvider router={router}>
+        </RouterProvider>
       </PersistGate>
     </Provider>
   );

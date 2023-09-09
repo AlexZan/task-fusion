@@ -1,11 +1,11 @@
 import React from 'react';
-import { useTimeContext } from '../context/TimeContext';
+import useTime from '../hooks/useTime';
 import { formatTimeSpent } from '../utils/timeUtils'
 import TimeSpentPieChart from './TimeSpentPieChart';
 
 function Insights() {
   // Destructure the time data from TimeContext
-  const { productiveTime, passionTime, leisureTime, resetDailyInsights } = useTimeContext();
+  const { productiveTime, passionTime, leisureTime, resetDailyInsights } = useTime();
 
   const descriptionClass = "text-gray-500 text-sm";
 
