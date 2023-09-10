@@ -13,10 +13,6 @@ function Timer() {
   // Destructure from useTime
   const {
     isProductivity,
-    needToDoTime,
-    wantToDoTime,
-    setNeedToDoTime,
-    setWantToDoTime,
   } = useTime();
 
   // Destructure from useTimer
@@ -53,7 +49,7 @@ function Timer() {
       <button onClick={switchTimer} className="mt-4 text-gray-500 hover:text-blue-500 transition-colors duration-200">
         <FaExchangeAlt />
       </button>
-      <ConfigModal isOpen={isConfigOpen} onClose={handleClose} needToDoTime={needToDoTime} wantToDoTime={wantToDoTime} setNeedToDoTime={setNeedToDoTime} setWantToDoTime={setWantToDoTime} />
+      <ConfigModal isOpen={isConfigOpen} onClose={handleClose} />
       {isInfoPanelOpen && (
         <div className="bg-blue-300 border border-blue-900 text-blue-900 px-4 py-3 rounded-md shadow-md" role="alert">
           {isProductivity ? (

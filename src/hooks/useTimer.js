@@ -28,6 +28,8 @@ function useTimer() {
   // Helper function to determine if timer has finished
   const isFinished = () => timeLeft <= 0;
 
+  const getCurrentModeTotalTime = () => isProductivity ? productivityTime : enjoymentTime;
+
   const startContinuousAlarm = () => {
     // logic to start alarm
     toggleTimerAlarmPlaying();
@@ -98,7 +100,7 @@ function useTimer() {
 
   const reset = () => {
     setTimerRunning(false);
-    updateTimeLeft(0); // Reset to initialTime if you want a different starting point
+    updateTimeLeft(getCurrentModeTotalTime());
   }
 
   const switchTimer = () => {
