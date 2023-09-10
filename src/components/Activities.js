@@ -16,14 +16,23 @@ function Activity({ activity, onDelete }) {
 
   const handleSelection = (activity) => {
     if (isProductivity) return;
-    
+
+    setInfoOpen(true);
     selectEnjoymentItem({ ...activity, type: 'activity' });
   };
-  
 
-  const isSelected = (activity) => !isProductivity && selectedEnjoymentItem?.id === activity.id && selectedEnjoymentItem?.type === 'activity';
 
-  const handleInfoClick = () => {
+  const isSelected = (activity) =>
+    !isProductivity && selectedEnjoymentItem?.id === activity.id && selectedEnjoymentItem?.type === 'activity';
+
+  useEffect(() => {
+    if (!isSelected(activity)) {
+      setInfoOpen(false);
+    }
+  }, [selectedEnjoymentItem]);
+
+  const handleInfoClick = (event) => {
+    event.stopPropagation();
     setInfoOpen(!isInfoOpen);
   };
 
@@ -38,7 +47,7 @@ function Activity({ activity, onDelete }) {
           <AiOutlineDelete />
         </IconButton>
       </div>
-      <InfoPanel isOpen={isInfoOpen} item={activity} />
+      <InfoPanel isOpen={isInfoOpen || isSelected(activity)} item={activity} />
     </div>
   );
 }

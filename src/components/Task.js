@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
 import { useDrag, useDrop } from 'react-dnd';
 
@@ -53,11 +53,20 @@ function Task({ task, index, recentlyAdded }) {
   const handleSelection = (task) => {
     if (isProductivity) return;
 
+    setIsInfoOpen(true);
     selectEnjoymentItem({ ...task, type: 'task' });
   };
 
 
-  const isSelected = (task) => (isProductivity && index === 0) || (!isProductivity && selectedEnjoymentItem?.id === task.id && selectedEnjoymentItem?.type === 'task');
+   // This function checks if the current task is selected
+   const isSelected = (task) => 
+   !isProductivity && selectedEnjoymentItem?.id === task.id && selectedEnjoymentItem?.type === 'task';
+
+  useEffect(() => {
+    if (!isSelected(task)) {
+      setIsInfoOpen(false);
+    }
+  }, [selectedEnjoymentItem]);
 
   const className = `
     flex items-center item-container 
@@ -87,7 +96,7 @@ function Task({ task, index, recentlyAdded }) {
           <AiOutlineDelete />
         </IconButton>
       </div>
-      <InfoPanel isOpen={isInfoOpen || (isProductivity && index === 0)} item={task} />
+      <InfoPanel isOpen={isInfoOpen || isSelected(task)} item={task} />
     </div>
   );
 }
