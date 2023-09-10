@@ -11,7 +11,7 @@ const ItemType = 'TASK';
 
 function Task({ task, index, recentlyAdded }) {
 
-  const { completeTask, deleteTask, moveTask, updateTaskTimeSpent } = useActiveTasks();
+  const { completeTask, handleDeleteTask, moveTask } = useActiveTasks();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const { selectEnjoymentItem, isProductivity, selectedEnjoymentItem } = useTime();
 
@@ -47,7 +47,7 @@ function Task({ task, index, recentlyAdded }) {
 
   const handleDelete = (event) => {
     event.stopPropagation();
-    deleteTask(task.id);
+    handleDeleteTask(task.id);
   }
 
   const handleSelection = (task) => {
@@ -58,7 +58,7 @@ function Task({ task, index, recentlyAdded }) {
   };
 
 
-   // This function checks if the current task is selected
+  // This function checks if the current task is selected
    const isSelected = (task) => 
    !isProductivity && selectedEnjoymentItem?.id === task.id && selectedEnjoymentItem?.type === 'task';
 
