@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { addActiveTaskAction, deleteTaskAction, moveTaskAction, updateTopTaskTimeSpentAction } from '../slices/activeTasksSlice';
+import { addActiveTaskAction, deleteTaskAction, moveTaskAction, updateTopTaskTimeSpentAction, updateTaskName } from '../slices/activeTasksSlice';
 import { completeTaskAction } from '../thunks/taskThunks';
 
 const useActiveTasks = () => {
@@ -8,6 +8,10 @@ const useActiveTasks = () => {
 
   const handleAddTask = (task) => {
     dispatch(addActiveTaskAction(task));
+  };
+
+  const editTaskName = (taskId, newName) => {
+    dispatch(updateTaskName({ id: taskId, newName }));
   };
 
   const handleDeleteTask = (taskId) => {
@@ -33,6 +37,7 @@ const useActiveTasks = () => {
   return {
     activeTasks,
     handleAddTask,
+    editTaskName,
     handleDeleteTask,
     completeTask,
     moveTask,

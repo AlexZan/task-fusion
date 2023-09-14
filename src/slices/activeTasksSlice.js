@@ -14,11 +14,11 @@ const activeTasksSlice = createSlice({
   reducers: {
     addActiveTaskAction: (state, action) => {
       const task = action.payload;
-    
+
       if (!task.id) {
         task.id = uuidv4();
       }
-  
+
       state.push(task);
     },
     deleteTaskAction: (state, action) => {
@@ -41,11 +41,18 @@ const activeTasksSlice = createSlice({
     },
     updateTopTaskTimeSpentAction: (state, action) => {
       if (state.length > 0) {
-          state[0].timeSpent += action.payload;
+        state[0].timeSpent += action.payload;
       }
-  },
+    },
+    // Inside the reducers object in createSlice
+    updateTaskName: (state, action) => {
+      const taskToUpdate = state.find(task => task.id === action.payload.id);
+      if (taskToUpdate) {
+        taskToUpdate.name = action.payload.newName;
+      }
+    },
   }
 });
 
-export const { addActiveTaskAction, deleteTaskAction, moveTaskAction, updateTaskTimeSpent, updateTopTaskTimeSpentAction } = activeTasksSlice.actions;
+export const { addActiveTaskAction, deleteTaskAction, moveTaskAction, updateTaskTimeSpent, updateTopTaskTimeSpentAction, updateTaskName } = activeTasksSlice.actions;
 export default activeTasksSlice.reducer;
