@@ -3,6 +3,11 @@ import { startAlarm, setTimeLeft } from '../../slices/timerSlice';
 import { increaseProductiveTime, increasePassionTime, increaseLeisureTime } from '../../slices/timeTrackerSlice'
 import { updateActivityTimeSpent } from '../../slices/activitiesSlice';
 import { updateTaskTimeSpent, updateTopTaskTimeSpentAction } from '../../slices/activeTasksSlice';
+import {
+    startTimerInServiceWorker,
+    stopTimerInServiceWorker,
+    resetTimerInServiceWorker,
+} from '../../utils/serviceWorkerUtils';
 
 let tickInterval;
 let accumulatedSeconds = 0;
@@ -10,6 +15,11 @@ let accumulatedSeconds = 0;
 const tickMiddleware = store => next => action => {
     switch (action.type) {
         case 'timer/setRunning':
+            if (action.payload) {
+                startTimerInServiceWorker(store.getState().timer.timeLeft);
+            } else {
+                stopTimerInServiceWorker();
+            }
             if (action.payload && !tickInterval) {
                 let lastUpdateTime = Date.now();
 
@@ -37,10 +47,10 @@ const tickMiddleware = store => next => action => {
                     if (!isProductivity && selectedEnjoymentItem) {
                         if (selectedEnjoymentItem.type === 'task') {
                             store.dispatch(increasePassionTime(elapsedMinutes));
-                            store.dispatch(updateTaskTimeSpent({id: selectedEnjoymentItem.id, time: elapsedMinutes}));
+                            store.dispatch(updateTaskTimeSpent({ id: selectedEnjoymentItem.id, time: elapsedMinutes }));
                         } else if (selectedEnjoymentItem.type === 'activity') {
                             store.dispatch(increaseLeisureTime(elapsedMinutes));
-                            store.dispatch(updateActivityTimeSpent({id: selectedEnjoymentItem.id, time: elapsedMinutes}));
+                            store.dispatch(updateActivityTimeSpent({ id: selectedEnjoymentItem.id, time: elapsedMinutes }));
                         }
                     }
 
@@ -62,10 +72,21 @@ const tickMiddleware = store => next => action => {
                 tickInterval = null;
             }
             break;
+        case 'timer/toggleProductivity':
+            resetTimerInServiceWorker();
+            break;
 
         default:
             break;
     }
+
+    // Listen for messages from the service worker.
+    navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data === 'timerFinished') {
+            store.dispatch(startAlarm());
+            store.dispatch(setTimeLeft(0));  // Set time left to zero
+        }
+    });
 
     return next(action);
 };
