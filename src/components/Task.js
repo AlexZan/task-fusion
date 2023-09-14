@@ -47,6 +47,7 @@ function Task({ task, index, recentlyAdded }) {
     setIsEditing(true);
   };
 
+
   const handleCancelClick = () => {
     setEditedName(task.name);  // Reset the editedName to the original name of the task
     setIsEditing(false);  // Exit editing mode
@@ -100,51 +101,52 @@ function Task({ task, index, recentlyAdded }) {
     ${isDragging ? 'dragging' : ''}
 `;
 
-return (
-  <div>
-    <div ref={ref} className={className} onClick={() => handleSelection(task)}>
-      {
-        isEditing ? (
-          <div className="flex items-center w-full">
-            <input
-              value={editedName}
-              onChange={handleInputChange}
-              className="flex-grow dark:bg-gray-700 dark:text-white p-1 rounded border border-gray-400 focus:border-blue-500 focus:outline-none transition duration-150 text-sm h-8 mr-2"
-            />
-            <IconButton onClick={handleSaveClick} hoverClassName="hover:text-blue-500">
-              <AiOutlineSave />
-            </IconButton>
-            <IconButton onClick={handleCancelClick} hoverClassName="hover:text-red-500">
-              <AiOutlineClose />
-            </IconButton>
-          </div>
-        ) : (
-          <div className="flex items-center w-full">
-            <input
-              type="checkbox"
-              checked={task.isCompleted}
-              className="mr-2 form-checkbox text-blue-600"
-              onChange={() => completeTask(task)}
-            />
-            <p className="flex-grow dark:text-white">{task.name}</p>
-            <div className="flex items-center">
-              <IconButton onClick={handleInfoClick} hoverClassName="hover:text-blue-500">
-                <AiOutlineInfoCircle />
+  return (
+    <div>
+      <div ref={ref} className={className} onClick={() => handleSelection(task)}>
+        {
+          isEditing ? (
+            <div className="flex items-center w-full">
+              <input
+                key={task.id}
+                value={editedName}
+                onChange={handleInputChange}
+                className="flex-grow dark:bg-gray-700 dark:text-white p-1 rounded border border-gray-400 focus:border-blue-500 focus:outline-none transition duration-150 text-sm h-8 mr-2"
+              />
+              <IconButton onClick={handleSaveClick} hoverClassName="hover:text-blue-500">
+                <AiOutlineSave />
               </IconButton>
-              <IconButton onClick={handleEditClick} hoverClassName="hover:text-yellow-500">
-                <AiOutlineEdit />
-              </IconButton>
-              <IconButton onClick={handleDelete} hoverClassName="hover:text-red-500">
-                <AiOutlineDelete />
+              <IconButton onClick={handleCancelClick} hoverClassName="hover:text-red-500">
+                <AiOutlineClose />
               </IconButton>
             </div>
-          </div>
-        )
-      }
+          ) : (
+            <div className="flex items-center w-full">
+              <input
+                type="checkbox"
+                checked={task.isCompleted}
+                className="mr-2 form-checkbox text-blue-600"
+                onChange={() => completeTask(task)}
+              />
+              <p className="flex-grow dark:text-white">{task.name}</p>
+              <div className="flex items-center">
+                <IconButton onClick={handleInfoClick} hoverClassName="hover:text-blue-500">
+                  <AiOutlineInfoCircle />
+                </IconButton>
+                <IconButton onClick={handleEditClick} hoverClassName="hover:text-yellow-500">
+                  <AiOutlineEdit />
+                </IconButton>
+                <IconButton onClick={handleDelete} hoverClassName="hover:text-red-500">
+                  <AiOutlineDelete />
+                </IconButton>
+              </div>
+            </div>
+          )
+        }
+      </div>
+      <InfoPanel isOpen={isInfoOpen || isSelected(task) || isTopTaskInProductivityMode} item={task} />
     </div>
-    <InfoPanel isOpen={isInfoOpen || isSelected(task) || isTopTaskInProductivityMode} item={task} />
-  </div>
-);
+  );
 
 }
 export default Task;
