@@ -6,7 +6,7 @@ import {
   resetProductiveTime,
   resetPassionTime,
   resetLeisureTime
-} from '../slices/timeSlice';
+} from '../slices/timeTrackerSlice';
 
 import { 
     setTimeLeft,
@@ -14,7 +14,6 @@ import {
     setRunning,
     toggleProductivity,
     setSelectedEnjoymentItem,
-    toggleAlarmPlaying,
     setProductivityTime,
     setEnjoymentTime
   } from '../slices/timerSlice';
@@ -29,10 +28,8 @@ export default function useTime() {
   const isRunning = useSelector((state) => state.timer.isRunning);
   const isProductivity = useSelector((state) => state.timer.isProductivity);
   const selectedEnjoymentItem = useSelector((state) => state.timer.selectedEnjoymentItem);
-  const isAlarmPlaying = useSelector((state) => state.timer.isAlarmPlaying);
-  const productivityTime = useSelector((state) => state.timer.productivityTime);
-  const enjoymentTime = useSelector((state) => state.timer.enjoymentTime);
-  
+  const productivityDuration = useSelector((state) => state.timer.productivityDuration);
+  const enjoymentDuration = useSelector((state) => state.timer.enjoymentDuration);
 
   const addProductiveTime = (amount) => {
     dispatch(increaseProductiveTime(amount));
@@ -78,10 +75,6 @@ export default function useTime() {
     dispatch(setSelectedEnjoymentItem(item));
   };
 
-  const toggleTimerAlarmPlaying = () => {
-    dispatch(toggleAlarmPlaying());
-  };
-
   const updateProductivityTime = (time) => {
     dispatch(setProductivityTime(time));
   };
@@ -104,15 +97,13 @@ export default function useTime() {
     isRunning,
     isProductivity,
     selectedEnjoymentItem,
-    isAlarmPlaying,
     updateTimeLeft,
     toggleTimerRunning,
     setTimerRunning,
     toggleTimerProductivity,
     selectEnjoymentItem,
-    toggleTimerAlarmPlaying,
-    productivityTime,
-    enjoymentTime,
+    productivityTime: productivityDuration,
+    enjoymentTime: enjoymentDuration,
     updateProductivityTime,
     updateEnjoymentTime,
   };

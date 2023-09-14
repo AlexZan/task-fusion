@@ -32,11 +32,11 @@ const activeTasksSlice = createSlice({
       const [draggedTask] = state.splice(fromIndex, 1);
       state.splice(toIndex, 0, draggedTask);
     },
-    updateTimeSpentAction: (state, action) => {
+    updateTaskTimeSpent: (state, action) => {
       const task = state.find(t => t.id === action.payload.id);
 
       if (task) {
-        task.timeSpent = (task.timeSpent || 0) + action.payload.elapsedTime;
+        task.timeSpent = (task.timeSpent || 0) + action.payload.time;
       }
     },
     updateTopTaskTimeSpentAction: (state, action) => {
@@ -47,5 +47,5 @@ const activeTasksSlice = createSlice({
   }
 });
 
-export const { addActiveTaskAction, deleteTaskAction, moveTaskAction, updateTimeSpentAction, updateTopTaskTimeSpentAction } = activeTasksSlice.actions;
+export const { addActiveTaskAction, deleteTaskAction, moveTaskAction, updateTaskTimeSpent, updateTopTaskTimeSpentAction } = activeTasksSlice.actions;
 export default activeTasksSlice.reducer;

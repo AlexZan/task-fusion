@@ -1,8 +1,8 @@
 // timeSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
-export const timeSlice = createSlice({
-  name: 'time',
+export const timeTrackerSlice = createSlice({
+  name: 'timeTracker',
   initialState: {
     productiveTime: 0,
     passionTime: 0,
@@ -40,6 +40,6 @@ export const {
   resetPassionTime,
   resetLeisureTime,
   // ... export other actions
-} = timeSlice.actions;
+} = timeTrackerSlice.actions;
 
-export default timeSlice.reducer;
+export default timeTrackerSlice.reducer;

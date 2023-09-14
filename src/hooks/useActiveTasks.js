@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { addActiveTaskAction, deleteTaskAction, moveTaskAction, updateTimeSpentAction, updateTopTaskTimeSpentAction } from '../slices/activeTasksSlice';
+import { addActiveTaskAction, deleteTaskAction, moveTaskAction, updateTopTaskTimeSpentAction } from '../slices/activeTasksSlice';
 import { completeTaskAction } from '../thunks/taskThunks';
 
 const useActiveTasks = () => {
@@ -23,7 +23,7 @@ const useActiveTasks = () => {
   };
 
   const updateTaskTimeSpent = (id, elapsedTime) => {
-    dispatch(updateTimeSpentAction({id, elapsedTime}));
+    dispatch(updateTaskTimeSpent({id, elapsedTime}));
   };
 
   const handleUpdateTopTaskTimeSpent = (elapsedTime) => {

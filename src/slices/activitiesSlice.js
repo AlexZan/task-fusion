@@ -15,7 +15,9 @@ const activitiesSlice = createSlice({
       return state.filter((activity) => activity.id !== action.payload);
     },
     updateActivityTimeSpent: (state, action) => {
+
       const activity = state.find((activity) => activity.id === action.payload.id);
+
       if (activity) {
         activity.timeSpent += action.payload.time;
       }

@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const defaultProductivityTime = 20 * 60;
-const defaultEnjoymentTime = 40 * 60;
+const initialProductivityTime = 8;
+const initialEnjoymentTime = 8;
 
 export const timerSlice = createSlice({
   name: 'timer',
   initialState: {
-    timeLeft: defaultProductivityTime,
-    productivityTime: defaultProductivityTime,
-    enjoymentTime: defaultEnjoymentTime,
+    timeLeft: initialProductivityTime,
+    productivityDuration: initialProductivityTime,
+    enjoymentDuration: initialEnjoymentTime,
     isRunning: false,
     isProductivity: true,
     selectedEnjoymentItem: null,
@@ -19,10 +19,10 @@ export const timerSlice = createSlice({
       state.timeLeft = action.payload;
     },
     setProductivityTime: (state, action) => {
-      state.productivityTime = action.payload;
+      state.productivityDuration = action.payload;
     },
     setEnjoymentTime: (state, action) => {
-      state.enjoymentTime = action.payload;
+      state.enjoymentDuration = action.payload;
     },
     toggleRunning: (state) => {
       state.isRunning = !state.isRunning;
@@ -36,9 +36,12 @@ export const timerSlice = createSlice({
     setSelectedEnjoymentItem: (state, action) => {
       state.selectedEnjoymentItem = action.payload;
     },
-    toggleAlarmPlaying: (state) => {
-      state.isAlarmPlaying = !state.isAlarmPlaying;
+    startAlarm: (state) => {
+      state.isAlarmPlaying = true;
     },
+    stopAlarm: (state) => {
+      state.isAlarmPlaying = false;
+    }
   },
 });
 
@@ -48,7 +51,8 @@ export const {
   setRunning,
   toggleProductivity,
   setSelectedEnjoymentItem,
-  toggleAlarmPlaying,
+  startAlarm,
+  stopAlarm,
   setProductivityTime,
   setEnjoymentTime,
 } = timerSlice.actions;

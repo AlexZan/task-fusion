@@ -1,11 +1,9 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState } from 'react';
 import { FaCog } from 'react-icons/fa';
-import useTimer from '../hooks/useTimer';
 import useTime from '../hooks/useTime';
 
 function ConfigModal({ isOpen, onClose }) {
-  const { reset } = useTimer();
   const { updateProductivityTime, updateEnjoymentTime, productivityTime,enjoymentTime } = useTime();
 
     // Local states for productivity and enjoyment times
@@ -18,10 +16,6 @@ function ConfigModal({ isOpen, onClose }) {
     updateEnjoymentTime(localEnjoymentTime);
     onClose();
   };
-
-  useEffect(() => {
-    reset();  // Reset the timer whenever the global times change
-}, [productivityTime, enjoymentTime]);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>

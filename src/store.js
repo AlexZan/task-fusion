@@ -7,21 +7,34 @@ import activeTasksReducer from './slices/activeTasksSlice';
 import completedTasksReducer from './slices/completedTasksSlice';
 import repeatTasksReducer from './slices/repeatTasksSlice';
 import activitiesReducer from './slices/activitiesSlice';
-import timeReducer from './slices/timeSlice'
+import timeTrackerReducer from './slices/timeTrackerSlice'
 import timerReducer from './slices/timerSlice'
+
+import alarmMiddleware from './components/Timer/alarmMiddleware'
+import tickMiddleware from './components/Timer/tickMiddleware';
 
 const persistConfig = {
   key: 'root',
   storage,
+  blacklist: ['timer']
 };
+
+const timerPersistConfig = {
+  key: 'timer',
+  storage,
+  blacklist: ['isAlarmPlaying']
+};
+
+const persistedTimerReducer = persistReducer(timerPersistConfig, timerReducer);
+
 
 const rootReducer = combineReducers({
   activeTasks: activeTasksReducer,
   completedTasks: completedTasksReducer,
   repeatTasks: repeatTasksReducer,
   activities: activitiesReducer,
-  time: timeReducer,
-  timer: timerReducer,
+  time: timeTrackerReducer,
+  timer: persistedTimerReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -37,7 +50,7 @@ const store = configureStore({
       // You can also ignore certain paths:
       // ignoredPaths: ['some.path.to.ignore']
     }
-  })
+  }).concat(alarmMiddleware, tickMiddleware)
 });
 
 const persistor = persistStore(store);

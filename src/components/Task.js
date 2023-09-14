@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AiOutlineDelete, AiOutlineInfoCircle } from 'react-icons/ai';
 import { useDrag, useDrop } from 'react-dnd';
 
@@ -14,6 +14,8 @@ function Task({ task, index, recentlyAdded }) {
   const { completeTask, handleDeleteTask, moveTask } = useActiveTasks();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const { selectEnjoymentItem, isProductivity, selectedEnjoymentItem } = useTime();
+  const isTopTaskInProductivityMode = isProductivity && index === 0;
+
 
   const ref = React.useRef(null);
 
@@ -58,21 +60,23 @@ function Task({ task, index, recentlyAdded }) {
   };
 
 
-  // This function checks if the current task is selected
-   const isSelected = (task) => 
-   !isProductivity && selectedEnjoymentItem?.id === task.id && selectedEnjoymentItem?.type === 'task';
+  const isSelected = useCallback((currentTask) =>
+    !isProductivity && selectedEnjoymentItem?.id === currentTask.id && selectedEnjoymentItem?.type === 'task',
+    [selectedEnjoymentItem, isProductivity]);
 
-  useEffect(() => {
-    if (!isSelected(task)) {
-      setIsInfoOpen(false);
-    }
-  }, [selectedEnjoymentItem]);
+
+    useEffect(() => {
+      if (!isSelected(task)) {
+        setIsInfoOpen(false);
+      }
+  }, [isSelected, task]);
+  
 
   const className = `
     flex items-center item-container 
   
     ${recentlyAdded ? 'highlight-task' : ''} 
-    ${isSelected(task) || (isProductivity && index === 0) ? 'selected-item' : ''}
+    ${isSelected(task) || isTopTaskInProductivityMode ? 'selected-item' : ''}
     ${isDragging ? 'dragging' : ''}
 `;
 
@@ -96,7 +100,7 @@ function Task({ task, index, recentlyAdded }) {
           <AiOutlineDelete />
         </IconButton>
       </div>
-      <InfoPanel isOpen={isInfoOpen || isSelected(task)} item={task} />
+      <InfoPanel isOpen={isInfoOpen || isSelected(task) || isTopTaskInProductivityMode} item={task} />
     </div>
   );
 }

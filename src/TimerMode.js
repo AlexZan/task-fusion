@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { FaClock } from 'react-icons/fa';
 
-import Timer from './components/Timer';
+import Timer from './components/Timer/Timer';
 import TaskList from './components/TaskList';
 import RepeatTasksModal from './components/RepeatTasks/RepeatTasksModal';
 import Activities from './components/Activities';

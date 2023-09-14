@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
 import { FaCog, FaExchangeAlt, FaQuestionCircle } from 'react-icons/fa';
 
-import ConfigModal from './ConfigModal';
+import ConfigModal from '../ConfigModal';
 import TimerDisplayControl from './TimerDisplayControl';
-import useTime from '../hooks/useTime';
-import useTimer from '../hooks/useTimer';
+import useTime from '../../hooks/useTime';
+import useTimer from '../../hooks/useTimer';
 
 function Timer() {
+
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isInfoPanelOpen, setInfoPanelOpen] = useState(false);
 
   // Destructure from useTime
   const {
+    timeLeft,
+    isRunning,
     isProductivity,
   } = useTime();
 
   // Destructure from useTimer
   const {
-    timeLeft,
-    isRunning,
     start,
     stop,
     reset,
