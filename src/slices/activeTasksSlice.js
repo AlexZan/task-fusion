@@ -40,8 +40,9 @@ const activeTasksSlice = createSlice({
       }
     },
     updateTopTaskTimeSpentAction: (state, action) => {
+      console.log(state[0].name)
       if (state.length > 0) {
-        state[0].timeSpent += action.payload;
+        state[0].timeSpent = (state[0].timeSpent || 0) + action.payload;
       }
     },
     // Inside the reducers object in createSlice
