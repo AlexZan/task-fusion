@@ -42,6 +42,13 @@ const router = createBrowserRouter([
 
 
 function App() {
+  React.useEffect(() => {
+    const currentState = store.getState();
+    if (currentState.timer.isRunning) {
+      store.dispatch({ type: 'timer/setRunning', payload: true });
+    }
+  }, []);
+
 
   return (
     <Provider store={store}>
