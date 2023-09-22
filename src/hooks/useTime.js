@@ -3,9 +3,7 @@ import {
   increaseProductiveTime,
   increasePassionTime,
   increaseLeisureTime,
-  resetProductiveTime,
-  resetPassionTime,
-  resetLeisureTime
+  resetAll
 } from '../slices/timeTrackerSlice';
 
 import { 
@@ -43,16 +41,8 @@ export default function useTime() {
     dispatch(increaseLeisureTime(amount));
   };
 
-  const clearProductiveTime = () => {
-    dispatch(resetProductiveTime());
-  };
-
-  const clearPassionTime = () => {
-    dispatch(resetPassionTime());
-  };
-
-  const clearLeisureTime = () => {
-    dispatch(resetLeisureTime());
+  const resetDailyInsights = () => {
+    dispatch(resetAll());
   };
 
   const updateTimeLeft = (time) => {
@@ -90,9 +80,6 @@ export default function useTime() {
     addProductiveTime,
     addPassionTime,
     addLeisureTime,
-    clearProductiveTime,
-    clearPassionTime,
-    clearLeisureTime,
     timeLeft,
     isRunning,
     isProductivity,
@@ -106,5 +93,6 @@ export default function useTime() {
     enjoymentTime: enjoymentDuration,
     updateProductivityTime,
     updateEnjoymentTime,
+    resetDailyInsights,
   };
 };

@@ -19,6 +19,11 @@ export const timeTrackerSlice = createSlice({
     increaseLeisureTime: (state, action) => {
       state.leisureTime += action.payload;
     },
+    resetAll: (state) => {
+      state.productiveTime = 0;
+      state.passionTime = 0;
+      state.leisureTime = 0;
+    },
     resetProductiveTime: (state) => {
       state.productiveTime = 0;
     },
@@ -39,7 +44,7 @@ export const {
   resetProductiveTime,
   resetPassionTime,
   resetLeisureTime,
-  // ... export other actions
+  resetAll,
 } = timeTrackerSlice.actions;
 
 export default timeTrackerSlice.reducer;
