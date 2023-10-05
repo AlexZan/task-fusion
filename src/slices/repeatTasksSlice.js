@@ -1,5 +1,6 @@
 // repeatTasksSlice.js
 import { createSlice } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
 
 import { addActiveTaskAction } from './activeTasksSlice';
 import tasksData from '../place-holder-data.json';
@@ -49,7 +50,12 @@ export const checkAndAddRepeatTasks = () => (dispatch, getState) => {
 
     repeatTasks.forEach(task => {
         if (shouldAddTask(task, activeTasks)) {
-            dispatch(addActiveTaskAction(task));
+            const newTask = {
+                ...task,
+                id: uuidv4(),  // Generating a new ID
+                repeatTaskId: task.id,  // Keeping reference to the original repeat task
+            };
+            dispatch(addActiveTaskAction(newTask));
 
             dispatch(updateRepeatTask({
                 id: task.id,
