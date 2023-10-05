@@ -13,7 +13,6 @@ const repeatTasksMiddleware = store => next => action => {
             if (!isIntervalSet) {
                 setInterval(() => {
                     store.dispatch(checkAndAddRepeatTasks());
-                    console.log("checking repeat tasks")
                 }, REPEAT_TASK_CHECK_INTERVAL);
                 isIntervalSet = true; // Update the flag once interval is set
             }

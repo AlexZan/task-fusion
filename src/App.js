@@ -44,7 +44,7 @@ function MainApp() {
 
   useEffect(() => {
     dispatch({ type: 'START_REPEAT_TASK_CHECK' });
-  }, []);
+  }, [dispatch]);
 
   return (
     <RouterProvider router={router}>
