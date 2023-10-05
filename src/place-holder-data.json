@@ -13,12 +13,16 @@
     {
       "id": "1",
       "name": "Meditate",
-      "repeat": 1440
+      "value": 1,
+      "unit": "day",
+      "lastAdded": "2023-09-20T00:00:00.000Z"
     },
     {
       "id": "2",
       "name": "Workout",
-      "repeat": 1440
+      "value": 2,
+      "unit": "day",
+      "lastAdded": "2023-09-19T00:00:00.000Z"
     }
   ],
   "activities": [

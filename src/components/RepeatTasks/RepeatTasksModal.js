@@ -3,7 +3,7 @@ import { FaTimes } from 'react-icons/fa';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { useRepeatTasks } from '../../hooks/useRepeatTasks';
 import ThemedDialog from '../ThemedDialog';
-import RepeatTaskTimeControl from './RepeatTaskTimeControl';
+import RepeatTaskTimeDropDown from './RepeatTaskTimeDropDown';
 import { IconButton } from '../IconButton';
 
 function TaskTitleColumn({ task }) {
@@ -28,20 +28,15 @@ function RepeatTasksTable({ tasks, children, recentlyAddedTaskId, deleteTask }) 
   ));
 }
 
-
-// The modal
 export default function RepeatTasksModal({ isOpen, onClose }) {
-  const { repeatTasks, addRepeatTask, deleteRepeatTask } = useRepeatTasks();
-
+  const { repeatTasks, addRepeatTask, deleteRepeatTask, updateExistingTask } = useRepeatTasks();
   const [newTask, setNewTask] = useState({
     name: '',
     repeat: 1,
+    unit: 'day',
   });
-
-  // Track the ID of the recently added task
   const [recentlyAddedTaskId, setRecentlyAddedTaskId] = useState(null);
 
-  // Clear recentlyAddedTaskId when the modal is closed
   useEffect(() => {
     if (!isOpen) {
       setRecentlyAddedTaskId(null);
@@ -50,53 +45,81 @@ export default function RepeatTasksModal({ isOpen, onClose }) {
 
   const handleInputKeyPress = (e) => {
     if (e.key === 'Enter' && newTask.name.trim() !== '' && newTask.repeat > 0) {
-      const newTaskId = addRepeatTask(newTask.name, newTask.repeat);
-      setNewTask({ name: '', repeat: 1 });
+      const newTaskId = addRepeatTask(newTask.name, newTask.repeat, newTask.unit); // Update to include unit
+      setNewTask({ name: '', repeat: 1, unit: 'day' });
       setRecentlyAddedTaskId(newTaskId);
     }
   };
 
   const handleCloseModal = () => {
-    setRecentlyAddedTaskId(null); // Reset the recently added task ID
-    onClose(); // Call the provided onClose function
+    setRecentlyAddedTaskId(null);
+    onClose();
+  };
+
+  const handleNewTimeChange = (time) => {
+    setNewTask({ ...newTask, repeat: time });
+  };
+
+  const handleNewUnitChange = (unit) => {
+    setNewTask({ ...newTask, unit });
+  };
+
+  const handleExistingTimeChange = (taskId, time, unit) => { // adding unit parameter
+    const task = repeatTasks.find((t) => t.id === taskId);
+    updateExistingTask(taskId, { ...task, value: time, unit });
+  };
+  
+
+  const handleExistingUnitChange = (taskId, unit) => {
+    const task = repeatTasks.find((t) => t.id === taskId);
+    updateExistingTask(taskId, { ...task, unit });
   };
 
   return (
-    <ThemedDialog open={isOpen} onClose={onClose} width="max-w-4xl">
-      <button
-        onClick={handleCloseModal}
-        className="absolute top-2 right-2 p-2 bg-gray-800 text-white rounded-full hover:bg-gray-700"
-        aria-label="Close modal"
-      >
-        <FaTimes />
-      </button>
-
-      <ThemedDialog.Title className="text-3xl leading-6 font-medium theme-text-dark padding-large">
-        Repeat Tasks
-      </ThemedDialog.Title>
-      <div className="padding-medium text-lg">
-        <div className="flex justify-between items-center">
-          <input
-            type="text"
-            value={newTask.name}
-            onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
-            onKeyDown={handleInputKeyPress}
-            className="input-theme w-full -ml-1"
-            placeholder="Type a new repeat task and press Enter"
-          />
-          <RepeatTaskTimeControl task={newTask} setTask={setNewTask} onKeyPress={handleInputKeyPress} />
-        </div>
-        <RepeatTasksTable
-          tasks={repeatTasks}
-          recentlyAddedTaskId={recentlyAddedTaskId}
-          deleteTask={deleteRepeatTask}
+    <ThemedDialog open={isOpen} onClose={handleCloseModal} width="max-w-4xl">
+        <button
+            onClick={handleCloseModal}
+            className="absolute top-2 right-2 p-2 bg-gray-800 text-white rounded-full hover:bg-gray-700"
+            aria-label="Close modal"
         >
-          {(task) => [
-            <TaskTitleColumn task={task} />,
-            <RepeatTaskTimeControl task={task} />,
-          ]}
-        </RepeatTasksTable>
-      </div>
+            <FaTimes />
+        </button>
+
+        <ThemedDialog.Title className="text-3xl leading-6 font-medium theme-text-dark padding-large">
+            Repeat Tasks
+        </ThemedDialog.Title>
+        <div className="padding-medium text-lg">
+            <div className="flex justify-between items-center">
+                <input
+                    type="text"
+                    value={newTask.name}
+                    onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
+                    onKeyDown={handleInputKeyPress}
+                    className="input-theme w-full -ml-1"
+                    placeholder="Type a new repeat task and press Enter"
+                />
+                <RepeatTaskTimeDropDown
+                    task={newTask}
+                    onTimeChange={handleNewTimeChange}
+                    onUnitChange={handleNewUnitChange}
+                />  
+            </div>
+            <RepeatTasksTable
+                tasks={repeatTasks}
+                recentlyAddedTaskId={recentlyAddedTaskId}
+                deleteTask={deleteRepeatTask}
+            >
+                {(task) => [
+                    <TaskTitleColumn task={task} />,
+                    <RepeatTaskTimeDropDown
+                        task={task}
+                        onTimeChange={(time) => handleExistingTimeChange(task.id, time)}
+                        onUnitChange={(unit) => handleExistingUnitChange(task.id, unit)}
+                    />,
+                ]}
+            </RepeatTasksTable>
+        </div>
     </ThemedDialog>
-  );
+);
+
 }

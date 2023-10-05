@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { createBrowserRouter, RouterProvider, Link, Outlet } from "react-router-dom";
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './store';
 
 import TimerMode from './TimerMode';
-import { store, persistor } from './store';
 import Insights from './components/Insights';
 
 function Header() {
@@ -39,22 +39,42 @@ const router = createBrowserRouter([
   }
 ]);
 
+function MainApp() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: 'START_REPEAT_TASK_CHECK' });
+  }, []);
+
+  return (
+    <RouterProvider router={router}>
+    </RouterProvider>
+  );
+}
 
 
 function App() {
-  React.useEffect(() => {
+
+
+  useEffect(() => {
     const currentState = store.getState();
     if (currentState.timer.isRunning) {
       store.dispatch({ type: 'timer/setRunning', payload: true });
     }
   }, []);
 
+  // useEffect(() => {
+  //   if (document.visibilityState === 'visible') {
+  //     // The tab/app is active
+  //     checkAndAddRepeatTasks();
+  //   }
+  // }, []);
+
 
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <RouterProvider router={router}>
-        </RouterProvider>
+        <MainApp />
       </PersistGate>
     </Provider>
   );

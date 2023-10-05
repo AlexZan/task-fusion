@@ -12,6 +12,7 @@ import timerReducer from './slices/timerSlice'
 
 import alarmMiddleware from './components/Timer/alarmMiddleware'
 import tickMiddleware from './components/Timer/tickMiddleware';
+import repeatTasksMiddleware from './RepeatTasks/repeatTasksMiddleware'
 
 const persistConfig = {
   key: 'root',
@@ -50,7 +51,7 @@ const store = configureStore({
       // You can also ignore certain paths:
       // ignoredPaths: ['some.path.to.ignore']
     }
-  }).concat(alarmMiddleware, tickMiddleware)
+  }).concat(alarmMiddleware, tickMiddleware, repeatTasksMiddleware)
 });
 
 const persistor = persistStore(store);

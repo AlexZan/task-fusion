@@ -1,30 +1,8 @@
 // Declare a variable to store the current timer
 let timerId = null;
-
-const repeatTasks = {};
-
-const startRepeatTask = (taskId, duration) => {
-  // Clear any existing repeat task timer
-  if (repeatTasks[taskId]) {
-    clearTimeout(repeatTasks[taskId]);
-  }
-
-  // Set a new timer with the given duration
-  repeatTasks[taskId] = setTimeout(() => {
-    // TODO: Add the repeat task to the "need to do" list
-    // You will need to implement the logic to add the task here
-    // Then, restart the repeat task timer
-    startRepeatTask(taskId, duration);
-  }, duration * 1000); // Convert duration to milliseconds
-};
-
-const stopRepeatTask = (taskId) => {
-  if (repeatTasks[taskId]) {
-    clearTimeout(repeatTasks[taskId]);
-    delete repeatTasks[taskId];
-  }
-};
-
+let repeatTaskInterval;
+// Fixed interval for checking tasks (5 seconds for testing)
+const REPEAT_TASK_INTERVAL = 5 * 1000; // Change to 15 * 60 * 1000 for 15 minutes in production
 
 self.addEventListener('message', (event) => {
   if (event.data === 'skipWaiting') {
@@ -34,6 +12,18 @@ self.addEventListener('message', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim());
+
+  // Start the fixed interval to check repeat tasks
+  if (!repeatTaskInterval) {
+    repeatTaskInterval = setInterval(() => {
+      // Send message to the main app to check for repeat tasks
+      self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({ type: 'CHECK_REPEAT_TASKS' });
+        });
+      });
+    }, REPEAT_TASK_INTERVAL);  // 5 seconds for testing, adjust as needed
+  }
 });
 
 self.addEventListener('notificationclick', (event) => {
@@ -53,6 +43,11 @@ self.addEventListener('notificationclick', (event) => {
     })
   );
 });
+
+self.addEventListener('redundant', () => {
+  clearInterval(repeatTaskInterval);
+});
+
 
 const startTimer = (duration) => {
   // Clear any existing timer
