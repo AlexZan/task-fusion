@@ -19,7 +19,7 @@ const activeTasksSlice = createSlice({
         task.id = uuidv4();
       }
 
-      state.push(task);
+      state.unshift(task);
     },
     deleteTaskAction: (state, action) => {
       const index = state.findIndex(task => task.id === action.payload);
