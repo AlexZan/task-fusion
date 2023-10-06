@@ -4,6 +4,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+const swPath = process.env.NODE_ENV === 'production'
+  ? '/task-fusion/serviceWorker.js'
+  : '/serviceWorker.js';
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -30,7 +35,7 @@ navigator.serviceWorker.addEventListener('controllerchange', event => {
 
 // Register the Service Worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/serviceWorker.js').then((registration) => {
+  navigator.serviceWorker.register(swPath).then((registration) => {
     // Registration was successful
     // console.log('ServiceWorker registration successful with scope: ', registration.scope);
     // Ensure the service worker takes over the page as soon as possible.
