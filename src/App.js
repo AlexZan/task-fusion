@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { createBrowserRouter, RouterProvider, Link, Outlet } from "react-router-dom";
+import { createHashRouter, RouterProvider, Link, Outlet } from "react-router-dom";
 import { Provider, useDispatch } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './store';
@@ -24,7 +24,7 @@ function Header() {
   );
 }
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     element: <Header />,
     children: [
