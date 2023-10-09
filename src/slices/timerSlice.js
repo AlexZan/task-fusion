@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialProductivityTime = 8;
-const initialEnjoymentTime = 8;
+const initialProductivityTime = 30 * 60;
+const initialEnjoymentTime = 30 * 60;
 
 export const timerSlice = createSlice({
   name: 'timer',
