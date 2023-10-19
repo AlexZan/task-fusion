@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const swPath = process.env.NODE_ENV === 'production'
-  ? '/task-fusion/serviceWorker.js'
+  ? '/serviceWorker.js'
   : '/serviceWorker.js';
 
 
@@ -15,23 +15,6 @@ root.render(
     <App />
   </React.StrictMode>
 );
-
-navigator.serviceWorker.addEventListener('controllerchange', function () {
-  console.log('Controller changed');
-});
-
-
-navigator.serviceWorker.addEventListener('install', event => {
-  console.log('Service Worker installing.');
-});
-
-navigator.serviceWorker.addEventListener('activate', event => {
-  console.log('Service Worker activated.');
-});
-
-navigator.serviceWorker.addEventListener('controllerchange', event => {
-  console.log('Controller changed:', navigator.serviceWorker.controller);
-});
 
 // Register the Service Worker
 if ('serviceWorker' in navigator) {
@@ -51,6 +34,25 @@ if ('serviceWorker' in navigator) {
     // console.log('ServiceWorker registration failed: ', err);
   });
 }
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  // Check if the browser supports notifications
+  if (!("Notification" in window)) {
+    console.log("This browser does not support desktop notification");
+  } else if (Notification.permission === "granted") {
+    // If permission is already granted
+    console.log("Permission to receive notifications has been granted previously");
+  } else if (Notification.permission !== "denied" || Notification.permission === "default") {
+    // Otherwise, ask the user for permission
+    Notification.requestPermission().then(function (permission) {
+      // If the user accepts, let's create a notification
+      if (permission === "granted") {
+        console.log("Permission to receive notifications has been granted");
+      }
+    });
+  }
+});
 
 
 
