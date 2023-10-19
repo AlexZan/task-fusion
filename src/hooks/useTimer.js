@@ -1,5 +1,6 @@
 import useTime from './useTime';
 import { useAlarm } from '../hooks/useAlarm';
+import {requestPermissionNotification } from '../utils/serviceWorkerUtils'
 
 function useTimer() {
   const {
@@ -20,6 +21,7 @@ function useTimer() {
 
   const start = () => {
     setTimerRunning(true);
+    requestPermissionNotification();
   }
 
   const stop = () => {
