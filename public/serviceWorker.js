@@ -93,13 +93,6 @@ self.addEventListener('message', (event) => {
     case 'reset':
       resetTimer();
       break;
-    case 'notify':
-      self.registration.showNotification('Notification from SW', {
-        body: 'This is a notification from the service worker!'
-      })
-        .then(() => console.log('Notification shown'))
-        .catch((error) => console.log('Failed to show notification:', error));
-      break;
     case 'startRepeatTask':
       startRepeatTask(taskId, duration);
       break;
