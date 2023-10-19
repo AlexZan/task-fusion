@@ -20,7 +20,6 @@ export const startTimerInServiceWorker = (duration) => {
   };
   
   export const requestPermissionNotification = () => {
-    console.log("here");
     // Check if the browser supports notifications
     if (!("Notification" in window)) {
       console.log("This browser does not support desktop notification");

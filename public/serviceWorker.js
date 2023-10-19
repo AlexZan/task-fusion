@@ -82,7 +82,6 @@ const resetTimer = () => {
 // Event listener to handle messages from the main application
 self.addEventListener('message', (event) => {
   const { action, duration, taskId } = event.data;
-
   switch (action) {
     case 'start':
       startTimer(duration);
