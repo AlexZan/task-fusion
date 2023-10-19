@@ -82,7 +82,6 @@ const resetTimer = () => {
 // Event listener to handle messages from the main application
 self.addEventListener('message', (event) => {
   const { action, duration, taskId } = event.data;
-
   switch (action) {
     case 'start':
       startTimer(duration);
@@ -92,13 +91,6 @@ self.addEventListener('message', (event) => {
       break;
     case 'reset':
       resetTimer();
-      break;
-    case 'notify':
-      self.registration.showNotification('Notification from SW', {
-        body: 'This is a notification from the service worker!'
-      })
-        .then(() => console.log('Notification shown'))
-        .catch((error) => console.log('Failed to show notification:', error));
       break;
     case 'startRepeatTask':
       startRepeatTask(taskId, duration);
