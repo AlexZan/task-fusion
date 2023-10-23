@@ -1,17 +1,23 @@
 import { playBeep } from '../../utils/audioUtils';  // Import the playBeep function
 
 let beepInterval;  // This will hold our alarm interval
+let audioContext;  // This will hold our shared AudioContext
 
 const alarmMiddleware = store => next => action => {
   switch (action.type) {
     case 'timer/startAlarm':
       if (!beepInterval) {
+        // Initialize the AudioContext if it doesn't exist
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
         // Immediately play the beep sound
-        playBeep();
+        playBeep(audioContext);
 
         // Set up an interval to play the beep sound repeatedly
         beepInterval = setInterval(() => {
-          playBeep();
+          playBeep(audioContext);
         }, 2000);  // Repeat every 2 seconds
       }
       break;
@@ -20,6 +26,11 @@ const alarmMiddleware = store => next => action => {
       if (beepInterval) {
         clearInterval(beepInterval);
         beepInterval = null;
+      }
+      // Close the AudioContext when it's not needed to free up resources
+      if (audioContext) {
+        audioContext.close();
+        audioContext = null;
       }
       break;
 
