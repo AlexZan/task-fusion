@@ -3,9 +3,12 @@ import { createHashRouter, RouterProvider, Link, Outlet } from "react-router-dom
 import { Provider, useDispatch } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './store';
+import ReactGA4 from "react-ga4";
 
 import TimerMode from './TimerMode';
 import Insights from './components/Insights';
+
+ReactGA4.initialize('G-0RFS7K47D2');
 
 function Header() {
   return (
@@ -46,6 +49,10 @@ function MainApp() {
   useEffect(() => {
     dispatch({ type: 'START_REPEAT_TASK_CHECK' });
   }, [dispatch]);
+
+  React.useEffect(() => {
+    ReactGA4.send('pageview');
+  }, []);
 
   return (
     <RouterProvider router={router}>
