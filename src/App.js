@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { createHashRouter, RouterProvider, Link, Outlet } from "react-router-dom";
 import { Provider, useDispatch } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -12,24 +12,27 @@ ReactGA4.initialize('G-0RFS7K47D2');
 
 function Header() {
   return (
-    <div className="App theme-bg-darker min-h-screen theme-text-dark">
-      <header className="text-center padding-small relative">
-        <Link to="/">
-          <img src={process.env.PUBLIC_URL + '/logo-thin.PNG'} alt="Logo" className="mx-auto w-1/2 max-w-xs" />
-          Beta v0.1
-        </Link>
-        <Link to="/insights" className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-400 hover:text-white">
-          Insights
-        </Link>
-      </header>
-      <Outlet />
-    </div>
+<header className="text-center padding-small relative flex justify-center items-center">
+  <img src={'/icon.png'} alt="Logo" className="w-20 h-20 mr-2" />
+  <div>
+    <h1 className="text-4xl font-light text-white" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+      TaskTick
+      <span className="text-xs text-gray-500 ml-2 opacity-50" style={{ verticalAlign: 'super' }}>Beta v0.1</span>
+    </h1>
+    <p className="text-gray-500">Your Personal Productivity Partner</p>
+  </div>
+  <Link to="/insights" className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-400 hover:text-white">
+    Insights
+  </Link>
+</header>
+
+
   );
 }
 
 const router = createHashRouter([
   {
-    element: <Header />,
+    element: <MainApp />,
     children: [
       {
         path: "/",
@@ -55,8 +58,12 @@ function MainApp() {
   }, []);
 
   return (
-    <RouterProvider router={router}>
-    </RouterProvider>
+    <div className="min-h-screen theme-text-dark min-h-screen" style={{
+      background: 'radial-gradient(circle, #121826 60%, #0e2138 100%)'
+    }}>
+      <Header />
+      <Outlet />
+    </div>
   );
 }
 
@@ -82,7 +89,7 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <MainApp />
+        <RouterProvider router={router} />
       </PersistGate>
     </Provider>
   );
