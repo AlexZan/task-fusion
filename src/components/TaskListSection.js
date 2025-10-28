@@ -12,6 +12,7 @@ export default function TaskListSection({ listType, title }) {
 
   const handleInputKeyPress = (e) => {
     if (e.key === 'Enter' && newTask.trim() !== '') {
+      e.preventDefault();
       const newTaskId = Date.now().toString(); // Generate a new ID for the task
       const newTaskObj = {
         id: newTaskId, // Include the ID in the new task object

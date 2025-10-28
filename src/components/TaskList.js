@@ -16,6 +16,7 @@ function TaskList({ onShowInfoPanel }) {
 
   const handleInputKeyPress = (e) => {
     if (e.key === 'Enter' && newTask.trim() !== '') {
+      e.preventDefault();
       const newTaskObj = {
         name: newTask,
         repeat: null,

@@ -63,6 +63,7 @@ export default function Activities() {
 
   const handleActivityKeyPress = (e) => {
     if (e.key === 'Enter' && newActivity.trim() !== '') {
+      e.preventDefault();
       addActivity(newActivity);
       setNewActivity('');
     }

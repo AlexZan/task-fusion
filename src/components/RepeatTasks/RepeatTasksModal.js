@@ -45,6 +45,7 @@ export default function RepeatTasksModal({ isOpen, onClose }) {
 
   const handleInputKeyPress = (e) => {
     if (e.key === 'Enter' && newTask.name.trim() !== '' && newTask.repeat > 0) {
+      e.preventDefault();
       const newTaskId = addRepeatTask(newTask.name, newTask.repeat, newTask.unit); // Update to include unit
       setNewTask({ name: '', repeat: 1, unit: 'day' });
       setRecentlyAddedTaskId(newTaskId);
