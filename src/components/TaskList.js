@@ -15,8 +15,7 @@ function TaskList({ onShowInfoPanel }) {
   const tasks = activeTasks.filter(task => !task.isCompleted);
 
   const handleInputKeyPress = (e) => {
-    if (e.key === 'Enter' && newTask.trim() !== '') {
-      e.preventDefault();
+    if ((e.key === 'Enter' || e.type === 'submit') && newTask.trim() !== '') {
       const newTaskObj = {
         name: newTask,
         repeat: null,

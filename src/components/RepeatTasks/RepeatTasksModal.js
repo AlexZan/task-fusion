@@ -44,12 +44,16 @@ export default function RepeatTasksModal({ isOpen, onClose }) {
   }, [isOpen]);
 
   const handleInputKeyPress = (e) => {
-    if (e.key === 'Enter' && newTask.name.trim() !== '' && newTask.repeat > 0) {
-      e.preventDefault();
+    if ((e.key === 'Enter' || e.type === 'submit') && newTask.name.trim() !== '' && newTask.repeat > 0) {
       const newTaskId = addRepeatTask(newTask.name, newTask.repeat, newTask.unit); // Update to include unit
       setNewTask({ name: '', repeat: 1, unit: 'day' });
       setRecentlyAddedTaskId(newTaskId);
     }
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    handleInputKeyPress(e);
   };
 
   const handleCloseModal = () => {
@@ -90,21 +94,23 @@ export default function RepeatTasksModal({ isOpen, onClose }) {
             Repeat Tasks
         </ThemedDialog.Title>
         <div className="padding-medium text-lg">
-            <div className="flex justify-between items-center">
-                <input
-                    type="text"
-                    value={newTask.name}
-                    onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
-                    onKeyDown={handleInputKeyPress}
-                    className="input-theme w-full -ml-1"
-                    placeholder="Type a new repeat task and press Enter"
-                />
-                <RepeatTaskTimeDropDown
-                    task={newTask}
-                    onTimeChange={handleNewTimeChange}
-                    onUnitChange={handleNewUnitChange}
-                />  
-            </div>
+            <form onSubmit={handleFormSubmit}>
+                <div className="flex justify-between items-center">
+                    <input
+                        type="text"
+                        value={newTask.name}
+                        onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
+                        onKeyDown={handleInputKeyPress}
+                        className="input-theme w-full -ml-1"
+                        placeholder="Type a new repeat task and press Enter"
+                    />
+                    <RepeatTaskTimeDropDown
+                        task={newTask}
+                        onTimeChange={handleNewTimeChange}
+                        onUnitChange={handleNewUnitChange}
+                    />
+                </div>
+            </form>
             <RepeatTasksTable
                 tasks={repeatTasks}
                 recentlyAddedTaskId={recentlyAddedTaskId}

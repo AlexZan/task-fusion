@@ -11,8 +11,7 @@ export default function TaskListSection({ listType, title }) {
   const [recentlyAddedTaskId, setRecentlyAddedTaskId] = useState(null);
 
   const handleInputKeyPress = (e) => {
-    if (e.key === 'Enter' && newTask.trim() !== '') {
-      e.preventDefault();
+    if ((e.key === 'Enter' || e.type === 'submit') && newTask.trim() !== '') {
       const newTaskId = Date.now().toString(); // Generate a new ID for the task
       const newTaskObj = {
         id: newTaskId, // Include the ID in the new task object
@@ -24,6 +23,11 @@ export default function TaskListSection({ listType, title }) {
       setNewTask(''); // Clear the input after adding the task
       setRecentlyAddedTaskId(newTaskId); // Set the recently added task ID
     }
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    handleInputKeyPress(e);
   };
 
 
@@ -43,15 +47,16 @@ export default function TaskListSection({ listType, title }) {
       <h2 className="text-2xl font-semibold mb-4">{title}</h2>
       {/* Input box for adding new tasks - only for active lists */}
       {listType !== 'completed-need-to-do' && listType !== 'completed-want-to-do' && (
-        <input
-          type="text"
-          value={newTask}
-          onChange={handleInputChange}
-          onKeyDown={(e) => { if (e.key === 'Enter') handleInputKeyPress(e); }}
-          className="input-theme w-full dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors duration-200"
-          placeholder="Type a new task and press Enter"
-        />
-
+        <form onSubmit={handleFormSubmit}>
+          <input
+            type="text"
+            value={newTask}
+            onChange={handleInputChange}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleInputKeyPress(e); }}
+            className="input-theme w-full dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors duration-200"
+            placeholder="Type a new task and press Enter"
+          />
+        </form>
       )}
       <TaskList tasks={tasks} listType={listType} recentlyAddedTaskId={recentlyAddedTaskId} />
     </div>
