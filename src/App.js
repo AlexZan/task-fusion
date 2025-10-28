@@ -4,6 +4,7 @@ import { Provider, useDispatch } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './store';
 import ReactGA4 from "react-ga4";
+import packageJson from '../package.json';
 
 import TimerMode from './TimerMode';
 import Insights from './components/Insights';
@@ -17,7 +18,7 @@ function Header() {
   <div>
     <h1 className="text-4xl font-light text-white" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
       TaskTick
-      <span className="text-xs text-gray-500 ml-2 opacity-50" style={{ verticalAlign: 'super' }}>Beta v0.1</span>
+      <span className="text-xs text-gray-500 ml-2 opacity-50" style={{ verticalAlign: 'super' }}>Beta v{packageJson.version}</span>
     </h1>
     <p className="text-gray-500">Your Personal Productivity Partner</p>
   </div>
