@@ -16,6 +16,7 @@
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
+    "react-dnd-touch-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-ga4": "^2.1.0",
     "react-icons": "^4.10.1",
@@ -57,7 +58,9 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@playwright/test": "^1.56.1",
     "gh-pages": "^6.0.0",
+    "playwright": "^1.56.1",
     "tailwindcss": "^3.3.3"
   }
 }

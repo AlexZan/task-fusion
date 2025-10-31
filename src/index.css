@@ -22,6 +22,31 @@
   border-radius: 3px;
   /* Rounded corners */
   padding-left: 12px;
+  min-height: 44px;
+  /* Minimum touch target size for mobile */
+}
+
+/* Mobile-specific styles for better touch targets */
+@media (max-width: 768px) {
+  .item-container {
+    min-height: 56px;
+    /* Larger touch targets on mobile */
+    padding: 12px;
+    margin-top: 8px;
+    font-size: 16px;
+    /* Prevent zoom on input focus */
+  }
+
+  .item-container input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+  }
+
+  .item-container p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
 }
 
 @keyframes highlight {

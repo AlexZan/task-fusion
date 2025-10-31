@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
 
 import Task from './Task';
 import ItemInput from './ItemInput';
@@ -13,6 +14,23 @@ function TaskList({ onShowInfoPanel }) {
   const { activeTasks, handleAddTask } = useActiveTasks();
 
   const tasks = activeTasks.filter(task => !task.isCompleted);
+
+  // Detect touch device and select backend inside component (after window is available)
+  const { backend, backendOptions } = useMemo(() => {
+    const isTouchDevice = (
+      typeof window !== 'undefined' &&
+      (('ontouchstart' in window) ||
+       (navigator.maxTouchPoints > 0) ||
+       (navigator.msMaxTouchPoints > 0))
+    );
+
+    return {
+      backend: isTouchDevice ? TouchBackend : HTML5Backend,
+      backendOptions: isTouchDevice
+        ? { enableMouseEvents: true, delayTouchStart: 200 }
+        : {}
+    };
+  }, []);
 
   const handleInputKeyPress = (e) => {
     if ((e.key === 'Enter' || e.type === 'submit') && newTask.trim() !== '') {
@@ -27,7 +45,7 @@ function TaskList({ onShowInfoPanel }) {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={backend} options={backendOptions}>
       <div className="padding-medium relative">
         <h2 className="text-2xl font-semibold">Tasks</h2>
         <ItemInput

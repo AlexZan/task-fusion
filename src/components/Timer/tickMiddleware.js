@@ -11,8 +11,19 @@ import {
 
 let tickInterval;
 let accumulatedSeconds = 0;
+let isServiceWorkerListenerAdded = false;
 
 const tickMiddleware = store => next => action => {
+    // Add service worker listener only once and only if it's available
+    if (!isServiceWorkerListenerAdded && typeof navigator !== 'undefined' && navigator.serviceWorker) {
+        navigator.serviceWorker.addEventListener('message', event => {
+            if (event.data === 'timerFinished') {
+                store.dispatch(startAlarm());
+                store.dispatch(setTimeLeft(0));
+            }
+        });
+        isServiceWorkerListenerAdded = true;
+    }
     switch (action.type) {
         case 'timer/setRunning':
             if (action.payload) {
@@ -79,14 +90,6 @@ const tickMiddleware = store => next => action => {
         default:
             break;
     }
-
-    // Listen for messages from the service worker.
-    navigator.serviceWorker.addEventListener('message', event => {
-        if (event.data === 'timerFinished') {
-            store.dispatch(startAlarm());
-            store.dispatch(setTimeLeft(0));  // Set time left to zero
-        }
-    });
 
     return next(action);
 };
